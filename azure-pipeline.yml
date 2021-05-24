@@ -17,6 +17,7 @@ pool:
 steps:
 
 - checkout: self
+  clean: true
 - checkout: dgca-app-core-android
 - script: |
     ls -l
