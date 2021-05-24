@@ -23,7 +23,7 @@ steps:
 
 - task: Gradle@2
   inputs:
-    gradleWrapperFile: 'gradlew'
+    gradleWrapperFile: 'dgca-verifier-app-android/gradlew'
     workingDirectory: 'dgca-verifier-app-android'
     tasks: 'build'
     publishJUnitResults: false
