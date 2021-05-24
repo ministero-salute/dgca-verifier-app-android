@@ -18,10 +18,13 @@ steps:
 
 - checkout: self
 - checkout: dgca-app-core-android
+- script: |
+    ls -l
 
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
+    workingDirectory: 'dgca-verifier-app-android'
     tasks: 'build'
     publishJUnitResults: false
     javaHomeOption: 'JDKVersion'
