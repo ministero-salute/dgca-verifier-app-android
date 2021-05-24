@@ -3,10 +3,22 @@ name: dgca-verifier-app-android
 trigger:
 - none
 
+resources:
+  repositories:
+  - repository: dgca-app-core-android
+    type: github
+    name: eu-digital-green-certificates/dgca-app-core-android
+    ref: 'refs/heads/main'
+    endpoint: 'GitHub - it-eucert-team'
+
 pool:
   vmImage: 'macos-latest'
 
 steps:
+
+- checkout: self
+- checkout: dgca-app-core-android
+
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
