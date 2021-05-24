@@ -21,7 +21,18 @@ steps:
 - checkout: dgca-app-core-android
 - script: |
     ls -l
-
+- task: Gradle@2
+  inputs:
+    gradleWrapperFile: 'dgca-app-core-android/gradlew'
+    workingDirectory: 'dgca-app-core-android'
+    options: '--debug'
+    tasks: 'build'
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    gradleOptions: '-Xmx3072m'
+    sonarQubeRunAnalysis: false
+    spotBugsAnalysis: false
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'dgca-verifier-app-android/gradlew'
