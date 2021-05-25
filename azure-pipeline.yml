@@ -36,7 +36,7 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    contents: '**/*.apk'
+    contents: '**/*.aab'
     targetFolder: '$(build.artifactStagingDirectory)'
 
 # - task: AndroidSigning@3
