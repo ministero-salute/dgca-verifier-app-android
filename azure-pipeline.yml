@@ -47,7 +47,7 @@ steps:
 
 - task: AndroidSigning@3
   inputs:
-    apkFiles: '**/*.apk'
+    apkFiles: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/apk/release/app-release-unsigned.apk'
     apksignerKeystoreFile: 'test.jks'
     apksignerKeystorePassword: '$(keystorepassword)'
     apksignerKeystoreAlias: '$(keystorealias)'
@@ -76,7 +76,7 @@ steps:
     serverEndpoint: 'DGC-App'
     appSlug: 'sogei/dgca-verifier-app-android'
     #appFile: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
-    appFile: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.apk'
+    appFile: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/apk/release/app-release-unsigned.apk'
     releaseNotesOption: 'input'
     releaseNotesInput: 'Prova'
     destinationType: 'groups'
