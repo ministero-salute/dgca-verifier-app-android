@@ -12,7 +12,7 @@ resources:
     endpoint: 'GitHub - it-eucert-team'
 
 pool:
-  vmImage: 'macos-latest'
+  vmImage: 'ubuntu-latest'
 
 steps:
 
@@ -21,18 +21,7 @@ steps:
 - checkout: dgca-app-core-android
 - script: |
     ls -l
-- task: Gradle@2
-  inputs:
-    gradleWrapperFile: 'dgca-app-core-android/gradlew'
-    workingDirectory: 'dgca-app-core-android'
-    options: '--debug'
-    tasks: 'build'
-    publishJUnitResults: false
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    gradleOptions: '-Xmx3072m'
-    sonarQubeRunAnalysis: false
-    spotBugsAnalysis: false
+
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'dgca-verifier-app-android/gradlew'
@@ -45,3 +34,32 @@ steps:
     gradleOptions: '-Xmx3072m'
     sonarQubeRunAnalysis: false
     spotBugsAnalysis: false
+
+# - task: CopyFiles@2
+#   inputs:
+#     contents: '**/*.apk'
+#     targetFolder: '$(build.artifactStagingDirectory)'
+
+# - task: AndroidSigning@3
+#   inputs:
+#     apkFiles: '$(build.artifactStagingDirectory)/app/build/outputs/apk/release/app-release-unsigned.apk'
+#     apksignerKeystoreFile: 'debug.jks'
+#     apksignerKeystorePassword: '$(keystorepassword)'
+#     apksignerKeystoreAlias: '$(keystorealias)'
+#     apksignerKeyPassword: '$(keystorepassword)'
+#     zipalign: false
+
+# - task: PublishBuildArtifacts@1
+#   inputs:
+#     pathToPublish: '$(build.artifactStagingDirectory)'
+#     artifactName: 'outputs'
+#     artifactType: 'container'
+
+# - task: AppCenterDistribute@3
+#   inputs:
+#     serverEndpoint: 'DGC-App'
+#     appSlug: 'sogei/dgca-verifier-app-android'
+#     appFile: '$(build.artifactStagingDirectory)/'
+#     releaseNotesOption: 'input'
+#     releaseNotesInput: 'Prova'
+#     destinationType: 'groups'
