@@ -48,17 +48,16 @@ steps:
 #     apksignerKeyPassword: '$(keystorepassword)'
 #     zipalign: false
 
-# - task: AndroidSigning@2
-#   inputs:
-#     apkFiles: '**/*.aab'
-#     jarsign: true
-#     jarsignerKeystoreFile: 'yourkeystore.jks'
-#     jarsignerKeystorePassword: '$(yourSecretKeystorePassword)'
-#     jarsignerKeystoreAlias: 'yourkeystore.alias'
-#     jarsignerKeyPassword: '$(yourSecretKeyPassword)'
-#     # The two Arguments working there magic:
-#     jarsignerArguments: '-sigalg SHA256withRSA -digestalg SHA-256'
-#     zipalign: true
+- task: AndroidSigning@2
+  inputs:
+    apkFiles: '**/*.aab'
+    jarsignerKeystoreFile: 'test.jks'
+    jarsignerKeystorePassword: '$(keystorepassword)'
+    jarsignerKeystoreAlias: 'test'
+    jarsignerKeyPassword: '$(keystorepassword)'
+    # The two Arguments working there magic:
+    jarsignerArguments: '-sigalg SHA256withRSA -digestalg SHA-256'
+    zipalign: true
 
 - task: PublishBuildArtifacts@1
   inputs:
