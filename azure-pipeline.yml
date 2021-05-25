@@ -65,11 +65,11 @@ steps:
     artifactName: 'outputs'
     artifactType: 'container'
 
-# - task: AppCenterDistribute@3
-#   inputs:
-#     serverEndpoint: 'DGC-App'
-#     appSlug: 'sogei/dgca-verifier-app-android'
-#     appFile: '$(build.artifactStagingDirectory)/'
-#     releaseNotesOption: 'input'
-#     releaseNotesInput: 'Prova'
-#     destinationType: 'groups'
+- task: AppCenterDistribute@3
+  inputs:
+    serverEndpoint: 'DGC-App'
+    appSlug: 'sogei/dgca-verifier-app-android'
+    appFile: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
+    releaseNotesOption: 'input'
+    releaseNotesInput: 'Prova'
+    destinationType: 'groups'
