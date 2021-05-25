@@ -26,7 +26,7 @@ steps:
   inputs:
     gradleWrapperFile: 'dgca-verifier-app-android/gradlew'
     workingDirectory: 'dgca-verifier-app-android'
-    tasks: 'build'
+    tasks: ':app:bundleRelease'
     publishJUnitResults: false
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.8'
