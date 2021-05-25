@@ -26,7 +26,6 @@ steps:
   inputs:
     gradleWrapperFile: 'dgca-verifier-app-android/gradlew'
     workingDirectory: 'dgca-verifier-app-android'
-    options: '--debug'
     tasks: 'build'
     publishJUnitResults: false
     javaHomeOption: 'JDKVersion'
@@ -35,10 +34,10 @@ steps:
     sonarQubeRunAnalysis: false
     spotBugsAnalysis: false
 
-# - task: CopyFiles@2
-#   inputs:
-#     contents: '**/*.apk'
-#     targetFolder: '$(build.artifactStagingDirectory)'
+- task: CopyFiles@2
+  inputs:
+    contents: '**/*.apk'
+    targetFolder: '$(build.artifactStagingDirectory)'
 
 # - task: AndroidSigning@3
 #   inputs:
@@ -49,11 +48,11 @@ steps:
 #     apksignerKeyPassword: '$(keystorepassword)'
 #     zipalign: false
 
-# - task: PublishBuildArtifacts@1
-#   inputs:
-#     pathToPublish: '$(build.artifactStagingDirectory)'
-#     artifactName: 'outputs'
-#     artifactType: 'container'
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)'
+    artifactName: 'outputs'
+    artifactType: 'container'
 
 # - task: AppCenterDistribute@3
 #   inputs:
