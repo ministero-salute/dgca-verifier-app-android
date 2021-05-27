@@ -14,69 +14,119 @@ resources:
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
 
-- checkout: self
-  clean: true
-- checkout: dgca-app-core-android
-- script: |
-    ls -l
+stages:
+- stage: Build
+  jobs:
+  - job: CheckoutRepo
+    steps:
+    - checkout: self
+      clean: true
+    - checkout: dgca-app-core-android
+ 
+  - job: Build-apk
+    dependsOn: checkoutRepo
+    steps:
+    - task: Gradle@2
+      inputs:
+        gradleWrapperFile: 'dgca-verifier-app-android/gradlew'
+        workingDirectory: 'dgca-verifier-app-android'
+        tasks: 'build'
+        publishJUnitResults: false
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.8'
+        gradleOptions: '-Xmx3072m'
+        sonarQubeRunAnalysis: false
+        spotBugsAnalysis: false
 
-- task: Gradle@2
-  inputs:
-    gradleWrapperFile: 'dgca-verifier-app-android/gradlew'
-    workingDirectory: 'dgca-verifier-app-android'
-    #tasks: ':app:bundleRelease'
-    tasks: 'build'
-    publishJUnitResults: false
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    gradleOptions: '-Xmx3072m'
-    sonarQubeRunAnalysis: false
-    spotBugsAnalysis: false
+    - task: CopyFiles@2
+      inputs:
+        contents: '**/*.apk'
+        targetFolder: '$(build.artifactStagingDirectory)'
 
-# - task: CopyFiles@2
-#   inputs:
-#     contents: '**/*.aab'
-#     targetFolder: '$(build.artifactStagingDirectory)'
+    - task: AndroidSigning@3
+      inputs:
+        apkFiles: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/apk/release/app-release-unsigned.apk'
+        apksignerKeystoreFile: 'test.jks'
+        apksignerKeystorePassword: '$(keystorepassword)'
+        apksignerKeystoreAlias: '$(keystorealias)'
+        apksignerKeyPassword: '$(keystorepassword)'
+        zipalign: false
 
-- task: CopyFiles@2
-  inputs:
-    contents: '**/*.apk'
-    targetFolder: '$(build.artifactStagingDirectory)'
 
-- task: AndroidSigning@3
-  inputs:
-    apkFiles: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/apk/release/app-release-unsigned.apk'
-    apksignerKeystoreFile: 'test.jks'
-    apksignerKeystorePassword: '$(keystorepassword)'
-    apksignerKeystoreAlias: '$(keystorealias)'
-    apksignerKeyPassword: '$(keystorepassword)'
-    zipalign: false
+  - job: Build-aab
+    dependsOn: Build-apk
+    steps:
+    - task: Gradle@2
+      inputs:
+        gradleWrapperFile: 'dgca-verifier-app-android/gradlew'
+        workingDirectory: 'dgca-verifier-app-android'
+        tasks: ':app:bundleRelease'
+        publishJUnitResults: false
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.8'
+        gradleOptions: '-Xmx3072m'
+        sonarQubeRunAnalysis: false
+        spotBugsAnalysis: false
 
-# - task: AndroidSigning@2
-#   inputs:
-#     apkFiles: '**/*.aab'
-#     jarsignerKeystoreFile: 'test.jks'
-#     jarsignerKeystorePassword: '$(keystorepassword)'
-#     jarsignerKeystoreAlias: 'test'
-#     jarsignerKeyPassword: '$(keystorepassword)'
-#     # The two Arguments working there magic:
-#     jarsignerArguments: '-sigalg SHA256withRSA -digestalg SHA-256'
-#     zipalign: true
+    - task: CopyFiles@2
+      inputs:
+        contents: '**/*.aab'
+        targetFolder: '$(build.artifactStagingDirectory)'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathToPublish: '$(build.artifactStagingDirectory)'
-    artifactName: 'outputs'
-    artifactType: 'container'
+    - task: AndroidSigning@2
+      inputs:
+        apkFiles: '**/*.aab'
+        jarsignerKeystoreFile: 'test.jks'
+        jarsignerKeystorePassword: '$(keystorepassword)'
+        jarsignerKeystoreAlias: 'test'
+        jarsignerKeyPassword: '$(keystorepassword)'
+        # The two Arguments working there magic:
+        jarsignerArguments: '-sigalg SHA256withRSA -digestalg SHA-256'
+        zipalign: true
 
-- task: AppCenterDistribute@3
-  inputs:
-    serverEndpoint: 'DGC-App'
-    appSlug: 'sogei/dgca-verifier-app-android'
-    #appFile: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
-    appFile: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/apk/release/app-release-unsigned.apk'
-    releaseNotesOption: 'input'
-    releaseNotesInput: 'Prova'
-    destinationType: 'groups'
+    
+  - job: PublishArtifact
+    dependsOn: Build-aab
+    steps:
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(build.artifactStagingDirectory)'
+        artifact: 'artifact'
+        publishLocation: 'pipeline'
+
+- stage: DistributeToAppcenter
+  jobs:
+  - job: ApkToAppCenter
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'artifact'
+        targetPath: '$(Pipeline.Workspace)'
+    - task: AppCenterDistribute@3
+      inputs:
+        serverEndpoint: 'DGC-App'
+        appSlug: 'sogei/dgca-verifier-app-android'
+        appFile: '$(Pipeline.Workspace)/dgca-verifier-app-android/app/build/outputs/apk/release/app-release-unsigned.apk'
+        releaseNotesOption: 'input'
+        releaseNotesInput: 'Prova'
+        destinationType: 'groups'
+
+# - stage: DistributeToAppcenter
+#   jobs:
+#   - job: ReleaseToGooglePlay
+#     steps:
+#     - task: DownloadPipelineArtifact@2
+#       inputs:
+#         buildType: 'current'
+#         artifactName: 'artifact'
+#         targetPath: '$(Pipeline.Workspace)'
+  
+#     - task: GooglePlayReleaseBundle@3
+#       inputs:
+#         serviceConnection: 'verificac19-google-play'
+#         applicationId: 'it.salute.verificac19'
+#         bundleFile: '$(Pipeline.Workspace)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
+#         track: 'internal'
+        
