@@ -24,7 +24,7 @@ stages:
       clean: true
     - checkout: dgca-app-core-android
  
-  - job: Build-apk
+  - job: Build_apk
     dependsOn: checkoutRepo
     steps:
     - task: Gradle@2
@@ -54,8 +54,8 @@ stages:
         zipalign: false
 
 
-  - job: Build-aab
-    dependsOn: Build-apk
+  - job: Build_aab
+    dependsOn: Build_apk
     steps:
     - task: Gradle@2
       inputs:
@@ -87,7 +87,7 @@ stages:
 
     
   - job: PublishArtifact
-    dependsOn: Build-aab
+    dependsOn: Build_aab
     steps:
     - task: PublishPipelineArtifact@1
       inputs:
