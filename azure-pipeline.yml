@@ -18,15 +18,11 @@ pool:
 stages:
 - stage: Build
   jobs:
-  - job: CheckoutRepo
+  - job: Build_apk
     steps:
     - checkout: self
       clean: true
     - checkout: dgca-app-core-android
- 
-  - job: Build_apk
-    dependsOn: checkoutRepo
-    steps:
     - task: Gradle@2
       inputs:
         gradleWrapperFile: 'dgca-verifier-app-android/gradlew'
@@ -53,10 +49,6 @@ stages:
         apksignerKeyPassword: '$(keystorepassword)'
         zipalign: false
 
-
-  - job: Build_aab
-    dependsOn: Build_apk
-    steps:
     - task: Gradle@2
       inputs:
         gradleWrapperFile: 'dgca-verifier-app-android/gradlew'
@@ -85,10 +77,6 @@ stages:
         jarsignerArguments: '-sigalg SHA256withRSA -digestalg SHA-256'
         zipalign: true
 
-    
-  - job: PublishArtifact
-    dependsOn: Build_aab
-    steps:
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: '$(build.artifactStagingDirectory)'
