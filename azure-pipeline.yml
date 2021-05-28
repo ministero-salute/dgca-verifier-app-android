@@ -80,6 +80,12 @@ stages:
         jarsignerKeystoreAlias: '$(keystorealias)'
         jarsignerKeyPassword: '$(keystorepassword)'
         jarsignerArguments: '-sigalg SHA256withRSA -digestalg SHA-256'
+    
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(build.artifactStagingDirectory)'
+        artifact: 'artifact'
+        publishLocation: 'pipeline'
 
     - task: GooglePlayReleaseBundle@3
       inputs:
@@ -89,11 +95,6 @@ stages:
         track: 'internal'
         languageCode: 'en-GB'
 
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: '$(build.artifactStagingDirectory)'
-        artifact: 'artifact'
-        publishLocation: 'pipeline'
 
 # - stage: DistributeToAppcenter
 #   jobs:
