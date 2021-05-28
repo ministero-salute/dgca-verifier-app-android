@@ -119,6 +119,6 @@ stages:
       inputs:
         serviceConnection: 'verificac19-google-play'
         applicationId: 'it.ministerodellasalute.verificaC19'
-        bundleFile: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
+        bundleFile: '$(Pipeline.Workspace)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
         track: 'internal'
         languageCode: 'en-GB'
