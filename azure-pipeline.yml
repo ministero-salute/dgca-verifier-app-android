@@ -101,20 +101,21 @@ stages:
         releaseNotesInput: 'Prova'
         destinationType: 'groups'
 
-# - stage: DistributeToGoogleStore
-#   jobs:
-#   - job: ReleaseToGooglePlay
-#     steps:
-#     - task: DownloadPipelineArtifact@2
-#       inputs:
-#         buildType: 'current'
-#         artifactName: 'artifact'
-#         targetPath: '$(Pipeline.Workspace)'
+- stage: DistributeToGoogleStore
+  jobs:
+  - job: ReleaseToGooglePlay
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'artifact'
+        targetPath: '$(Pipeline.Workspace)'
   
-#     - task: GooglePlayReleaseBundle@3
-#       inputs:
-#         serviceConnection: 'verificac19-google-play'
-#         applicationId: 'it.salute.verificac19'
-#         bundleFile: '$(Pipeline.Workspace)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
-#         track: 'internal'
+    - task: GooglePlayReleaseBundle@3
+      inputs:
+        serviceConnection: 'verificac19-google-play'
+        applicationId: 'dgca.verifier.app.android'
+        bundleFile: '$(Pipeline.Workspace)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
+        track: 'internal'
+        languageCode: 'en-GB'
         
