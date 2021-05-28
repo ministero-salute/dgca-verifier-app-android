@@ -49,11 +49,11 @@ stages:
     #     apksignerKeyPassword: '$(keystorepassword)'
     #     zipalign: false
 
-    - task: UpdateAndroidVersionGradle@1
-      inputs:
-        buildGradlePath: 'dgca-verifier-app-android/app/build.gradle'
-        versionCode: '4'
-        versionName: '1.0.0'
+    # - task: UpdateAndroidVersionGradle@1
+    #   inputs:
+    #     buildGradlePath: 'dgca-verifier-app-android/app/build.gradle'
+    #     versionCode: '4'
+    #     versionName: '1.0.0'
 
     - task: Gradle@2
       inputs:
