@@ -101,7 +101,7 @@ stages:
         releaseNotesInput: 'Prova'
         destinationType: 'groups'
 
-# - stage: DistributeToAppcenter
+# - stage: DistributeToGoogleStore
 #   jobs:
 #   - job: ReleaseToGooglePlay
 #     steps:
