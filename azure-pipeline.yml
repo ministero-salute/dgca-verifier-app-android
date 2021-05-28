@@ -49,6 +49,12 @@ stages:
     #     apksignerKeyPassword: '$(keystorepassword)'
     #     zipalign: false
 
+    - task: UpdateAndroidVersionGradle@1
+      inputs:
+        buildGradlePath: 'dgca-verifier-app-android/app/build.gradle'
+        versionCode: '4'
+        versionName: '1.0.0'
+
     - task: Gradle@2
       inputs:
         gradleWrapperFile: 'dgca-verifier-app-android/gradlew'
@@ -69,13 +75,11 @@ stages:
     - task: AndroidSigning@2
       inputs:
         apkFiles: '**/*.aab'
-        jarsignerKeystoreFile: 'test.jks'
+        jarsignerKeystoreFile: 'android-c19-key.jks'
         jarsignerKeystorePassword: '$(keystorepassword)'
-        jarsignerKeystoreAlias: 'test'
+        jarsignerKeystoreAlias: '$(keystorealias)'
         jarsignerKeyPassword: '$(keystorepassword)'
-        # The two Arguments working there magic:
         jarsignerArguments: '-sigalg SHA256withRSA -digestalg SHA-256'
-        zipalign: true
 
     - task: PublishPipelineArtifact@1
       inputs:
@@ -115,7 +119,6 @@ stages:
       inputs:
         serviceConnection: 'verificac19-google-play'
         applicationId: 'it.ministerodellasalute.verificaC19'
-        bundleFile: '$(Pipeline.Workspace)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
+        bundleFile: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
         track: 'internal'
         languageCode: 'en-GB'
-        
