@@ -114,7 +114,7 @@ stages:
     - task: GooglePlayReleaseBundle@3
       inputs:
         serviceConnection: 'verificac19-google-play'
-        applicationId: 'dgca.verifier.app.android'
+        applicationId: 'it.ministerodellasalute.verificaC19'
         bundleFile: '$(Pipeline.Workspace)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
         track: 'internal'
         languageCode: 'en-GB'
