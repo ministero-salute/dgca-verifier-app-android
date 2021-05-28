@@ -74,12 +74,20 @@ stages:
 
     - task: AndroidSigning@2
       inputs:
-        apkFiles: '**/*.aab'
+        apkFiles: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
         jarsignerKeystoreFile: 'android-c19-key.jks'
         jarsignerKeystorePassword: '$(keystorepassword)'
         jarsignerKeystoreAlias: '$(keystorealias)'
         jarsignerKeyPassword: '$(keystorepassword)'
         jarsignerArguments: '-sigalg SHA256withRSA -digestalg SHA-256'
+
+    - task: GooglePlayReleaseBundle@3
+      inputs:
+        serviceConnection: 'verificac19-google-play'
+        applicationId: 'it.ministerodellasalute.verificaC19'
+        bundleFile: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
+        track: 'internal'
+        languageCode: 'en-GB'
 
     - task: PublishPipelineArtifact@1
       inputs:
@@ -105,20 +113,20 @@ stages:
 #         releaseNotesInput: 'Prova'
 #         destinationType: 'groups'
 
-- stage: DistributeToGoogleStore
-  jobs:
-  - job: ReleaseToGooglePlay
-    steps:
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: 'current'
-        artifactName: 'artifact'
-        targetPath: '$(Pipeline.Workspace)'
+# - stage: DistributeToGoogleStore
+#   jobs:
+#   - job: ReleaseToGooglePlay
+#     steps:
+#     - task: DownloadPipelineArtifact@2
+#       inputs:
+#         buildType: 'current'
+#         artifactName: 'artifact'
+#         targetPath: '$(Pipeline.Workspace)'
   
-    - task: GooglePlayReleaseBundle@3
-      inputs:
-        serviceConnection: 'verificac19-google-play'
-        applicationId: 'it.ministerodellasalute.verificaC19'
-        bundleFile: '$(Pipeline.Workspace)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
-        track: 'internal'
-        languageCode: 'en-GB'
+#     - task: GooglePlayReleaseBundle@3
+#       inputs:
+#         serviceConnection: 'verificac19-google-play'
+#         applicationId: 'it.ministerodellasalute.verificaC19'
+#         bundleFile: '$(Pipeline.Workspace)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
+#         track: 'internal'
+#         languageCode: 'en-GB'
