@@ -26,7 +26,7 @@ stages:
 
     - task: UpdateAndroidVersionGradle@1
       inputs:
-        buildGradlePath: 'dgca-verifier-app-android/buildSrc/src/main/java/AppConfig.kt'
+        buildGradlePath: 'dgca-verifier-app-android/app/build.gradle'
         versionCode: '$(Build.BuildId)'
         versionName: '1.0.0'
 
