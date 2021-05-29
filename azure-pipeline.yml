@@ -23,7 +23,29 @@ stages:
     - checkout: self
       clean: true
     - checkout: dgca-app-core-android
+    - task: SonarQubePrepare@4
+      inputs:
+        SonarQube: 'SonarQube Azure 8.9'
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: '$(System.TeamProject)_it-dgc-verifier-service'
+        cliProjectName: '$(System.TeamProject)_it-dgc-verifier-service'
+        cliProjectVersion: '$(Build.SourceVersion)'
+        cliSources: '.'
+        extraProperties: |
+          # Additional properties that will be passed to the scanner, 
+          # Put one key=value per line, example:
+          # sonar.exclusions=**/*.bin
+          sonar.java.binaries=.
+          sonar.exclusions=**/CCReport*/**
+          sonar.branch.name=master
 
+    - task: SonarQubeAnalyze@4
+
+    - task: SonarQubePublish@4
+      inputs:
+        pollingTimeoutSec: '300'
+        
     - task: UpdateAndroidVersionGradle@1
       inputs:
         buildGradlePath: 'dgca-verifier-app-android/buildSrc/src/main/java/AppConfig.kt'
