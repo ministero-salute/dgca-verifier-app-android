@@ -49,11 +49,17 @@ stages:
     #     apksignerKeyPassword: '$(keystorepassword)'
     #     zipalign: false
 
-    # - task: UpdateAndroidVersionGradle@1
-    #   inputs:
-    #     buildGradlePath: 'dgca-verifier-app-android/app/build.gradle'
-    #     versionCode: '4'
-    #     versionName: '1.0.0'
+    - task: UpdateAndroidVersionGradle@1
+      inputs:
+        buildGradlePath: 'dgca-verifier-app-android/app/build.gradle'
+        versionCode: '2'
+        versionName: '4.1.2'
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: 'dgca-verifier-app-android/app/build.gradle'
+        artifact: 'build-gradle'
+        publishLocation: 'pipeline'
 
     - task: Gradle@2
       inputs:
@@ -83,8 +89,8 @@ stages:
     
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '$(build.artifactStagingDirectory)'
-        artifact: 'artifact'
+        targetPath: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
+        artifact: 'bundle'
         publishLocation: 'pipeline'
 
     - task: GooglePlayReleaseBundle@3
