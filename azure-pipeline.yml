@@ -31,7 +31,7 @@ stages:
         versionName: '1.0.0'
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '$(Pipeline.Workspace)/dgca-verifier-app-android/app/build.gradle'
+        targetPath: 'dgca-verifier-app-android/app/build.gradle'
         artifact: 'build-gradle'
         publishLocation: 'pipeline'
 
