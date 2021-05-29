@@ -28,8 +28,8 @@ stages:
         SonarQube: 'SonarQube Azure 8.9'
         scannerMode: 'CLI'
         configMode: 'manual'
-        cliProjectKey: '$(System.TeamProject)_it-dgc-verifier-service'
-        cliProjectName: '$(System.TeamProject)_it-dgc-verifier-service'
+        cliProjectKey: '$(System.TeamProject)_dgca-verifier-app-android'
+        cliProjectName: '$(System.TeamProject)_dgca-verifier-app-android'
         cliProjectVersion: '$(Build.SourceVersion)'
         cliSources: '.'
         extraProperties: |
@@ -45,7 +45,7 @@ stages:
     - task: SonarQubePublish@4
       inputs:
         pollingTimeoutSec: '300'
-        
+
     - task: UpdateAndroidVersionGradle@1
       inputs:
         buildGradlePath: 'dgca-verifier-app-android/buildSrc/src/main/java/AppConfig.kt'
