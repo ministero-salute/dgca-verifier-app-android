@@ -111,13 +111,13 @@ stages:
         artifact: 'bundle'
         publishLocation: 'pipeline'
     
-    - task: GooglePlayReleaseBundle@3
-      inputs:
-        serviceConnection: 'verificac19-google-play'
-        applicationId: 'it.ministerodellasalute.verificaC19'
-        bundleFile: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
-        track: 'internal'
-        languageCode: 'en-GB'
+    # - task: GooglePlayReleaseBundle@3
+    #   inputs:
+    #     serviceConnection: 'verificac19-google-play'
+    #     applicationId: 'it.ministerodellasalute.verificaC19'
+    #     bundleFile: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
+    #     track: 'internal'
+    #     languageCode: 'en-GB'
 
 
 # - stage: DistributeToAppcenter
