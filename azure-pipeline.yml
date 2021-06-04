@@ -18,18 +18,41 @@ pool:
 stages:
 - stage: Build
   jobs:
-  - job: Build_apk
+  - job: Build
+
     steps:
     - checkout: self
       clean: true
     - checkout: dgca-app-core-android
-
     - task: UpdateAndroidVersionGradle@1
       inputs:
         buildGradlePath: 'dgca-verifier-app-android/app/build.gradle'
         versionCode: '$(Build.BuildId)'
-        versionName: '1.0.0'
-        
+        versionName: '$(versionName)'
+    - task: SonarQubePrepare@4
+      inputs:
+        SonarQube: 'SonarQube Azure 8.9'
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: '$(System.TeamProject)_it-dgc-gateway-client'
+        cliProjectName: '$(System.TeamProject)_it-dgc-gateway-client'
+        cliProjectVersion: '$(Build.SourceBranchName)_$(Build.SourceVersion)'
+        cliSources: '.'
+        extraProperties: |
+          sonar.java.binaries=.
+          sonar.exclusions=**/CCReport*/**
+      continueOnError: true
+
+    - task: SonarQubeAnalyze@4
+      continueOnError: true
+      condition: succeeded()
+
+    - task: SonarQubePublish@4
+      inputs:
+        pollingTimeoutSec: '300'
+      continueOnError: true
+      condition: succeeded()
+     
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: 'dgca-verifier-app-android/app/build.gradle'
@@ -118,40 +141,3 @@ stages:
     #     bundleFile: '$(build.artifactStagingDirectory)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
     #     track: 'internal'
     #     languageCode: 'en-GB'
-
-
-# - stage: DistributeToAppcenter
-#   jobs:
-#   - job: ApkToAppCenter
-#     steps:
-#     - task: DownloadPipelineArtifact@2
-#       inputs:
-#         buildType: 'current'
-#         artifactName: 'artifact'
-#         targetPath: '$(Pipeline.Workspace)'
-#     - task: AppCenterDistribute@3
-#       inputs:
-#         serverEndpoint: 'DGC-App'
-#         appSlug: 'sogei/dgca-verifier-app-android'
-#         appFile: '$(Pipeline.Workspace)/dgca-verifier-app-android/app/build/outputs/apk/release/app-release-unsigned.apk'
-#         releaseNotesOption: 'input'
-#         releaseNotesInput: 'Prova'
-#         destinationType: 'groups'
-
-# - stage: DistributeToGoogleStore
-#   jobs:
-#   - job: ReleaseToGooglePlay
-#     steps:
-#     - task: DownloadPipelineArtifact@2
-#       inputs:
-#         buildType: 'current'
-#         artifactName: 'artifact'
-#         targetPath: '$(Pipeline.Workspace)'
-  
-#     - task: GooglePlayReleaseBundle@3
-#       inputs:
-#         serviceConnection: 'verificac19-google-play'
-#         applicationId: 'it.ministerodellasalute.verificaC19'
-#         bundleFile: '$(Pipeline.Workspace)/dgca-verifier-app-android/app/build/outputs/bundle/release/app-release.aab'
-#         track: 'internal'
-#         languageCode: 'en-GB'
