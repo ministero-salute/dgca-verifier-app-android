@@ -45,6 +45,7 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.ofPattern
 import java.util.*
@@ -102,7 +103,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
                 val endDate: LocalDate = LocalDate.parse(it.last().certificateValidFrom)
                     .plusDays(Integer.parseInt(viewModel.getRecoveryCertEndDay()).toLong())
-                if (startDate.isBefore(LocalDate.now()) && LocalDate.now().isBefore(endDate)) {
+                if (!startDate.isAfter(LocalDate.now()) && !LocalDate.now().isAfter(endDate)) {
                     return TestExpiryValues.VALID
                 }
             } catch (e: Exception) {
@@ -117,17 +118,20 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 return TestExpiryValues.TECHNICAL_ERROR
             }
             try {
-                val formatter = ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.ITALY)
+
+                val odtDateTimeOfCollection = OffsetDateTime.parse(it.last().dateTimeOfCollection)
+                val ldtDateTimeOfCollection = odtDateTimeOfCollection.toLocalDateTime()
 
                 val startDate: LocalDateTime =
-                    LocalDateTime.parse(it.last().dateTimeOfCollection, formatter)
+                    ldtDateTimeOfCollection
                         .plusHours(Integer.parseInt(viewModel.getRapidTestStartHour()).toLong())
 
                 val endDate: LocalDateTime =
-                    LocalDateTime.parse(it.last().dateTimeOfCollection, formatter)
+                    ldtDateTimeOfCollection
                         .plusHours(Integer.parseInt(viewModel.getRapidTestEndHour()).toLong())
-                if (startDate.isBefore(LocalDateTime.now()) && LocalDateTime.now()
-                        .isBefore(endDate)
+
+                if (!startDate.isAfter(LocalDateTime.now()) && !LocalDateTime.now()
+                        .isAfter(endDate)
                 ) {
                     return TestExpiryValues.VALID
                 }
@@ -155,7 +159,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
                     val endDate: LocalDate = LocalDate.parse(it.last().dateOfVaccination)
                         .plusDays(Integer.parseInt(viewModel.getVaccineEndDayComplete(it.last().medicinalProduct)).toLong())
-                    if (startDate.isBefore(LocalDate.now()) && LocalDate.now().isBefore(endDate)) {
+                    if (!startDate.isAfter(LocalDate.now()) && !LocalDate.now().isAfter(endDate)) {
                         return TestExpiryValues.VALID
                     }
                 }
@@ -184,6 +188,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkmark_filled)
                 binding.certificateValid.text = getString(R.string.certificateValid)
                 binding.subtitleText.text = getString(R.string.subtitle_text)
+                binding.nextQrButton.text = getString(R.string.nextQR)
             }
         } else {
             binding.containerPersonDetails.visibility = View.GONE
@@ -195,11 +200,10 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setTestErrorMessage(isExpired: Boolean) {
-        binding.containerPersonDetails.visibility = View.GONE
+        binding.containerPersonDetails.visibility = View.VISIBLE
         binding.checkmark.background =
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_misuse)
-        binding.certificateValid.text =
-            if (isExpired) getString(R.string.expirationText) else getString(R.string.certificateNonValid)
+        binding.certificateValid.text = getString(R.string.certificateNonValid)
         binding.subtitleText.text =
             if (isExpired) getString(R.string.subtitle_text_expired) else getString(R.string.subtitle_text_technicalError)
     }

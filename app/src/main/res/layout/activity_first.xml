@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+   ~ license-start
+   ~
+   ~ Copyright (C) 2021 Ministero della Salute and all other contributors
+   ~
+   ~ Licensed under the Apache License, Version 2.0 (the "License");
+   ~ you may not use this file except in compliance with the License.
+   ~ You may obtain a copy of the License at
+   ~
+   ~     http://www.apache.org/licenses/LICENSE-2.0
+   ~
+   ~ Unless required by applicable law or agreed to in writing, software
+   ~ distributed under the License is distributed on an "AS IS" BASIS,
+   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   ~ See the License for the specific language governing permissions and
+   ~ limitations under the License.
+-->
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,11 +40,12 @@
             <TextView
                 android:id="@+id/scanText"
                 style="@style/H1"
-                android:fontFamily="@font/titiliumfont"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_40dp"
+                android:fontFamily="@font/titilliumweb_bold"
                 android:text="@string/scan_green_pass"
+                android:textSize="32sp"
                 app:layout_constraintStart_toStartOf="@+id/guidelineStart"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -58,6 +77,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/titiliumfont"
                         android:text="@string/controlCertificate"
+                        android:textSize="23sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -68,6 +88,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_16dp"
                         android:text="@string/scanQrCertificate"
+                        android:textSize="15sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/controlCertificate" />
 
@@ -83,6 +104,7 @@
                         android:paddingStart="@dimen/padding_20dp"
                         android:paddingEnd="@dimen/padding_20dp"
                         android:text="@string/scanQr"
+                        android:textSize="15sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/scanQrCodeText" />
@@ -115,6 +137,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/titiliumfont"
                         android:text="@string/welcome"
+                        android:textSize="23sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -125,6 +148,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_16dp"
                         android:text="@string/systemDescription"
+                        android:textSize="15sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/welcomeText" />
@@ -160,14 +184,29 @@
 
     <TextView
         android:id="@+id/date_last_sync_text"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="5dp"
         android:padding="@dimen/padding_20dp"
-        tools:text="Last sync"/>
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Last sync" />
 
+    <TextView
+        android:id="@+id/version_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_20dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_last_sync_text"
+        app:layout_constraintVertical_bias="0.7"
+        tools:text="Version" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
