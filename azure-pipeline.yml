@@ -3,14 +3,14 @@ name: dgca-verifier-app-android
 trigger:
   branches:
     include:
-    - master
+    - main
     - develop
     - feature/*
     - releases/*
 pr:
   branches:
     include:
-    - master
+    - main
     - develop
     - releases/*
 
