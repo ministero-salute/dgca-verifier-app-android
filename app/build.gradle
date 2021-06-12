@@ -7,6 +7,17 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+tasks.whenTaskAdded { task ->
+    if (task.name == 'assembleDebug')
+        task.dependsOn test
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'assembleRelease')
+        task.dependsOn test
+}
+
+
 android {
     compileSdkVersion Config.compileSdk
 
