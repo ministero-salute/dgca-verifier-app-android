@@ -71,7 +71,7 @@ stages:
     - task: Gradle@2
       inputs:
         gradleWrapperFile: 'it-dgc-verificaC19-android/gradlew'
-        workingDirectory: 'dgca-verifier-app-android'
+        workingDirectory: 'it-dgc-verificaC19-android'
         tasks: 'build'
         publishJUnitResults: false
         javaHomeOption: 'JDKVersion'
