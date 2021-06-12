@@ -37,7 +37,7 @@ stages:
       inputs:
         buildGradlePath: 'it-dgc-verificaC19-android/app/build.gradle'
         versionCode: '$(Build.BuildId)'
-        versionName: '$(versionName)'
+        #versionName: '$(versionName)'
     - task: SonarQubePrepare@4
       inputs:
         SonarQube: 'SonarQube Azure 8.9'
