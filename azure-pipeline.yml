@@ -38,7 +38,7 @@ stages:
     - checkout: dgca-app-core-android
 
     - task: Bash@3
-      name: check pipeline variable value
+      displayName: check pipeline variable value
       inputs:
         targetType: 'inline'
         script: |
