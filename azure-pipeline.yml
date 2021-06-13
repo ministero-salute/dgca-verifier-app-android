@@ -90,6 +90,8 @@ stages:
         tasks: 'assembleRelease'
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
+        codeCoverageToolOption: 'JaCoCo'
+        codeCoverageClassFilesDirectories: 'build/classes/main/'
         javaHomeOption: 'JDKVersion'
         jdkVersionOption: '1.8'
         gradleOptions: '-Xmx3072m'
