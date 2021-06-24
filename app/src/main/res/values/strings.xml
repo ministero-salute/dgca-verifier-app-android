@@ -22,27 +22,24 @@
 
 <resources>
     <string name="app_name">VerificaC19</string>
-
-    <string name="pause">Pause</string>
-    <string name="resume">Resume</string>
     <string name="scan_green_pass">VerificaC19</string>
     <string name="controlCertificate">Controlla un certificato</string>
     <string name="welcome">Benvenuto</string>
-    <string name="systemDescription">Questo è il sistema di scannerizzazione dei QR code delle certificazioni di idoneità Covid19.</string>
+    <string name="systemDescription">Questo è il sistema di lettura e controllo dei QR code delle certificazioni di idoneità COVID-19.</string>
     <string name="privacyPolicy"><u>Privacy policy</u></string>
     <string name="codiceFiscale">Codice fiscale</string>
-    <string name="expirationText">Data scadenza certificato</string>
+    <string name="expirationText">Data di scadenza certificato</string>
     <string name="certificateValid">Certificato valido</string>
     <string name="certificateNonValid">Certificato non valido</string>
     <string name="subtitle_text">Per sicurezza, confrontare i seguenti dati con un documento ufficiale (es: Carta d\'Identità).</string>
-    <string name="subtitle_text_nonvalid">Il QR code, o firma digitale, non è valido.</string>
+    <string name="subtitle_text_nonvalid">Il QR code, o la sua firma digitale, non è valido.</string>
     <string name="subtitle_text_expired">Il certificato è scaduto.</string>
     <string name="subtitle_text_future">Il certificato non è ancora valido.</string>
     <string name="subtitle_text_technicalError">Il certificato non è valido o non è stato possibile verificarlo.</string>
-    <string name="scanQrCertificate">Scannerizza il QR code di una certificazione. </string>
-    <string name="scanQr">Avvia scan </string>
-    <string name="nextQR">Prossima scansione</string>
-    <string name="repeatQR">Ripeti scansione</string>
+    <string name="scanQrCertificate">Per iniziare, leggi il QR code di una certificazione.</string>
+    <string name="scanQr">Avvia lettura</string>
+    <string name="nextQR">Nuova lettura</string>
+    <string name="repeatQR">Ripeti lettura</string>
     <string name="dateOfBirth">Data di nascita</string>
     <string name="lastSyncDate">Ultimo aggiornamento: %1$s</string>
     <string name="loading">Caricamento certificati in corso…</string>
@@ -50,7 +47,7 @@
     <string name="updateTitle">Aggiornamento richiesto</string>
     <string name="updateMessage">Per continuare ad utilizzare l’applicazione, scarica la nuova versione dallo store</string>
     <string name="updateLabel">Aggiorna</string>
-    <string name="noKeyAlertTitle">Impossibile scansionare</string>
+    <string name="noKeyAlertTitle">Impossibile leggere il QR code</string>
     <string name="noKeyAlertMessage">L\'applicazione deve connettersi alla rete almeno una volta per essere utilizzata</string>
     <string name="ok">OK</string>
     <string name="version">v. %1$s</string>
