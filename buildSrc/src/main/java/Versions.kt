@@ -28,11 +28,8 @@ object Versions {
     const val desugar_jdk_libs = "1.1.5"
 
     const val androidx_core = "1.4.0-alpha01"
-    
-	const val androidx_appcompat = "1.0.2"
-	// EDITRAW const val androidx_appcompat = "1.2.0"
-    
-	const val androidx_navigation = "2.3.5"
+    const val androidx_appcompat = "1.2.0"
+    const val androidx_navigation = "2.3.5"
     const val androidx_material = "1.3.0"
     const val androidx_constraint = "2.0.4"
     const val kotlinx_coroutines = "1.3.9"
