@@ -86,7 +86,7 @@ task getReleaseCoverage(type: org.gradle.api.tasks.Exec, dependsOn: 'codeCoverag
 
 
 android {
-	buildToolsVersion '28.0.3'
+    buildToolsVersion '28.0.3'
     compileSdkVersion Config.compileSdk
 
     defaultConfig {
@@ -160,7 +160,7 @@ dependencies {
     implementation Deps.androidx_worker_ktx
     implementation Deps.kotlinx_coroutines
     implementation(Deps.zxing) { transitive = false }
-	implementation 'com.google.zxing:core:3.3.2'
+    implementation 'com.google.zxing:core:3.3.2'
     implementation Deps.guava_conflict_resolver
 
     implementation Deps.hilt
