@@ -1,5 +1,5 @@
 <h1 align="center">
-    VerificaC19 - 1.1.0 Release - lower API minSDK
+    EU Digital COVID Certificate Verifier App - Android
 </h1>
 
 <p align="center">
@@ -21,9 +21,7 @@
 
 ## About
 
-This repository contains edited source code of *VerificaC19*, the Italian customization of the EU Digital COVID Certificate Verifier App for the Android Operating System. The repository is forked from the [official EU Digital COVID Certificate Verifier App - Android](https://github.com/eu-digital-green-certificates/dgca-verifier-app-android)
-
-Custom Edits in order to run on Android devices with lower API level - Android version than the minSDK of the official releases (API Level 26 - Android Oreo 8.0).
+This repository contains the source code of *VerificaC19*, the Italian customization of the EU Digital COVID Certificate Verifier App for the Android Operating System. The repository is forked from the [official EU Digital COVID Certificate Verifier App - Android](https://github.com/eu-digital-green-certificates/dgca-verifier-app-android)
 
 The DGC Verifier Apps are responsible for scanning and verifying DCCs using public keys from national backend servers. Offline verification is supported, if the latest public keys are present in the app's key store. Consequently, once up-to-date keys have been downloaded, the verification works without active internet connection.
 The Italian version adds some medical rules to the validation of the DCCs, defined by rules downloaded from national backend servers.
