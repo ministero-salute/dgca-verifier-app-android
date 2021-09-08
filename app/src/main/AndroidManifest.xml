@@ -47,6 +47,12 @@
             android:name=".ui.main.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.main.VerificationActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.FirstActivity"
             android:configChanges="orientation|keyboardHidden"

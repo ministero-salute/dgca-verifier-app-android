@@ -24,6 +24,7 @@ package it.ministerodellasalute.verificaC19.ui
 import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
@@ -38,7 +39,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.text.set
 import androidx.lifecycle.observe
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.BuildConfig
@@ -55,6 +55,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityFirstBinding
 
     private val viewModel by viewModels<FirstViewModel>()
+
+    private var barcodeBroadcastReceiver: BarcodeBroadcastReceiver? = null
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -104,6 +106,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
                             FORMATTED_DATE_LAST_SYNC
                         )
                     )
+                    registerBroadcastReceiver(date)
                 }
             }
         }
@@ -148,13 +151,37 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
     override fun onResume() {
         super.onResume()
         viewModel.getAppMinVersion().let {
             if (Utility.versionCompare(it, BuildConfig.VERSION_NAME) > 0) {
                 createForceUpdateDialog()
             }
+        }
+        viewModel.getDateLastSync().let {
+            registerBroadcastReceiver(it)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterBroadcastReceiver()
+    }
+
+    @Synchronized private fun registerBroadcastReceiver(date: Long) {
+        if (date != -1L && barcodeBroadcastReceiver == null) {
+            barcodeBroadcastReceiver = BarcodeBroadcastReceiver()
+            val intentFilter = IntentFilter()
+            intentFilter.addAction(BarcodeBroadcastReceiver.ACTION)
+            intentFilter.addCategory(BarcodeBroadcastReceiver.CATEGORY)
+            registerReceiver(barcodeBroadcastReceiver, intentFilter)
+        }
+    }
+
+    @Synchronized private fun unregisterBroadcastReceiver() {
+        if (barcodeBroadcastReceiver != null) {
+            unregisterReceiver(barcodeBroadcastReceiver)
+            barcodeBroadcastReceiver = null
         }
     }
 

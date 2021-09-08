@@ -17,31 +17,16 @@
   ~  limitations under the License.
   ~  license-end
   ~
-  ~  Created by Mykhailo Nester on 4/23/21 9:53 AM
   -->
 
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    app:startDestination="@id/codeReaderFragment">
+    android:id="@+id/nav_graph_verification_only"
+    app:startDestination="@id/verificationOnlyFragment">
 
     <fragment
-        android:id="@+id/codeReaderFragment"
-        android:name="it.ministerodellasalute.verificaC19.ui.main.codeReader.CodeReaderFragment"
-        android:label="CodeReader"
-        tools:layout="@layout/fragment_code_reader">
-
-        <action
-            android:id="@+id/action_codeReaderFragment_to_verificationFragment"
-            app:destination="@id/verificationFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/verificationFragment"
+        android:id="@+id/verificationOnlyFragment"
         android:name="it.ministerodellasalute.verificaC19.ui.main.verification.VerificationFragment"
         android:label="VerificationFragment"
         tools:layout="@layout/fragment_verification">

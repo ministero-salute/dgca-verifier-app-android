@@ -173,7 +173,13 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.close_button -> findNavController().popBackStack()
+            R.id.close_button -> {
+                if (args.finishOnClose) {
+                    requireActivity().finish()
+                } else {
+                    findNavController().popBackStack()
+                }
+            }
         }
     }
 
