@@ -46,7 +46,12 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="it.ministerodellasalute.verificaC19.checkqr"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.FirstActivity"
             android:configChanges="orientation|keyboardHidden"

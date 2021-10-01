@@ -20,6 +20,8 @@
 
 package it.ministerodellasalute.verificaC19.ui.main.verification
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,6 +45,10 @@ import java.util.*
 @ExperimentalUnsignedTypes
 @AndroidEntryPoint
 class VerificationFragment : Fragment(), View.OnClickListener {
+    companion object {
+        private const val CHECK_VALIDITY_INTENT = "it.ministerodellasalute.verificaC19.checkqr"
+        private const val CHECK_VALIDITY_INTENT_RESULT_KO = 1234
+    }
 
     private val args by navArgs<VerificationFragmentArgs>()
     private val viewModel by viewModels<VerificationViewModel>()
@@ -72,12 +78,31 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 certificateModel = it
                 setPersonData(it.person, it.dateOfBirth)
                 setupCertStatusView(it)
+                handleCheckQrIntent(it)
             }
         }
         viewModel.inProgress.observe(viewLifecycleOwner) {
             binding.progressBar.isVisible = it
         }
         viewModel.init(args.qrCodeText)
+    }
+
+    private fun handleCheckQrIntent(certificateModel: CertificateModel) {
+        activity?.let { activity ->
+            if (activity.intent.action == CHECK_VALIDITY_INTENT) {
+                Intent(CHECK_VALIDITY_INTENT).also { result ->
+                    activity.setResult(
+                        if (certificateModel.isValid) {
+                            Activity.RESULT_OK
+                        } else {
+                            CHECK_VALIDITY_INTENT_RESULT_KO
+                        },
+                        result
+                    )
+                }
+                activity.finish()
+            }
+        }
     }
 
     private fun setupCertStatusView(cert: CertificateModel) {
