@@ -91,6 +91,8 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         activity?.let { activity ->
             if (activity.intent.action == CHECK_VALIDITY_INTENT) {
                 Intent(CHECK_VALIDITY_INTENT).also { result ->
+                    result.putExtra("givenName", certificateModel.person?.givenName)
+                    result.putExtra("familyName", certificateModel.person?.familyName)
                     activity.setResult(
                         if (certificateModel.isValid) {
                             Activity.RESULT_OK
