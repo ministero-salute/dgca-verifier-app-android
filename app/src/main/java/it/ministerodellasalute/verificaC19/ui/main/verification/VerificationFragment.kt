@@ -93,6 +93,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 Intent(CHECK_VALIDITY_INTENT).also { result ->
                     result.putExtra("givenName", certificateModel.person?.givenName)
                     result.putExtra("familyName", certificateModel.person?.familyName)
+                    result.putExtra("dateOfBirth", certificateModel.dateOfBirth)
                     activity.setResult(
                         if (certificateModel.isValid) {
                             Activity.RESULT_OK
