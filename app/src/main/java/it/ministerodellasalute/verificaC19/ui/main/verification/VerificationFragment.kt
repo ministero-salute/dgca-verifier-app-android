@@ -45,10 +45,7 @@ import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.VerificaMinSDKVersionException
 import it.ministerodellasalute.verificaC19sdk.VerificaMinVersionException
-import it.ministerodellasalute.verificaC19sdk.model.CertificateSimple
-import it.ministerodellasalute.verificaC19sdk.model.CertificateStatus
-import it.ministerodellasalute.verificaC19sdk.model.SimplePersonModel
-import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
+import it.ministerodellasalute.verificaC19sdk.model.*
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_BIRTHDAY_DATE
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_VALIDATION_DATE
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseFromTo
@@ -58,6 +55,14 @@ import it.ministerodellasalute.verificaC19sdk.util.YEAR_MONTH_DAY
 @ExperimentalUnsignedTypes
 @AndroidEntryPoint
 class VerificationFragment : Fragment(), View.OnClickListener {
+    companion object {
+        private const val CHECK_VALIDITY_INTENT = "it.ministerodellasalute.verificaC19.checkqr"
+        private const val CHECK_VALIDITY_INTENT_RESULT_NOT_VALID = 0
+        private const val CHECK_VALIDITY_INTENT_RESULT_NOT_VALID_YET = 1
+        private const val CHECK_VALIDITY_INTENT_RESULT_VALID = 2
+        private const val CHECK_VALIDITY_INTENT_RESULT_PARTIALLY_VALID = 3
+        private const val CHECK_VALIDITY_INTENT_RESULT_NOT_EU_DCC = 4
+    }
 
     private val args by navArgs<VerificationFragmentArgs>()
     private val viewModel by viewModels<VerificationViewModel>()
@@ -89,6 +94,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                         activity?.onBackPressed()
                     }, 5000)
                 }
+                handleCheckQrIntent(it)
             }
         }
         viewModel.inProgress.observe(viewLifecycleOwner) {
@@ -234,6 +240,23 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         val dialog = builder.create()
         dialog.setCancelable(true)
         dialog.show()
+    }
+
+    private fun handleCheckQrIntent(certificateSimple: CertificateSimple) {
+        activity?.let { activity ->
+            if (activity.intent.action == CHECK_VALIDITY_INTENT) {
+                Intent(CHECK_VALIDITY_INTENT).also { result ->
+                    result.putExtra("givenName", certificateSimple.person?.givenName)
+                    result.putExtra("familyName", certificateSimple.person?.familyName)
+                    result.putExtra("dateOfBirth", certificateSimple.dateOfBirth)
+                    result.putExtra("resultStr",  certificateSimple.certificateStatus?.name);
+                    result.putExtra("result", certificateSimple.certificateStatus?.ordinal);
+
+                    activity.setResult(certificateSimple.certificateStatus!!.ordinal , result );
+                }
+                activity.finish()
+            }
+        }
     }
 
 }
