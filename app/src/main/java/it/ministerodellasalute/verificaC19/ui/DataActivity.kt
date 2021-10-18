@@ -31,6 +31,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.ActivityDataBinding
 import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
+import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
+import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -73,9 +75,9 @@ class DataActivity : AppCompatActivity(), View.OnClickListener {
             binding.kidsListValue.text = stringBuilder.toString()
         }
         binding.resumeTokenValue.text = viewModel.getResumeToken().toString()
-        binding.dateLastFetchValue.text = viewModel.getDateLastFetch().toString()
+        binding.dateLastFetchValue.text = viewModel.getDateLastFetch().parseTo(FORMATTED_DATE_LAST_SYNC)
         binding.validationRulesValue.movementMethod = ScrollingMovementMethod()
-        binding.validationRulesValue.text = viewModel.callGetValidationRules().toString()
+        binding.validationRulesValue.text = viewModel.callGetValidationRules().map { "[" + it.name + "\n" + it.type + "\n" + it.value + "]"}.joinToString("\n")
 
     }
 

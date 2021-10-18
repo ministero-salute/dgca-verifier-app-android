@@ -36,13 +36,206 @@
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/settings_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_24dp"
+                android:background="@color/grey_light"
+                android:fontFamily="@font/titiliumfont"
+                android:paddingHorizontal="@dimen/margin_24dp"
+                android:text="Dati dell'applicazione"
+                android:textAllCaps="true"
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/text_size_16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar_layout" />
+
+            <TextView
+                android:id="@+id/preferences_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_30dp"
+                android:background="@color/grey_light"
+                android:fontFamily="@font/titiliumfont"
+                android:paddingHorizontal="@dimen/margin_24dp"
+                android:text="@string/preferences_title"
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/text_size_16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/horizontal_line" />
+
+            <TextView
+                android:id="@+id/resume_token_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_24dp"
+                android:layout_marginTop="@dimen/padding_30dp"
+                android:background="@color/grey_light"
+                android:fontFamily="@font/titiliumfont"
+                android:text="Resume Token: "
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/preferences_text" />
+
+            <TextView
+                android:id="@+id/resume_token_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@color/grey_light"
+                android:fontFamily="@font/titiliumfont"
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/resume_token_text"
+                app:layout_constraintStart_toEndOf="@+id/resume_token_text"
+                app:layout_constraintTop_toTopOf="@+id/resume_token_text"
+                tools:text="0" />
+
+            <TextView
+                android:id="@+id/date_last_fetch_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_24dp"
+                android:layout_marginTop="@dimen/padding_30dp"
+                android:background="@color/grey_light"
+                android:fontFamily="@font/titiliumfont"
+                android:text="Date Last Fetch: "
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/resume_token_text" />
+
+            <TextView
+                android:id="@+id/date_last_fetch_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@color/grey_light"
+                android:fontFamily="@font/titiliumfont"
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/date_last_fetch_text"
+                app:layout_constraintStart_toEndOf="@+id/date_last_fetch_text"
+                app:layout_constraintTop_toTopOf="@+id/date_last_fetch_text"
+                tools:text="0" />
+
+            <TextView
+                android:id="@+id/kids_count_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_24dp"
+                android:layout_marginTop="@dimen/padding_30dp"
+                android:background="@color/grey_light"
+                android:fontFamily="@font/titiliumfont"
+                android:text="KIDS Count: "
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/date_last_fetch_text" />
+
+            <TextView
+                android:id="@+id/kids_count_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@color/grey_light"
+                android:fontFamily="@font/titiliumfont"
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/kids_count_text"
+                app:layout_constraintStart_toEndOf="@+id/kids_count_text"
+                app:layout_constraintTop_toTopOf="@+id/kids_count_text"
+                tools:text="0" />
+
+            <TextView
+                android:id="@+id/validation_rules_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_24dp"
+                android:layout_marginTop="@dimen/padding_30dp"
+                android:background="@color/grey_light"
+                android:fontFamily="@font/titiliumfont"
+                android:text="Validation Rules: "
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/kids_count_text" />
+
+            <TextView
+                android:id="@+id/validation_rules_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/grey_light"
+                android:fontFamily="@font/titiliumfont"
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/validation_rules_text"
+                tools:text="0" />
+
+            <TextView
+                android:id="@+id/kids_list_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="28dp"
+                android:background="@color/grey_light"
+                android:fontFamily="@font/titiliumfont"
+                android:text="KIDS List: "
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/validation_rules_value" />
+
+            <TextView
+                android:id="@+id/kids_list_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@color/grey_light"
+                android:fontFamily="@font/titiliumfont"
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/kids_list_text"
+                app:layout_constraintTop_toTopOf="@+id/kids_list_text"
+                tools:text="0" />
+
+            <View
+                android:id="@+id/horizontal_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:background="@color/grey_50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/settings_text" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/toolbar_layout"
@@ -80,198 +273,6 @@
                     app:layout_constraintStart_toEndOf="@id/back_image"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <TextView
-                android:id="@+id/settings_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/titiliumfont"
-                android:textSize="@dimen/text_size_16sp"
-                android:textStyle="bold"
-                android:paddingHorizontal="@dimen/margin_24dp"
-                android:background="@color/grey_light"
-                android:text="Dati dell'applicazione"
-                android:textAllCaps="true"
-                android:textColor="@color/blue_dark"
-                android:layout_marginTop="@dimen/padding_24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar_layout" />
-
-            <View
-                android:id="@+id/horizontal_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/margin_24dp"
-                android:background="@color/grey_50"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/settings_text" />
-
-            <TextView
-                android:id="@+id/preferences_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/titiliumfont"
-                android:textSize="@dimen/text_size_16sp"
-                android:textStyle="bold"
-                android:paddingHorizontal="@dimen/margin_24dp"
-                android:background="@color/grey_light"
-                android:text="@string/preferences_title"
-                android:textColor="@color/blue_dark"
-                android:layout_marginTop="@dimen/padding_30dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/horizontal_line" />
-
-            <TextView
-                android:id="@+id/resume_token_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_30dp"
-                android:background="@color/grey_light"
-                android:fontFamily="@font/titiliumfont"
-                android:layout_marginStart="@dimen/margin_24dp"
-                android:text="Resume Token: "
-                android:textColor="@color/blue_dark"
-                android:textSize="@dimen/text_size_14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/preferences_text" />
-
-            <TextView
-                android:id="@+id/resume_token_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@color/grey_light"
-                android:fontFamily="@font/titiliumfont"
-                android:textColor="@color/blue_dark"
-                android:textSize="@dimen/text_size_14sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/resume_token_text"
-                app:layout_constraintStart_toEndOf="@+id/resume_token_text"
-                app:layout_constraintTop_toTopOf="@+id/resume_token_text"
-                tools:text="0" />
-
-            <TextView
-                android:id="@+id/date_last_fetch_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_30dp"
-                android:background="@color/grey_light"
-                android:fontFamily="@font/titiliumfont"
-                android:layout_marginStart="@dimen/margin_24dp"
-                android:text="Date Last Fetch: "
-                android:textColor="@color/blue_dark"
-                android:textSize="@dimen/text_size_14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/resume_token_text" />
-
-            <TextView
-                android:id="@+id/date_last_fetch_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@color/grey_light"
-                android:fontFamily="@font/titiliumfont"
-                android:textColor="@color/blue_dark"
-                android:textSize="@dimen/text_size_14sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/date_last_fetch_text"
-                app:layout_constraintStart_toEndOf="@+id/date_last_fetch_text"
-                app:layout_constraintTop_toTopOf="@+id/date_last_fetch_text"
-                tools:text="0" />
-
-            <TextView
-                android:id="@+id/kids_count_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_30dp"
-                android:background="@color/grey_light"
-                android:fontFamily="@font/titiliumfont"
-                android:layout_marginStart="@dimen/margin_24dp"
-                android:text="KIDS Count: "
-                android:textColor="@color/blue_dark"
-                android:textSize="@dimen/text_size_14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/date_last_fetch_text" />
-
-            <TextView
-                android:id="@+id/kids_count_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@color/grey_light"
-                android:fontFamily="@font/titiliumfont"
-                android:textColor="@color/blue_dark"
-                android:textSize="@dimen/text_size_14sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/kids_count_text"
-                app:layout_constraintStart_toEndOf="@+id/kids_count_text"
-                app:layout_constraintTop_toTopOf="@+id/kids_count_text"
-                tools:text="0" />
-
-            <TextView
-                android:id="@+id/validation_rules_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_30dp"
-                android:background="@color/grey_light"
-                android:fontFamily="@font/titiliumfont"
-                android:layout_marginStart="@dimen/margin_24dp"
-                android:text="Validation Rules: "
-                android:textColor="@color/blue_dark"
-                android:textSize="@dimen/text_size_14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/kids_count_text" />
-
-            <TextView
-                android:id="@+id/validation_rules_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@color/grey_light"
-                android:fontFamily="@font/titiliumfont"
-                android:textColor="@color/blue_dark"
-                android:textSize="@dimen/text_size_14sp"
-                android:textStyle="bold"
-                android:scrollbars="horizontal"
-                app:layout_constraintBottom_toBottomOf="@id/validation_rules_text"
-                app:layout_constraintStart_toEndOf="@+id/validation_rules_text"
-                app:layout_constraintTop_toTopOf="@+id/validation_rules_text"
-                tools:text="0" />
-
-            <TextView
-                android:id="@+id/kids_list_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_30dp"
-                android:background="@color/grey_light"
-                android:fontFamily="@font/titiliumfont"
-                android:paddingHorizontal="@dimen/margin_24dp"
-                android:text="KIDS List: "
-                android:textColor="@color/blue_dark"
-                android:textSize="@dimen/text_size_14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/validation_rules_text" />
-            <TextView
-                android:id="@+id/kids_list_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@color/grey_light"
-                android:fontFamily="@font/titiliumfont"
-                android:textColor="@color/blue_dark"
-                android:textSize="@dimen/text_size_14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/kids_list_text"
-                app:layout_constraintTop_toTopOf="@+id/kids_list_text"
-                tools:text="0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
