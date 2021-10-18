@@ -23,9 +23,12 @@
 package it.ministerodellasalute.verificaC19.ui
 
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
+import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.ActivityDataBinding
 import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -35,12 +38,10 @@ import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
 @AndroidEntryPoint
-class DataActivity : AppCompatActivity() {
+class DataActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var binding: ActivityDataBinding
     private val viewModel by viewModels<VerificationViewModel>()
-
-    private var kidsCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +49,9 @@ class DataActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setData()
+
+        binding.backImage.setOnClickListener(this)
+        binding.backText.setOnClickListener(this)
     }
 
     private fun setData() {
@@ -57,9 +61,27 @@ class DataActivity : AppCompatActivity() {
             }
             val kidsCount = value.await()
             binding.kidsCountValue.text = kidsCount.toString()
+
+            val valueAllKids = async {
+                viewModel.getAllKids()
+            }
+            val kidsList = valueAllKids.await()
+            var stringBuilder = StringBuilder()
+            for (item in kidsList){
+                stringBuilder.append(item.kid+"\n")
+            }
+            binding.kidsListValue.text = stringBuilder.toString()
         }
         binding.resumeTokenValue.text = viewModel.getResumeToken().toString()
         binding.dateLastFetchValue.text = viewModel.getDateLastFetch().toString()
+        binding.validationRulesValue.movementMethod = ScrollingMovementMethod()
         binding.validationRulesValue.text = viewModel.callGetValidationRules().toString()
+
+    }
+
+    override fun onClick(v: View?) {
+        if (v?.id == R.id.back_image || v?.id == R.id.back_text) {
+            finish()
+        }
     }
 }

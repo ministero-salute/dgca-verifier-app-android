@@ -22,6 +22,7 @@
 
 package it.ministerodellasalute.verificaC19.ui
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -76,14 +77,30 @@ class SettingsActivity : AppCompatActivity(), View.OnClickListener {
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
             startActivity(browserIntent)
         } else if (v?.id == R.id.reset_button) {
-            resetAndRestart()
+            showAlertDialog()
         } else if (v?.id == R.id.view_data_button) {
             val intent = Intent(this, DataActivity::class.java)
             startActivity(intent)
         }
     }
 
+    private fun showAlertDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Tutti i dati memorizzati nell'app verranno cancellati. Quest'operazione è irreversibile. Confermare?")
+            .setTitle("Attenzione")
+            .setCancelable(false)
+            .setPositiveButton("Sì") { dialog, id ->
+                resetAndRestart()
+            }
+            .setNegativeButton("No") { dialog, id ->
+                dialog.dismiss()
+            }
+        val alert = builder.create()
+        alert.show()
+    }
+
     private fun resetAndRestart() {
+        VerificaApplication.dataResetted = true
         viewModel.nukeData()
         VerificaApplication().setWorkManager()
         finish()
