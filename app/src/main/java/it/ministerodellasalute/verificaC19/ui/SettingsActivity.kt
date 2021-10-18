@@ -25,12 +25,15 @@ package it.ministerodellasalute.verificaC19.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.R
+import it.ministerodellasalute.verificaC19.VerificaApplication
 import it.ministerodellasalute.verificaC19.databinding.ActivitySettingsBinding
+import it.ministerodellasalute.verificaC19sdk.data.VerifierRepositoryImpl
 import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
 
 @AndroidEntryPoint
@@ -51,6 +54,8 @@ class SettingsActivity : AppCompatActivity(), View.OnClickListener {
         binding.totemSwitch.setOnClickListener(this)
         binding.faqCard.setOnClickListener(this)
         binding.privacyPolicyCard.setOnClickListener(this)
+        binding.resetButton.setOnClickListener(this)
+        binding.viewDataButton.setOnClickListener(this)
     }
 
     private fun setSwitchesValue() {
@@ -70,6 +75,17 @@ class SettingsActivity : AppCompatActivity(), View.OnClickListener {
             val browserIntent =
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
             startActivity(browserIntent)
+        } else if (v?.id == R.id.reset_button) {
+            resetAndRestart()
+        } else if (v?.id == R.id.view_data_button) {
+            val intent = Intent(this, DataActivity::class.java)
+            startActivity(intent)
         }
+    }
+
+    private fun resetAndRestart() {
+        viewModel.nukeData()
+        VerificaApplication().setWorkManager()
+        finish()
     }
 }
