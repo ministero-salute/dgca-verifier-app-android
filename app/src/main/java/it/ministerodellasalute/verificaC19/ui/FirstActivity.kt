@@ -53,6 +53,7 @@ import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
 import it.ministerodellasalute.verificaC19sdk.util.Utility
+import kotlin.system.exitProcess
 
 
 @AndroidEntryPoint
@@ -90,7 +91,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
         }
         binding.versionText.text = spannableString
 
-        binding.updateProgressBar.max = viewModel.getLastChunk().toInt()
+        binding.updateProgressBar.max = viewModel.getTotalChunk().toInt()
         updateDownloadedPackagesCount()
         Log.i("viewModel.getauthorizedToDownload()", viewModel.getauthorizedToDownload().toString())
         viewModel.getauthorizedToDownload().let {
@@ -170,6 +171,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
             val verificaApplication = VerificaApplication()
             verificaApplication.setWorkManager()
         }
+
+
     }
 
     private fun checkCameraPermission() {
@@ -198,6 +201,28 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
             dialog.show()
         } catch (e: Exception) {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+        }
+    }
+
+    private fun createDownloadAlert() {
+        try {
+            val builder = AlertDialog.Builder(this)
+            var dialog: AlertDialog? = null
+            builder.setTitle(getString(R.string.titleDownloadAlert))
+            builder.setMessage(getString(R.string.messageDownloadAlert))
+            builder.setPositiveButton(getString(R.string.label_download)) { _, _ ->
+                dialog?.dismiss()
+                viewModel.callForDownloadChunk()
+            }
+            builder.setNegativeButton(getString(R.string.after_download)) { _, _ ->
+                binding.resumeDownload.visibility = View.GONE
+                binding.downloadBigFile.visibility = View.VISIBLE
+                binding.dateLastSyncText.text = getString(R.string.message_update_incomplete)
+                dialog?.dismiss()
+            }
+            dialog = builder.create()
+            dialog.show()
+        } catch (e: Exception) {
         }
     }
 
@@ -281,10 +306,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
                 updateDownloadedPackagesCount()
                 Log.i(key.toString(), viewModel.getLastDownloadedChunk().toString())
             }
-            if (key == "last_chunk") {
-                val lastChunk = viewModel.getLastChunk().toInt()
-                binding.updateProgressBar.max = lastChunk
-                Log.i("lastChunk", lastChunk.toString())
+            if (key == "total_chunk") {
+                val totalChunk = viewModel.getTotalChunk().toInt()
+                binding.updateProgressBar.max = totalChunk
+                Log.i("total_chunk", totalChunk.toString())
             }
             if (key == "auth_to_resume") {
                 val authToResume = viewModel.getAuthResume().toInt()
@@ -293,6 +318,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
                 if (viewModel.getAuthResume() == 0L)
                 {
                     binding.resumeDownload.visibility = View.VISIBLE
+                }
+            }
+            if (key == "size_over_thresold") {
+                val isSizeOverThresold = viewModel.getIsSizeOverThreshold()
+                if (isSizeOverThresold){
+                    createDownloadAlert()
                 }
             }
         }
@@ -305,7 +336,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
 
     private fun updateDownloadedPackagesCount() {
         val lastDownloadedChunk = viewModel.getLastDownloadedChunk().toInt()
-        val lastChunk = viewModel.getLastChunk().toInt()
+        val lastChunk = viewModel.getTotalChunk().toInt()
         val singleChunkSize = viewModel.getSizeSingleChunkInByte()
         val totalChunksSize = ConversionUtility.byteToMegaByte(lastChunk * singleChunkSize)
 
