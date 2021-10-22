@@ -81,6 +81,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
         setContentView(binding.root)
 
         binding.qrButton.setOnClickListener(this)
+        binding.settings.setOnClickListener(this)
 
         val string = getString(R.string.version, BuildConfig.VERSION_NAME)
         val spannableString = SpannableString(string).also {
@@ -204,7 +205,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
     override fun onResume() {
         super.onResume()
         viewModel.getAppMinVersion().let {
-            if (Utility.versionCompare(it, BuildConfig.VERSION_NAME) > 0) {
+            if (Utility.versionCompare(it, BuildConfig.VERSION_NAME) > 0 || viewModel.isSDKVersionObsoleted()) {
                 createForceUpdateDialog()
             }
         }
@@ -212,6 +213,11 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
 
     private fun openQrCodeReader() {
         val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun openSettings() {
+        val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
     }
 
@@ -224,6 +230,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
         }
         when (v?.id) {
             R.id.qrButton -> checkCameraPermission()
+            R.id.settings -> openSettings()
         }
     }
 

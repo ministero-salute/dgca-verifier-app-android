@@ -88,3 +88,5 @@ lint/tmp/
 # Android Profiling
 *.hprof
 Project_Default.xml
+dgc-sdk
+.DS_Store
