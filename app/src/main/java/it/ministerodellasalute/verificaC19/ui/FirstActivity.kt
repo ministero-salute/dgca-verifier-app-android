@@ -217,7 +217,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
             builder.setNegativeButton(getString(R.string.after_download)) { _, _ ->
                 binding.resumeDownload.visibility = View.GONE
                 binding.downloadBigFile.visibility = View.VISIBLE
-                binding.dateLastSyncText.text = getString(R.string.message_update_incomplete)
+                binding.dateLastSyncText.text = getString(R.string.titleDownloadAlert)
                 dialog?.dismiss()
             }
             dialog = builder.create()

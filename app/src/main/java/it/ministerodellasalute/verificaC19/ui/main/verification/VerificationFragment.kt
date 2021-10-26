@@ -43,6 +43,7 @@ import it.ministerodellasalute.verificaC19.databinding.FragmentVerificationBindi
 import it.ministerodellasalute.verificaC19.ui.FirstActivity
 import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
+import it.ministerodellasalute.verificaC19sdk.VerificaApplication
 import it.ministerodellasalute.verificaC19sdk.VerificaMinSDKVersionException
 import it.ministerodellasalute.verificaC19sdk.VerificaMinVersionException
 import it.ministerodellasalute.verificaC19sdk.model.CertificateSimple
@@ -170,7 +171,13 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             CertificateStatus.VALID -> getString(R.string.certificateValid)
             CertificateStatus.PARTIALLY_VALID -> getString(R.string.certificatePartiallyValid)
             CertificateStatus.NOT_EU_DCC -> getString(R.string.certificateNotDCC)
-            CertificateStatus.NOT_VALID -> getString(R.string.certificateNonValid)
+            CertificateStatus.NOT_VALID -> {
+                if(VerificaApplication.isCertificateRevoked){
+                    getString(R.string.certificateRevoked)
+                } else {
+                    getString(R.string.certificateNonValid)
+                }
+            }
             CertificateStatus.NOT_VALID_YET -> getString(R.string.certificateNonValidYet)
         }
     }
