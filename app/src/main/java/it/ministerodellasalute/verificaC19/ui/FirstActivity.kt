@@ -250,14 +250,13 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
     override fun onClick(v: View?) {
         viewModel.getDateLastSync().let {
             if (it == -1L) {
-                createNoKeyAlert()
+                createNoSyncAlertDialog("no_sync")
                 return
             }
         }
         viewModel.getDrlDateLastSync().let {
             if (System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) {
-                VerificaApplication.showDrlAlertDialog = true
-                createNoKeyAlert()
+                createNoSyncAlertDialog("no_drl_sync")
                 return
             }
         }
@@ -267,14 +266,13 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
         }
     }
 
-    private fun createNoKeyAlert() {
+    private fun createNoSyncAlertDialog(alertType: String) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.noKeyAlertTitle))
-        if (!VerificaApplication.showDrlAlertDialog) {
+        if (alertType == "no_sync") {
             builder.setMessage(getString(R.string.noKeyAlertMessage))
-        } else {
+        } else if (alertType == "no_drl_sync") {
             builder.setMessage(getString(R.string.noKeyAlertMessageForDrl))
-            VerificaApplication.showDrlAlertDialog = false
         }
         builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
         }
