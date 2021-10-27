@@ -53,7 +53,6 @@ import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
 import it.ministerodellasalute.verificaC19sdk.util.Utility
-import kotlin.system.exitProcess
 
 
 @AndroidEntryPoint
@@ -338,10 +337,17 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
         val lastDownloadedChunk = viewModel.getLastDownloadedChunk().toInt()
         val lastChunk = viewModel.getTotalChunk().toInt()
         val singleChunkSize = viewModel.getSizeSingleChunkInByte()
-        val totalChunksSize = ConversionUtility.byteToMegaByte(lastChunk * singleChunkSize)
+        totalChunksSize = ConversionUtility.byteToMegaByte(lastChunk * singleChunkSize)
 
         binding.updateProgressBar.progress = lastDownloadedChunk
-        binding.chunkCount.text = "Pacchetto $lastDownloadedChunk su $lastChunk"
-        binding.chunkSize.text = "${ConversionUtility.byteToMegaByte(lastDownloadedChunk * singleChunkSize)}Mb su ${totalChunksSize}Mb"
+        //binding.chunkCount.text = "Pacchetto $lastDownloadedChunk su $lastChunk"
+        binding.chunkCount.text = getString(R.string.chunk_count, lastDownloadedChunk, lastChunk)
+
+        //binding.chunkSize.text = "${ConversionUtility.byteToMegaByte(lastDownloadedChunk * singleChunkSize)}Mb su ${totalChunksSize}Mb"
+        binding.chunkSize.text = getString(
+            R.string.chunk_size,
+            ConversionUtility.byteToMegaByte(lastDownloadedChunk * singleChunkSize),
+            totalChunksSize
+        )
     }
 }
