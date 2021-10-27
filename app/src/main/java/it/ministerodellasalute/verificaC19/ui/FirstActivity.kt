@@ -63,6 +63,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
 
     private val viewModel by viewModels<FirstViewModel>()
 
+    private var totalChunksSize = 0L
+
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
@@ -207,7 +209,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
         try {
             val builder = AlertDialog.Builder(this)
             var dialog: AlertDialog? = null
-            builder.setTitle(getString(R.string.titleDownloadAlert))
+            builder.setTitle(getString(R.string.titleDownloadAlert, totalChunksSize))
             builder.setMessage(getString(R.string.messageDownloadAlert))
             builder.setPositiveButton(getString(R.string.label_download)) { _, _ ->
                 dialog?.dismiss()
@@ -216,7 +218,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
             builder.setNegativeButton(getString(R.string.after_download)) { _, _ ->
                 binding.resumeDownload.visibility = View.GONE
                 binding.downloadBigFile.visibility = View.VISIBLE
-                binding.dateLastSyncText.text = getString(R.string.titleDownloadAlert)
+                binding.dateLastSyncText.text = getString(R.string.titleDownloadAlert, totalChunksSize)
                 dialog?.dismiss()
             }
             dialog = builder.create()
@@ -252,6 +254,13 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
                 return
             }
         }
+        viewModel.getDrlDateLastSync().let {
+            if (System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) {
+                VerificaApplication.showDrlAlertDialog = true
+                createNoKeyAlert()
+                return
+            }
+        }
         when (v?.id) {
             R.id.qrButton -> checkCameraPermission()
             R.id.settings -> openSettings()
@@ -261,7 +270,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
     private fun createNoKeyAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.noKeyAlertTitle))
-        builder.setMessage(getString(R.string.noKeyAlertMessage))
+        if (!VerificaApplication.showDrlAlertDialog) {
+            builder.setMessage(getString(R.string.noKeyAlertMessage))
+        } else {
+            builder.setMessage(getString(R.string.noKeyAlertMessageForDrl))
+            VerificaApplication.showDrlAlertDialog = false
+        }
         builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
         }
         val dialog = builder.create()

@@ -38,6 +38,10 @@ class VerificaApplication : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    companion object {
+        var showDrlAlertDialog = false
+    }
+
     override fun getWorkManagerConfiguration(): Configuration {
         return Configuration.Builder()
             .setWorkerFactory(workerFactory)
