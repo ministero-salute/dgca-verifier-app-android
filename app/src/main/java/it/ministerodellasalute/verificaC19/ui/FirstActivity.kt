@@ -349,7 +349,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
         val lastDownloadedChunk = viewModel.getLastDownloadedChunk().toInt()
         val lastChunk = viewModel.getTotalChunk().toInt()
         val singleChunkSize = viewModel.getSizeSingleChunkInByte()
-        totalChunksSize = ConversionUtility.byteToMegaByte(lastChunk * singleChunkSize)
+        totalChunksSize = viewModel.getTotalSizeInByte()
 
         binding.updateProgressBar.progress = lastDownloadedChunk
         //binding.chunkCount.text = "Pacchetto $lastDownloadedChunk su $lastChunk"
