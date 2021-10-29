@@ -172,7 +172,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             CertificateStatus.PARTIALLY_VALID -> getString(R.string.certificatePartiallyValid)
             CertificateStatus.NOT_EU_DCC -> getString(R.string.certificateNotDCC)
             CertificateStatus.NOT_VALID -> {
-                if(VerificaApplication.isCertificateRevoked){
+                if(VerificaApplication.isCertificateRevoked && BuildConfig.DEBUG){
                     getString(R.string.certificateRevoked)
                 } else {
                     getString(R.string.certificateNonValid)
