@@ -64,4 +64,13 @@ class VerificaApplication : Application(), Configuration.Provider {
             )
     }
 
+    fun startAppMaintenanceWorker(now: Boolean) {
+
+        if (now) {
+            setWorkManager()
+        }
+
+    }
+
+
 }
