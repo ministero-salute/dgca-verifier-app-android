@@ -44,6 +44,7 @@ import it.ministerodellasalute.verificaC19.ui.FirstActivity
 import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.VerificaApplication
+import it.ministerodellasalute.verificaC19sdk.VerificaDrlVersionException
 import it.ministerodellasalute.verificaC19sdk.VerificaMinSDKVersionException
 import it.ministerodellasalute.verificaC19sdk.VerificaMinVersionException
 import it.ministerodellasalute.verificaC19sdk.model.CertificateSimple
@@ -79,6 +80,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.closeButton.setOnClickListener(this)
+        viewModel.checkDrlInconsistent()
         viewModel.certificate.observe(viewLifecycleOwner) { certificate ->
             certificate?.let {
                 certificateModel = it
@@ -96,19 +98,28 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         viewModel.inProgress.observe(viewLifecycleOwner) {
             binding.progressBar.isVisible = it
         }
-        try {
-            viewModel.init(args.qrCodeText, true)
+
+        viewModel.isDrlInconsistent.observe(viewLifecycleOwner){
+            try {
+                viewModel.init(args.qrCodeText, true)
+            }
+            catch (e: VerificaMinSDKVersionException)
+            {
+                Log.d("VerificationFragment", "Min SDK Version Exception")
+                createForceUpdateDialog(getString(R.string.updateMessage))
+            }
+            catch (e: VerificaMinVersionException)
+            {
+                Log.d("VerificationFragment", "Min App Version Exception")
+                createForceUpdateDialog(getString(R.string.updateMessage))
+            }
+            catch (e: VerificaDrlVersionException)
+            {
+                Log.d("VerificationFragment", "Drl Version Exception")
+                createForceUpdateDialog(getString(R.string.messageDownloadStarted))
+            }
         }
-        catch (e: VerificaMinSDKVersionException)
-        {
-            Log.d("VerificationFragment", "Min SDK Version Exception")
-            createForceUpdateDialog()
-        }
-        catch (e: VerificaMinVersionException)
-        {
-            Log.d("VerificationFragment", "Min App Version Exception")
-            createForceUpdateDialog()
-        }
+
 
     }
 
@@ -232,10 +243,10 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         _binding = null
     }
 
-    private fun createForceUpdateDialog() {
+    private fun createForceUpdateDialog(message: String) {
         val builder = this.activity?.let { AlertDialog.Builder(requireContext()) }
         builder!!.setTitle(getString(R.string.updateTitle))
-        builder!!.setMessage(getString(R.string.updateMessage))
+        builder!!.setMessage(message)
         builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
             findNavController().popBackStack()
         }
