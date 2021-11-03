@@ -255,7 +255,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
             }
         }
         viewModel.getDrlDateLastSync().let {
-            if (System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) {
+            if (viewModel.getIsDrlSyncActive() && System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) {
                 createNoSyncAlertDialog(getString(R.string.noKeyAlertMessageForDrl))
                 return
             }

@@ -80,6 +80,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.closeButton.setOnClickListener(this)
+        viewModel.checkDrlInconsistent()
         viewModel.certificate.observe(viewLifecycleOwner) { certificate ->
             certificate?.let {
                 certificateModel = it
@@ -97,24 +98,28 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         viewModel.inProgress.observe(viewLifecycleOwner) {
             binding.progressBar.isVisible = it
         }
-        try {
-            viewModel.init(args.qrCodeText, true)
+
+        viewModel.isDrlInconsistent.observe(viewLifecycleOwner){
+            try {
+                viewModel.init(args.qrCodeText, true)
+            }
+            catch (e: VerificaMinSDKVersionException)
+            {
+                Log.d("VerificationFragment", "Min SDK Version Exception")
+                createForceUpdateDialog(getString(R.string.updateMessage))
+            }
+            catch (e: VerificaMinVersionException)
+            {
+                Log.d("VerificationFragment", "Min App Version Exception")
+                createForceUpdateDialog(getString(R.string.updateMessage))
+            }
+            catch (e: VerificaDrlVersionException)
+            {
+                Log.d("VerificationFragment", "Drl Version Exception")
+                createForceUpdateDialog(getString(R.string.messageDownloadStarted))
+            }
         }
-        catch (e: VerificaMinSDKVersionException)
-        {
-            Log.d("VerificationFragment", "Min SDK Version Exception")
-            createForceUpdateDialog(getString(R.string.updateMessage))
-        }
-        catch (e: VerificaMinVersionException)
-        {
-            Log.d("VerificationFragment", "Min App Version Exception")
-            createForceUpdateDialog(getString(R.string.updateMessage))
-        }
-        catch (e: VerificaDrlVersionException)
-        {
-            Log.d("VerificationFragment", "Drl Version Exception")
-            createForceUpdateDialog(getString(R.string.messageDownloadStarted))
-        }
+
 
     }
 
