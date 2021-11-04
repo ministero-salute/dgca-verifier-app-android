@@ -91,6 +91,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
             it.setSpan(StyleSpan(Typeface.BOLD), 0, it.length, 0)
         }
         binding.versionText.text = spannableString
+        binding.dateLastSyncText.text = getString(R.string.loading)
 
         binding.updateProgressBar.max = viewModel.getTotalChunk().toInt()
         updateDownloadedPackagesCount()
@@ -106,19 +107,20 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
         Log.i("viewModel.getAuthResume()", viewModel.getAuthResume().toString())
 
 
-        val isPendingDownload = viewModel.getIsPendingDownload()
+        //val isPendingDownload = viewModel.getIsPendingDownload()
 
         viewModel.getAuthResume().let {
 
-            if (it == 0.toLong() || isPendingDownload) {
+            if (it == 0.toLong() || viewModel.getIsPendingDownload()) {
                 binding.resumeDownload.visibility = View.VISIBLE
                 binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
                 binding.chunkCount.visibility = View.VISIBLE
                 binding.chunkSize.visibility = View.VISIBLE
+                binding.updateProgressBar.visibility = View.VISIBLE
             } else
             {
                 binding.resumeDownload.visibility = View.GONE
-                binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
+                //binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
             }
         }
 
@@ -129,24 +131,26 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
             if (it) {
                 binding.qrButton.isEnabled = false
                 binding.qrButton.background.alpha = 128
-                binding.updateProgressBar.visibility = View.VISIBLE
-                binding.chunkCount.visibility = View.VISIBLE
-                binding.chunkSize.visibility = View.VISIBLE
+                //binding.updateProgressBar.visibility = View.VISIBLE
+                //binding.chunkCount.visibility = View.VISIBLE
+                //binding.chunkSize.visibility = View.VISIBLE
 
             } else {
                 binding.qrButton.isEnabled = true
                 binding.qrButton.background.alpha = 255
-                viewModel.getDateLastSync().let { date ->
-                    binding.dateLastSyncText.text = getString(
-                        R.string.lastSyncDate,
-                        if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
-                            FORMATTED_DATE_LAST_SYNC
+                if (!viewModel.getIsPendingDownload()) {
+                    viewModel.getDateLastSync().let { date ->
+                        binding.dateLastSyncText.text = getString(
+                            R.string.lastSyncDate,
+                            if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
+                                FORMATTED_DATE_LAST_SYNC
+                            )
                         )
-                    )
+                    }
+                    binding.updateProgressBar.visibility = View.GONE
+                    binding.chunkCount.visibility = View.GONE
+                    binding.chunkSize.visibility = View.GONE
                 }
-                binding.updateProgressBar.visibility = View.GONE
-                binding.chunkCount.visibility = View.GONE
-                binding.chunkSize.visibility = View.GONE
             }
         }
         binding.privacyPolicyCard.setOnClickListener {
@@ -316,6 +320,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
             if (key == "total_chunk") {
                 val totalChunk = viewModel.getTotalChunk().toInt()
                 binding.updateProgressBar.max = totalChunk
+
+                binding.updateProgressBar.visibility = View.VISIBLE
+                binding.chunkCount.visibility = View.VISIBLE
+                binding.chunkSize.visibility = View.VISIBLE
                 Log.i("total_chunk", totalChunk.toString())
             }
             if (key == "auth_to_resume") {
