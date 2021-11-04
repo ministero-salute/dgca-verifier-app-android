@@ -350,12 +350,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
         binding.updateProgressBar.progress = lastDownloadedChunk
         //binding.chunkCount.text = "Pacchetto $lastDownloadedChunk su $lastChunk"
         binding.chunkCount.text = getString(R.string.chunk_count, lastDownloadedChunk, lastChunk)
-
-        //binding.chunkSize.text = "${ConversionUtility.byteToMegaByte(lastDownloadedChunk * singleChunkSize)}Mb su ${totalChunksSize}Mb"
         binding.chunkSize.text = getString(
             R.string.chunk_size,
-            ConversionUtility.byteToMegaByte(lastDownloadedChunk * singleChunkSize),
-            totalChunksSize
+            ConversionUtility.byteToMegaByte((lastDownloadedChunk * singleChunkSize.toFloat())),
+            ConversionUtility.byteToMegaByte(totalChunksSize.toFloat())
         )
     }
 }
