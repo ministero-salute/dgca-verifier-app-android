@@ -56,7 +56,8 @@ import it.ministerodellasalute.verificaC19sdk.util.Utility
 
 
 @AndroidEntryPoint
-class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
+class FirstActivity : AppCompatActivity(), View.OnClickListener,
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var binding: ActivityFirstBinding
     private lateinit var shared: SharedPreferences
@@ -96,11 +97,11 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
         binding.updateProgressBar.max = viewModel.getTotalChunk().toInt()
         updateDownloadedPackagesCount()
         Log.i("viewModel.getauthorizedToDownload()", viewModel.getauthorizedToDownload().toString())
-        viewModel.getauthorizedToDownload().let {
-            if (it == 0L)
+        viewModel.getauthorizedToDownload().let { isAuthorizedToDownload ->
+
+            if (isAuthorizedToDownload == 0L && !viewModel.getIsPendingDownload())
                 binding.downloadBigFile.visibility = View.VISIBLE
-            else
-            {
+            else {
                 binding.downloadBigFile.visibility = View.GONE
             }
         }
@@ -117,8 +118,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
                 binding.chunkCount.visibility = View.VISIBLE
                 binding.chunkSize.visibility = View.VISIBLE
                 binding.updateProgressBar.visibility = View.VISIBLE
-            } else
-            {
+            } else {
                 binding.resumeDownload.visibility = View.GONE
                 //binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
             }
@@ -137,7 +137,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
 
             } else {
                 binding.qrButton.isEnabled = true
-                binding.qrButton.background.alpha = 255
                 if (!viewModel.getIsPendingDownload()) {
                     viewModel.getDateLastSync().let { date ->
                         binding.dateLastSyncText.text = getString(
@@ -147,6 +146,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
                             )
                         )
                     }
+                    binding.qrButton.background.alpha = 255
                     binding.updateProgressBar.visibility = View.GONE
                     binding.chunkCount.visibility = View.GONE
                     binding.chunkSize.visibility = View.GONE
@@ -165,6 +165,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
         }
         binding.downloadBigFile.setOnClickListener {
             viewModel.setauthorizedToDownload()
+            binding.downloadBigFile.visibility = View.GONE
             val verificaApplication = VerificaApplication()
             verificaApplication.setWorkManager()
         }
@@ -222,7 +223,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
             builder.setNegativeButton(getString(R.string.after_download)) { _, _ ->
                 binding.resumeDownload.visibility = View.GONE
                 binding.downloadBigFile.visibility = View.VISIBLE
-                binding.dateLastSyncText.text = getString(R.string.titleDownloadAlert, totalChunksSize)
+                binding.dateLastSyncText.text =
+                    getString(R.string.titleDownloadAlert, totalChunksSize)
                 dialog?.dismiss()
             }
             dialog = builder.create()
@@ -235,7 +237,11 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
     override fun onResume() {
         super.onResume()
         viewModel.getAppMinVersion().let {
-            if (Utility.versionCompare(it, BuildConfig.VERSION_NAME) > 0 || viewModel.isSDKVersionObsoleted()) {
+            if (Utility.versionCompare(
+                    it,
+                    BuildConfig.VERSION_NAME
+                ) > 0 || viewModel.isSDKVersionObsoleted()
+            ) {
                 createForceUpdateDialog()
             }
         }
@@ -330,16 +336,28 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, SharedPreferenc
                 val authToResume = viewModel.getAuthResume().toInt()
                 Log.i("auth_to_resume", authToResume.toString())
 
-                if (viewModel.getAuthResume() == 0L)
-                {
+                if (viewModel.getAuthResume() == 0L) {
                     binding.resumeDownload.visibility = View.VISIBLE
                 }
             }
             if (key == "size_over_thresold") {
                 val isSizeOverThresold = viewModel.getIsSizeOverThreshold()
-                if (isSizeOverThresold){
+                if (isSizeOverThresold) {
                     createDownloadAlert()
                 }
+            }
+            if (key == "drl_date_last_fetch") {
+                viewModel.getDateLastSync().let { date ->
+                    binding.dateLastSyncText.text = getString(
+                        R.string.lastSyncDate,
+                        if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
+                            FORMATTED_DATE_LAST_SYNC
+                        )
+                    )
+                }
+                binding.updateProgressBar.visibility = View.GONE
+                binding.chunkCount.visibility = View.GONE
+                binding.chunkSize.visibility = View.GONE
             }
         }
     }
