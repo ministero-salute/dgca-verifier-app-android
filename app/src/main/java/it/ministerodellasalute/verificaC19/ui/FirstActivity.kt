@@ -96,8 +96,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
         binding.updateProgressBar.max = viewModel.getTotalChunk().toInt()
         updateDownloadedPackagesCount()
-        Log.i("viewModel.getauthorizedToDownload()", viewModel.getauthorizedToDownload().toString())
-        viewModel.getauthorizedToDownload().let { isAuthorizedToDownload ->
+        Log.i("viewModel.getauthorizedToDownload()", viewModel.getDownloadAvailable().toString())
+        viewModel.getDownloadAvailable().let { isAuthorizedToDownload ->
 
             if (isAuthorizedToDownload == 0L && !viewModel.getIsPendingDownload())
                 binding.initDownload.visibility = View.VISIBLE
@@ -105,13 +105,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 binding.initDownload.visibility = View.GONE
             }
         }
-        Log.i("viewModel.getAuthResume()", viewModel.getAuthResume().toString())
+        Log.i("viewModel.getAuthResume()", viewModel.getResumeAvailable().toString())
 
-
-        //val isPendingDownload = viewModel.getIsPendingDownload()
-
-        viewModel.getAuthResume().let {
-
+        viewModel.getResumeAvailable().let {
             if (it == 0.toLong() || viewModel.getIsPendingDownload()) {
                 binding.resumeDownload.visibility = View.VISIBLE
                 binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
@@ -120,7 +116,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 binding.updateProgressBar.visibility = View.VISIBLE
             } else {
                 binding.resumeDownload.visibility = View.GONE
-                //binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
             }
         }
 
@@ -161,7 +156,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         }
         binding.initDownload.setOnClickListener {
             viewModel.setShouldInitDownload(true)
-            viewModel.setauthorizedToDownload()
+            viewModel.setDownloadAsAvailable()
             binding.initDownload.visibility = View.GONE
             binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
             val verificaApplication = VerificaApplication()
@@ -169,7 +164,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         }
 
         binding.resumeDownload.setOnClickListener {
-            viewModel.setAuthResume()
+            viewModel.setResumeAsAvailable()
             binding.resumeDownload.visibility = View.GONE
             binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
             val verificaApplication = VerificaApplication()
@@ -212,17 +207,26 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         try {
             val builder = AlertDialog.Builder(this)
             var dialog: AlertDialog? = null
-            builder.setTitle(getString(R.string.titleDownloadAlert, ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())))
+            builder.setTitle(
+                getString(
+                    R.string.titleDownloadAlert,
+                    ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
+                )
+            )
             builder.setMessage(getString(R.string.messageDownloadAlert))
             builder.setPositiveButton(getString(R.string.label_download)) { _, _ ->
                 dialog?.dismiss()
-                viewModel.callForDownloadChunk()
+                val verificaApplication = VerificaApplication()
+                verificaApplication.setWorkManager()
             }
             builder.setNegativeButton(getString(R.string.after_download)) { _, _ ->
                 binding.resumeDownload.visibility = View.GONE
                 binding.initDownload.visibility = View.VISIBLE
                 binding.dateLastSyncText.text =
-                    getString(R.string.titleDownloadAlert, ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat()))
+                    getString(
+                        R.string.titleDownloadAlert,
+                        ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
+                    )
                 dialog?.dismiss()
             }
             dialog = builder.create()
@@ -324,17 +328,17 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             if (key == "total_chunk") {
                 val totalChunk = viewModel.getTotalChunk().toInt()
                 binding.updateProgressBar.max = totalChunk
-
                 binding.updateProgressBar.visibility = View.VISIBLE
                 binding.chunkCount.visibility = View.VISIBLE
                 binding.chunkSize.visibility = View.VISIBLE
+                updateDownloadedPackagesCount()
                 Log.i("total_chunk", totalChunk.toString())
             }
             if (key == "auth_to_resume") {
-                val authToResume = viewModel.getAuthResume().toInt()
+                val authToResume = viewModel.getResumeAvailable().toInt()
                 Log.i("auth_to_resume", authToResume.toString())
 
-                if (viewModel.getAuthResume() == 0L) {
+                if (viewModel.getResumeAvailable() == 0L) {
                     binding.resumeDownload.visibility = View.VISIBLE
                 }
             }
@@ -369,10 +373,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         val lastDownloadedChunk = viewModel.getLastDownloadedChunk().toInt()
         val lastChunk = viewModel.getTotalChunk().toInt()
         val singleChunkSize = viewModel.getSizeSingleChunkInByte()
-        //totalChunksSize = viewModel.getTotalSizeInByte()
 
         binding.updateProgressBar.progress = lastDownloadedChunk
-        //binding.chunkCount.text = "Pacchetto $lastDownloadedChunk su $lastChunk"
         binding.chunkCount.text = getString(R.string.chunk_count, lastDownloadedChunk, lastChunk)
         binding.chunkSize.text = getString(
             R.string.chunk_size,
