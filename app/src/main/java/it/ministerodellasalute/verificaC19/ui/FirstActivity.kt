@@ -131,10 +131,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             if (it) {
                 binding.qrButton.isEnabled = false
                 binding.qrButton.background.alpha = 128
-                //binding.updateProgressBar.visibility = View.VISIBLE
-                //binding.chunkCount.visibility = View.VISIBLE
-                //binding.chunkSize.visibility = View.VISIBLE
-
             } else {
                 binding.qrButton.isEnabled = true
                 if (!viewModel.getIsPendingDownload()) {
