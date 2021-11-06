@@ -64,7 +64,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     private val viewModel by viewModels<FirstViewModel>()
 
-    private var totalChunksSize = 0L
+    //private var totalChunksSize = 0L
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -100,9 +100,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         viewModel.getauthorizedToDownload().let { isAuthorizedToDownload ->
 
             if (isAuthorizedToDownload == 0L && !viewModel.getIsPendingDownload())
-                binding.downloadBigFile.visibility = View.VISIBLE
+                binding.initDownload.visibility = View.VISIBLE
             else {
-                binding.downloadBigFile.visibility = View.GONE
+                binding.initDownload.visibility = View.GONE
             }
         }
         Log.i("viewModel.getAuthResume()", viewModel.getAuthResume().toString())
@@ -163,9 +163,11 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
             startActivity(browserIntent)
         }
-        binding.downloadBigFile.setOnClickListener {
+        binding.initDownload.setOnClickListener {
+            viewModel.setShouldInitDownload(true)
             viewModel.setauthorizedToDownload()
-            binding.downloadBigFile.visibility = View.GONE
+            binding.initDownload.visibility = View.GONE
+            binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
             val verificaApplication = VerificaApplication()
             verificaApplication.setWorkManager()
         }
@@ -214,7 +216,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         try {
             val builder = AlertDialog.Builder(this)
             var dialog: AlertDialog? = null
-            builder.setTitle(getString(R.string.titleDownloadAlert, totalChunksSize))
+            builder.setTitle(getString(R.string.titleDownloadAlert, ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())))
             builder.setMessage(getString(R.string.messageDownloadAlert))
             builder.setPositiveButton(getString(R.string.label_download)) { _, _ ->
                 dialog?.dismiss()
@@ -222,9 +224,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             }
             builder.setNegativeButton(getString(R.string.after_download)) { _, _ ->
                 binding.resumeDownload.visibility = View.GONE
-                binding.downloadBigFile.visibility = View.VISIBLE
+                binding.initDownload.visibility = View.VISIBLE
                 binding.dateLastSyncText.text =
-                    getString(R.string.titleDownloadAlert, totalChunksSize)
+                    getString(R.string.titleDownloadAlert, ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat()))
                 dialog?.dismiss()
             }
             dialog = builder.create()
@@ -371,7 +373,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         val lastDownloadedChunk = viewModel.getLastDownloadedChunk().toInt()
         val lastChunk = viewModel.getTotalChunk().toInt()
         val singleChunkSize = viewModel.getSizeSingleChunkInByte()
-        totalChunksSize = viewModel.getTotalSizeInByte()
+        //totalChunksSize = viewModel.getTotalSizeInByte()
 
         binding.updateProgressBar.progress = lastDownloadedChunk
         //binding.chunkCount.text = "Pacchetto $lastDownloadedChunk su $lastChunk"
@@ -379,7 +381,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         binding.chunkSize.text = getString(
             R.string.chunk_size,
             ConversionUtility.byteToMegaByte((lastDownloadedChunk * singleChunkSize.toFloat())),
-            ConversionUtility.byteToMegaByte(totalChunksSize.toFloat())
+            ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
         )
     }
 }
