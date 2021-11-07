@@ -48,6 +48,7 @@ import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.VerificaApplication
 import it.ministerodellasalute.verificaC19.databinding.ActivityFirstBinding
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
+import it.ministerodellasalute.verificaC19sdk.data.local.PrefKeys
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
 import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
@@ -57,27 +58,26 @@ import it.ministerodellasalute.verificaC19sdk.util.Utility
 
 @AndroidEntryPoint
 class FirstActivity : AppCompatActivity(), View.OnClickListener,
-    SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var binding: ActivityFirstBinding
     private lateinit var shared: SharedPreferences
 
     private val viewModel by viewModels<FirstViewModel>()
 
-    //private var totalChunksSize = 0L
 
     private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (isGranted) {
-                openQrCodeReader()
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+                if (isGranted) {
+                    openQrCodeReader()
+                }
             }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFlags(
-            WindowManager.LayoutParams.FLAG_SECURE,
-            WindowManager.LayoutParams.FLAG_SECURE
+                WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE
         )
 
         binding = ActivityFirstBinding.inflate(layoutInflater)
@@ -131,10 +131,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 if (!viewModel.getIsPendingDownload()) {
                     viewModel.getDateLastSync().let { date ->
                         binding.dateLastSyncText.text = getString(
-                            R.string.lastSyncDate,
-                            if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
-                                FORMATTED_DATE_LAST_SYNC
-                            )
+                                R.string.lastSyncDate,
+                                if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
+                                        FORMATTED_DATE_LAST_SYNC
+                                )
                         )
                     }
                     binding.qrButton.background.alpha = 255
@@ -146,12 +146,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         }
         binding.privacyPolicyCard.setOnClickListener {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/pn.html"))
+                    Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/pn.html"))
             startActivity(browserIntent)
         }
         binding.faqCard.setOnClickListener {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
+                    Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
             startActivity(browserIntent)
         }
         binding.initDownload.setOnClickListener {
@@ -176,9 +176,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     private fun checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_DENIED
+                        this,
+                        Manifest.permission.CAMERA
+                ) == PackageManager.PERMISSION_DENIED
         ) {
             createPermissionAlert()
         } else {
@@ -208,10 +208,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             val builder = AlertDialog.Builder(this)
             var dialog: AlertDialog? = null
             builder.setTitle(
-                getString(
-                    R.string.titleDownloadAlert,
-                    ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
-                )
+                    getString(
+                            R.string.titleDownloadAlert,
+                            ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
+                    )
             )
             builder.setMessage(getString(R.string.messageDownloadAlert))
             builder.setPositiveButton(getString(R.string.label_download)) { _, _ ->
@@ -223,10 +223,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 binding.resumeDownload.visibility = View.GONE
                 binding.initDownload.visibility = View.VISIBLE
                 binding.dateLastSyncText.text =
-                    getString(
-                        R.string.titleDownloadAlert,
-                        ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
-                    )
+                        getString(
+                                R.string.titleDownloadAlert,
+                                ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
+                        )
                 dialog?.dismiss()
             }
             dialog = builder.create()
@@ -240,9 +240,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         super.onResume()
         viewModel.getAppMinVersion().let {
             if (Utility.versionCompare(
-                    it,
-                    BuildConfig.VERSION_NAME
-                ) > 0 || viewModel.isSDKVersionObsoleted()
+                            it,
+                            BuildConfig.VERSION_NAME
+                    ) > 0 || viewModel.isSDKVersionObsoleted()
             ) {
                 createForceUpdateDialog()
             }
@@ -306,10 +306,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
         } catch (e: ActivityNotFoundException) {
             startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
-                )
+                    Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                    )
             )
         }
     }
@@ -321,45 +321,50 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key != null) {
-            if (key == "last_downloaded_chunk") {
-                updateDownloadedPackagesCount()
-                Log.i(key.toString(), viewModel.getLastDownloadedChunk().toString())
-            }
-            if (key == "total_chunk") {
-                val totalChunk = viewModel.getTotalChunk().toInt()
-                binding.updateProgressBar.max = totalChunk
-                binding.updateProgressBar.visibility = View.VISIBLE
-                binding.chunkCount.visibility = View.VISIBLE
-                binding.chunkSize.visibility = View.VISIBLE
-                updateDownloadedPackagesCount()
-                Log.i("total_chunk", totalChunk.toString())
-            }
-            if (key == "auth_to_resume") {
-                val authToResume = viewModel.getResumeAvailable().toInt()
-                Log.i("auth_to_resume", authToResume.toString())
+            when (key) {
+                PrefKeys.KEY_DOWNLOADED_LAST_CHUNK -> {
+                    updateDownloadedPackagesCount()
+                    Log.i(key.toString(), viewModel.getLastDownloadedChunk().toString())
+                }
+                PrefKeys.KEY_TOTAL_CHUNK -> {
+                    val totalChunk = viewModel.getTotalChunk().toInt()
+                    binding.updateProgressBar.max = totalChunk
+                    binding.updateProgressBar.visibility = View.VISIBLE
+                    binding.chunkCount.visibility = View.VISIBLE
+                    binding.chunkSize.visibility = View.VISIBLE
+                    updateDownloadedPackagesCount()
+                    Log.i("total_chunk", totalChunk.toString())
+                }
+                PrefKeys.AUTH_TO_RESUME -> {
+                    val authToResume = viewModel.getResumeAvailable().toInt()
+                    Log.i("auth_to_resume", authToResume.toString())
 
-                if (viewModel.getResumeAvailable() == 0L) {
-                    binding.resumeDownload.visibility = View.VISIBLE
+                    if (viewModel.getResumeAvailable() == 0L) {
+                        binding.resumeDownload.visibility = View.VISIBLE
+                    }
                 }
-            }
-            if (key == "size_over_thresold") {
-                val isSizeOverThresold = viewModel.getIsSizeOverThreshold()
-                if (isSizeOverThresold) {
-                    createDownloadAlert()
+                PrefKeys.KEY_SIZE_OVER_THRESHOLD -> {
+                    val isSizeOverThreshold = viewModel.getIsSizeOverThreshold()
+                    if (isSizeOverThreshold) {
+                        createDownloadAlert()
+                    }
                 }
-            }
-            if (key == "drl_date_last_fetch") {
-                viewModel.getDateLastSync().let { date ->
-                    binding.dateLastSyncText.text = getString(
-                        R.string.lastSyncDate,
-                        if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
-                            FORMATTED_DATE_LAST_SYNC
+                PrefKeys.KEY_DRL_DATE_LAST_FETCH -> {
+                    viewModel.getDateLastSync().let { date ->
+                        binding.dateLastSyncText.text = getString(
+                                R.string.lastSyncDate,
+                                if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
+                                        FORMATTED_DATE_LAST_SYNC
+                                )
                         )
-                    )
+                    }
+                    binding.updateProgressBar.visibility = View.GONE
+                    binding.chunkCount.visibility = View.GONE
+                    binding.chunkSize.visibility = View.GONE
                 }
-                binding.updateProgressBar.visibility = View.GONE
-                binding.chunkCount.visibility = View.GONE
-                binding.chunkSize.visibility = View.GONE
+                else -> {
+
+                }
             }
         }
     }
@@ -377,9 +382,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         binding.updateProgressBar.progress = lastDownloadedChunk
         binding.chunkCount.text = getString(R.string.chunk_count, lastDownloadedChunk, lastChunk)
         binding.chunkSize.text = getString(
-            R.string.chunk_size,
-            ConversionUtility.byteToMegaByte((lastDownloadedChunk * singleChunkSize.toFloat())),
-            ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
+                R.string.chunk_size,
+                ConversionUtility.byteToMegaByte((lastDownloadedChunk * singleChunkSize.toFloat())),
+                ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
         )
     }
 }

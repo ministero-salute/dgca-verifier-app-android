@@ -114,7 +114,6 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setupCertStatusView(cert: CertificateSimple) {
-        //val certStatus = viewModel.getCertificateStatus(cert)
         val certStatus = cert.certificateStatus
         if (certStatus != null) {
             setBackgroundColor(certStatus)
