@@ -65,8 +65,8 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private lateinit var certificateModel: CertificateSimple
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         _binding = FragmentVerificationBinding.inflate(inflater, container, false)
         return binding.root
@@ -83,7 +83,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 setupCertStatusView(it)
                 setupTimeStamp(it)
                 if (viewModel.getTotemMode() && (certificate.certificateStatus == CertificateStatus.VALID
-                            || certificate.certificateStatus == CertificateStatus.PARTIALLY_VALID)
+                                || certificate.certificateStatus == CertificateStatus.PARTIALLY_VALID)
                 ) {
                     Handler().postDelayed({
                         activity?.onBackPressed()
@@ -128,14 +128,15 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setupTimeStamp(cert: CertificateSimple) {
         binding.validationDate.text = getString(
-            R.string.label_validation_timestamp, cert.timeStamp?.parseTo(
+                R.string.label_validation_timestamp, cert.timeStamp?.parseTo(
                 FORMATTED_VALIDATION_DATE
-            )
+        )
         )
         binding.validationDate.visibility = View.VISIBLE
     }
 
     private fun setLinkViews(certStatus: CertificateStatus) {
+        binding.questionContainer.removeAllViews()
         val questionMap: Map<String, String> = when (certStatus) {
             CertificateStatus.VALID, CertificateStatus.PARTIALLY_VALID -> mapOf(getString(R.string.label_what_can_be_done) to "https://www.dgc.gov.it/web/faq.html#verifica19")
             CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19")
@@ -159,11 +160,11 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setValidationSubText(certStatus: CertificateStatus) {
         binding.subtitleText.text =
-            when (certStatus) {
-                CertificateStatus.VALID, CertificateStatus.PARTIALLY_VALID -> getString(R.string.subtitle_text)
-                CertificateStatus.NOT_VALID, CertificateStatus.NOT_VALID_YET -> getString(R.string.subtitle_text_notvalid)
-                else -> getString(R.string.subtitle_text_technicalError)
-            }
+                when (certStatus) {
+                    CertificateStatus.VALID, CertificateStatus.PARTIALLY_VALID -> getString(R.string.subtitle_text)
+                    CertificateStatus.NOT_VALID, CertificateStatus.NOT_VALID_YET -> getString(R.string.subtitle_text_notvalid)
+                    else -> getString(R.string.subtitle_text_technicalError)
+                }
     }
 
     private fun setValidationMainText(certStatus: CertificateStatus) {
@@ -184,15 +185,15 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setValidationIcon(certStatus: CertificateStatus) {
         binding.checkmark.background =
-            ContextCompat.getDrawable(
-                requireContext(), when (certStatus) {
+                ContextCompat.getDrawable(
+                        requireContext(), when (certStatus) {
                     CertificateStatus.VALID -> R.drawable.ic_valid_cert
                     CertificateStatus.NOT_VALID_YET -> R.drawable.ic_not_valid_yet
                     CertificateStatus.PARTIALLY_VALID -> R.drawable.ic_valid_cert
                     CertificateStatus.NOT_EU_DCC -> R.drawable.ic_technical_error
                     else -> R.drawable.ic_invalid
                 }
-            )
+                )
     }
 
     private fun setPersonDetailsVisibility(certStatus: CertificateStatus) {
@@ -204,21 +205,21 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setBackgroundColor(certStatus: CertificateStatus) {
         binding.verificationBackground.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                when (certStatus) {
-                    CertificateStatus.VALID -> R.color.green
-                    CertificateStatus.PARTIALLY_VALID -> R.color.green
-                    else -> R.color.red_bg
-                }
-            )
+                ContextCompat.getColor(
+                        requireContext(),
+                        when (certStatus) {
+                            CertificateStatus.VALID -> R.color.green
+                            CertificateStatus.PARTIALLY_VALID -> R.color.green
+                            else -> R.color.red_bg
+                        }
+                )
         )
     }
 
     private fun setPersonData(person: SimplePersonModel?, dateOfBirth: String?) {
         binding.nameStandardisedText.text = person?.familyName.plus(" ").plus(person?.givenName)
         binding.birthdateText.text =
-            dateOfBirth?.parseFromTo(YEAR_MONTH_DAY, FORMATTED_BIRTHDAY_DATE) ?: ""
+                dateOfBirth?.parseFromTo(YEAR_MONTH_DAY, FORMATTED_BIRTHDAY_DATE) ?: ""
     }
 
     override fun onClick(v: View?) {
