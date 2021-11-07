@@ -375,7 +375,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun updateDownloadedPackagesCount() {
-        val lastDownloadedChunk = viewModel.getLastDownloadedChunk().toInt()
+        val lastDownloadedChunk = viewModel.getCurrentChunk().toInt()
         val lastChunk = viewModel.getTotalChunk().toInt()
         val singleChunkSize = viewModel.getSizeSingleChunkInByte()
 
