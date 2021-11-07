@@ -48,6 +48,7 @@ import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.VerificaApplication
 import it.ministerodellasalute.verificaC19.databinding.ActivityFirstBinding
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
+import it.ministerodellasalute.verificaC19sdk.data.VerifierRepositoryImpl
 import it.ministerodellasalute.verificaC19sdk.data.local.PrefKeys
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
 import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
@@ -127,8 +128,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 binding.qrButton.isEnabled = false
                 binding.qrButton.background.alpha = 128
             } else {
-                binding.qrButton.isEnabled = true
-                if (!viewModel.getIsPendingDownload()) {
+                if (!viewModel.getIsPendingDownload() && viewModel.maxRetryReached.value == false) {
                     viewModel.getDateLastSync().let { date ->
                         binding.dateLastSyncText.text = getString(
                                 R.string.lastSyncDate,
@@ -137,6 +137,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                                 )
                         )
                     }
+                    binding.qrButton.isEnabled = true
                     binding.qrButton.background.alpha = 255
                     binding.updateProgressBar.visibility = View.GONE
                     binding.chunkCount.visibility = View.GONE
@@ -144,6 +145,13 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 }
             }
         }
+
+        viewModel.maxRetryReached.observe(this) {
+            if (it) {
+                enableInitDownload()
+            }
+        }
+
         binding.privacyPolicyCard.setOnClickListener {
             val browserIntent =
                     Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/pn.html"))
@@ -155,6 +163,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             startActivity(browserIntent)
         }
         binding.initDownload.setOnClickListener {
+            viewModel.resetCurrentRetry()
             viewModel.setShouldInitDownload(true)
             viewModel.setDownloadAsAvailable()
             binding.initDownload.visibility = View.GONE
@@ -220,19 +229,23 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 verificaApplication.setWorkManager()
             }
             builder.setNegativeButton(getString(R.string.after_download)) { _, _ ->
-                binding.resumeDownload.visibility = View.GONE
-                binding.initDownload.visibility = View.VISIBLE
-                binding.dateLastSyncText.text =
-                        getString(
-                                R.string.titleDownloadAlert,
-                                ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
-                        )
+                enableInitDownload()
                 dialog?.dismiss()
             }
             dialog = builder.create()
             dialog.show()
         } catch (e: Exception) {
         }
+    }
+
+    private fun enableInitDownload() {
+        binding.resumeDownload.visibility = View.GONE
+        binding.initDownload.visibility = View.VISIBLE
+        binding.dateLastSyncText.text =
+            getString(
+                R.string.titleDownloadAlert,
+                ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
+            )
     }
 
 
