@@ -322,9 +322,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key != null) {
             when (key) {
-                PrefKeys.KEY_DOWNLOADED_LAST_CHUNK -> {
+                PrefKeys.CURRENT_CHUNK -> {
                     updateDownloadedPackagesCount()
-                    Log.i(key.toString(), viewModel.getLastDownloadedChunk().toString())
+                    Log.i(key.toString(), viewModel.getCurrentChunk().toString())
                 }
                 PrefKeys.KEY_TOTAL_CHUNK -> {
                     val totalChunk = viewModel.getTotalChunk().toInt()
