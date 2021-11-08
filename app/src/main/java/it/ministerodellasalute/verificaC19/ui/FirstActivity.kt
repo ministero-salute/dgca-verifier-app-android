@@ -59,26 +59,27 @@ import it.ministerodellasalute.verificaC19sdk.util.Utility
 
 @AndroidEntryPoint
 class FirstActivity : AppCompatActivity(), View.OnClickListener,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var binding: ActivityFirstBinding
     private lateinit var shared: SharedPreferences
 
     private val viewModel by viewModels<FirstViewModel>()
 
+    private val verificaApplication = VerificaApplication()
 
     private val requestPermissionLauncher =
-            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-                if (isGranted) {
-                    openQrCodeReader()
-                }
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                openQrCodeReader()
             }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFlags(
-                WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
         )
 
         binding = ActivityFirstBinding.inflate(layoutInflater)
@@ -125,19 +126,19 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
         viewModel.fetchStatus.observe(this) {
             if (it) {
-                binding.qrButton.isEnabled = false
+                //binding.qrButton.isEnabled = false
                 binding.qrButton.background.alpha = 128
             } else {
                 if (!viewModel.getIsPendingDownload() && viewModel.maxRetryReached.value == false) {
                     viewModel.getDateLastSync().let { date ->
                         binding.dateLastSyncText.text = getString(
-                                R.string.lastSyncDate,
-                                if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
-                                        FORMATTED_DATE_LAST_SYNC
-                                )
+                            R.string.lastSyncDate,
+                            if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
+                                FORMATTED_DATE_LAST_SYNC
+                            )
                         )
                     }
-                    binding.qrButton.isEnabled = true
+                    //binding.qrButton.isEnabled = true
                     binding.qrButton.background.alpha = 255
                     binding.updateProgressBar.visibility = View.GONE
                     binding.chunkCount.visibility = View.GONE
@@ -154,30 +155,26 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
         binding.privacyPolicyCard.setOnClickListener {
             val browserIntent =
-                    Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/pn.html"))
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/pn.html"))
             startActivity(browserIntent)
         }
         binding.faqCard.setOnClickListener {
             val browserIntent =
-                    Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
             startActivity(browserIntent)
         }
         binding.initDownload.setOnClickListener {
-            viewModel.resetCurrentRetry()
-            viewModel.setShouldInitDownload(true)
-            viewModel.setDownloadAsAvailable()
+            prepareForDownload()
             binding.initDownload.visibility = View.GONE
             binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
-            val verificaApplication = VerificaApplication()
-            verificaApplication.setWorkManager()
+            startSyncData()
         }
 
         binding.resumeDownload.setOnClickListener {
             viewModel.setResumeAsAvailable()
             binding.resumeDownload.visibility = View.GONE
             binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
-            val verificaApplication = VerificaApplication()
-            verificaApplication.setWorkManager()
+            startSyncData()
         }
 
 
@@ -185,9 +182,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     private fun checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.CAMERA
-                ) == PackageManager.PERMISSION_DENIED
+                this,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_DENIED
         ) {
             createPermissionAlert()
         } else {
@@ -217,16 +214,17 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             val builder = AlertDialog.Builder(this)
             var dialog: AlertDialog? = null
             builder.setTitle(
-                    getString(
-                            R.string.titleDownloadAlert,
-                            ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
-                    )
+                getString(
+                    R.string.titleDownloadAlert,
+                    ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
+                )
             )
             builder.setMessage(getString(R.string.messageDownloadAlert))
             builder.setPositiveButton(getString(R.string.label_download)) { _, _ ->
                 dialog?.dismiss()
-                val verificaApplication = VerificaApplication()
-                verificaApplication.setWorkManager()
+                prepareForDownload()
+                binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
+                startSyncData()
             }
             builder.setNegativeButton(getString(R.string.after_download)) { _, _ ->
                 enableInitDownload()
@@ -236,6 +234,16 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             dialog.show()
         } catch (e: Exception) {
         }
+    }
+
+    private fun prepareForDownload() {
+        viewModel.resetCurrentRetry()
+        viewModel.setShouldInitDownload(true)
+        viewModel.setDownloadAsAvailable()
+    }
+
+    private fun startSyncData() {
+        verificaApplication.setWorkManager()
     }
 
     private fun enableInitDownload() {
@@ -248,14 +256,13 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             )
     }
 
-
     override fun onResume() {
         super.onResume()
         viewModel.getAppMinVersion().let {
             if (Utility.versionCompare(
-                            it,
-                            BuildConfig.VERSION_NAME
-                    ) > 0 || viewModel.isSDKVersionObsoleted()
+                    it,
+                    BuildConfig.VERSION_NAME
+                ) > 0 || viewModel.isSDKVersionObsoleted()
             ) {
                 createForceUpdateDialog()
             }
@@ -280,7 +287,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             }
         }
         viewModel.getDrlDateLastSync().let {
-            if (viewModel.getIsDrlSyncActive() && System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) {
+            if (viewModel.getIsDrlSyncActive() && it == -1L) {
+                createNoSyncAlertDialog("L'applicazione deve terminare il download della lista dei certificati revocati per poter essere utilizzata.")
+                return
+            } else if (viewModel.getIsDrlSyncActive() && System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) {
                 createNoSyncAlertDialog(getString(R.string.noKeyAlertMessageForDrl))
                 return
             }
@@ -319,10 +329,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
         } catch (e: ActivityNotFoundException) {
             startActivity(
-                    Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
-                    )
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                )
             )
         }
     }
@@ -365,10 +375,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 PrefKeys.KEY_DRL_DATE_LAST_FETCH -> {
                     viewModel.getDateLastSync().let { date ->
                         binding.dateLastSyncText.text = getString(
-                                R.string.lastSyncDate,
-                                if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
-                                        FORMATTED_DATE_LAST_SYNC
-                                )
+                            R.string.lastSyncDate,
+                            if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
+                                FORMATTED_DATE_LAST_SYNC
+                            )
                         )
                     }
                     binding.updateProgressBar.visibility = View.GONE
@@ -395,9 +405,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         binding.updateProgressBar.progress = lastDownloadedChunk
         binding.chunkCount.text = getString(R.string.chunk_count, lastDownloadedChunk, lastChunk)
         binding.chunkSize.text = getString(
-                R.string.chunk_size,
-                ConversionUtility.byteToMegaByte((lastDownloadedChunk * singleChunkSize.toFloat())),
-                ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
+            R.string.chunk_size,
+            ConversionUtility.byteToMegaByte((lastDownloadedChunk * singleChunkSize.toFloat())),
+            ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
         )
     }
 }

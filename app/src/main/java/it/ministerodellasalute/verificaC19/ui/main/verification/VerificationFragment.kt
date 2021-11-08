@@ -39,10 +39,7 @@ import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.FragmentVerificationBinding
 import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
-import it.ministerodellasalute.verificaC19sdk.VerificaApplication
-import it.ministerodellasalute.verificaC19sdk.VerificaDrlVersionException
-import it.ministerodellasalute.verificaC19sdk.VerificaMinSDKVersionException
-import it.ministerodellasalute.verificaC19sdk.VerificaMinVersionException
+import it.ministerodellasalute.verificaC19sdk.*
 import it.ministerodellasalute.verificaC19sdk.model.CertificateSimple
 import it.ministerodellasalute.verificaC19sdk.model.CertificateStatus
 import it.ministerodellasalute.verificaC19sdk.model.SimplePersonModel
@@ -65,8 +62,8 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private lateinit var certificateModel: CertificateSimple
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentVerificationBinding.inflate(inflater, container, false)
         return binding.root
@@ -75,7 +72,6 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.closeButton.setOnClickListener(this)
-        viewModel.checkDrlInconsistent()
         viewModel.certificate.observe(viewLifecycleOwner) { certificate ->
             certificate?.let {
                 certificateModel = it
@@ -83,7 +79,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 setupCertStatusView(it)
                 setupTimeStamp(it)
                 if (viewModel.getTotemMode() && (certificate.certificateStatus == CertificateStatus.VALID
-                                || certificate.certificateStatus == CertificateStatus.PARTIALLY_VALID)
+                            || certificate.certificateStatus == CertificateStatus.PARTIALLY_VALID)
                 ) {
                     Handler().postDelayed({
                         activity?.onBackPressed()
@@ -95,22 +91,18 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             binding.progressBar.isVisible = it
         }
 
-        viewModel.isDrlInconsistent.observe(viewLifecycleOwner) {
-            try {
-                viewModel.init(args.qrCodeText, true)
-            } catch (e: VerificaMinSDKVersionException) {
-                Log.d("VerificationFragment", "Min SDK Version Exception")
-                createForceUpdateDialog(getString(R.string.updateMessage))
-            } catch (e: VerificaMinVersionException) {
-                Log.d("VerificationFragment", "Min App Version Exception")
-                createForceUpdateDialog(getString(R.string.updateMessage))
-            } catch (e: VerificaDrlVersionException) {
-                Log.d("VerificationFragment", "Drl Version Exception")
-                createForceUpdateDialog(getString(R.string.messageDownloadStarted))
-            }
+        try {
+            viewModel.init(args.qrCodeText, true)
+        } catch (e: VerificaMinSDKVersionException) {
+            Log.d("VerificationFragment", "Min SDK Version Exception")
+            createForceUpdateDialog(getString(R.string.updateMessage))
+        } catch (e: VerificaMinVersionException) {
+            Log.d("VerificationFragment", "Min App Version Exception")
+            createForceUpdateDialog(getString(R.string.updateMessage))
+        } catch (e: VerificaDownloadInProgressException) {
+            Log.d("VerificationFragment", "Download In Progress Exception")
+            createForceUpdateDialog(getString(R.string.messageDownloadStarted))
         }
-
-
     }
 
     private fun setupCertStatusView(cert: CertificateSimple) {
@@ -128,9 +120,9 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setupTimeStamp(cert: CertificateSimple) {
         binding.validationDate.text = getString(
-                R.string.label_validation_timestamp, cert.timeStamp?.parseTo(
+            R.string.label_validation_timestamp, cert.timeStamp?.parseTo(
                 FORMATTED_VALIDATION_DATE
-        )
+            )
         )
         binding.validationDate.visibility = View.VISIBLE
     }
@@ -160,11 +152,11 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setValidationSubText(certStatus: CertificateStatus) {
         binding.subtitleText.text =
-                when (certStatus) {
-                    CertificateStatus.VALID, CertificateStatus.PARTIALLY_VALID -> getString(R.string.subtitle_text)
-                    CertificateStatus.NOT_VALID, CertificateStatus.NOT_VALID_YET -> getString(R.string.subtitle_text_notvalid)
-                    else -> getString(R.string.subtitle_text_technicalError)
-                }
+            when (certStatus) {
+                CertificateStatus.VALID, CertificateStatus.PARTIALLY_VALID -> getString(R.string.subtitle_text)
+                CertificateStatus.NOT_VALID, CertificateStatus.NOT_VALID_YET -> getString(R.string.subtitle_text_notvalid)
+                else -> getString(R.string.subtitle_text_technicalError)
+            }
     }
 
     private fun setValidationMainText(certStatus: CertificateStatus) {
@@ -185,15 +177,15 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setValidationIcon(certStatus: CertificateStatus) {
         binding.checkmark.background =
-                ContextCompat.getDrawable(
-                        requireContext(), when (certStatus) {
+            ContextCompat.getDrawable(
+                requireContext(), when (certStatus) {
                     CertificateStatus.VALID -> R.drawable.ic_valid_cert
                     CertificateStatus.NOT_VALID_YET -> R.drawable.ic_not_valid_yet
                     CertificateStatus.PARTIALLY_VALID -> R.drawable.ic_valid_cert
                     CertificateStatus.NOT_EU_DCC -> R.drawable.ic_technical_error
                     else -> R.drawable.ic_invalid
                 }
-                )
+            )
     }
 
     private fun setPersonDetailsVisibility(certStatus: CertificateStatus) {
@@ -205,21 +197,21 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setBackgroundColor(certStatus: CertificateStatus) {
         binding.verificationBackground.setBackgroundColor(
-                ContextCompat.getColor(
-                        requireContext(),
-                        when (certStatus) {
-                            CertificateStatus.VALID -> R.color.green
-                            CertificateStatus.PARTIALLY_VALID -> R.color.green
-                            else -> R.color.red_bg
-                        }
-                )
+            ContextCompat.getColor(
+                requireContext(),
+                when (certStatus) {
+                    CertificateStatus.VALID -> R.color.green
+                    CertificateStatus.PARTIALLY_VALID -> R.color.green
+                    else -> R.color.red_bg
+                }
+            )
         )
     }
 
     private fun setPersonData(person: SimplePersonModel?, dateOfBirth: String?) {
         binding.nameStandardisedText.text = person?.familyName.plus(" ").plus(person?.givenName)
         binding.birthdateText.text =
-                dateOfBirth?.parseFromTo(YEAR_MONTH_DAY, FORMATTED_BIRTHDAY_DATE) ?: ""
+            dateOfBirth?.parseFromTo(YEAR_MONTH_DAY, FORMATTED_BIRTHDAY_DATE) ?: ""
     }
 
     override fun onClick(v: View?) {
