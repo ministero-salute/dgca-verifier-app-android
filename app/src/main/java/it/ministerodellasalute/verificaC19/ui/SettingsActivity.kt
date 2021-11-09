@@ -30,10 +30,12 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.VerificaApplication
 import it.ministerodellasalute.verificaC19.databinding.ActivitySettingsBinding
+import it.ministerodellasalute.verificaC19sdk.BuildConfig
 import it.ministerodellasalute.verificaC19sdk.data.VerifierRepositoryImpl
 import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
 
@@ -57,6 +59,12 @@ class SettingsActivity : AppCompatActivity(), View.OnClickListener {
         binding.privacyPolicyCard.setOnClickListener(this)
         binding.resetButton.setOnClickListener(this)
         binding.viewDataButton.setOnClickListener(this)
+
+        if (!BuildConfig.SHOW_DEBUG_BUTTONS.toBoolean()) {
+            binding.advancedSettingsText.isVisible = false
+            binding.resetButton.isVisible = false
+            binding.viewDataButton.isVisible = false
+        }
     }
 
     private fun setSwitchesValue() {
