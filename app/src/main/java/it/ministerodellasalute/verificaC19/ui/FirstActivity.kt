@@ -174,13 +174,11 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         }
 
         binding.resumeDownload.setOnClickListener {
-            if (Utility.isOnline(this)) {
                 viewModel.setResumeAsAvailable()
                 binding.resumeDownload.visibility = View.GONE
                 binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
                 startSyncData()
-            } else {
-            }
+
         }
 
 
