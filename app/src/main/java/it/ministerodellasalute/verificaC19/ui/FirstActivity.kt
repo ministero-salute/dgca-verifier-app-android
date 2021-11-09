@@ -170,19 +170,35 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
                 startSyncData()
             } else {
+                createCheckConnectionAlertDialog()
             }
         }
 
         binding.resumeDownload.setOnClickListener {
+            if (Utility.isOnline(this)) {
                 viewModel.setResumeAsAvailable()
                 binding.resumeDownload.visibility = View.GONE
                 binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
                 startSyncData()
-
+            } else {
+                createCheckConnectionAlertDialog()
+            }
         }
 
 
     }
+
+    private fun createCheckConnectionAlertDialog() {
+        val builder = AlertDialog.Builder(this)
+        var dialog: AlertDialog? = null
+        builder.setTitle("Connessione internet assente"
+        )
+        builder.setMessage("Connessione internet assente. Assicurati di essere connesso alla rete e riprova.")
+        builder.setPositiveButton("OK") { _, _ -> }
+        dialog = builder.create()
+        dialog.show()
+    }
+
 
     private fun checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(
@@ -236,6 +252,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             }
             dialog = builder.create()
             dialog.setCanceledOnTouchOutside(false)
+            dialog.setCancelable(false)
             dialog.show()
         } catch (e: Exception) {
         }
