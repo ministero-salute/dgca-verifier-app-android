@@ -164,17 +164,23 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             startActivity(browserIntent)
         }
         binding.initDownload.setOnClickListener {
-            prepareForDownload()
-            binding.initDownload.visibility = View.GONE
-            binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
-            startSyncData()
+            if (Utility.isOnline(this)) {
+                prepareForDownload()
+                binding.initDownload.visibility = View.GONE
+                binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
+                startSyncData()
+            } else {
+            }
         }
 
         binding.resumeDownload.setOnClickListener {
-            viewModel.setResumeAsAvailable()
-            binding.resumeDownload.visibility = View.GONE
-            binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
-            startSyncData()
+            if (Utility.isOnline(this)) {
+                viewModel.setResumeAsAvailable()
+                binding.resumeDownload.visibility = View.GONE
+                binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
+                startSyncData()
+            } else {
+            }
         }
 
 
@@ -231,6 +237,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 dialog?.dismiss()
             }
             dialog = builder.create()
+            dialog.setCanceledOnTouchOutside(false)
             dialog.show()
         } catch (e: Exception) {
         }
@@ -288,7 +295,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         }
         viewModel.getDrlDateLastSync().let {
             if (viewModel.getIsDrlSyncActive() && it == -1L) {
-                createNoSyncAlertDialog("L'applicazione deve terminare il download della lista dei certificati revocati per poter essere utilizzata.")
+                createNoSyncAlertDialog(getString(R.string.drl_download_necessary))
                 return
             } else if (viewModel.getIsDrlSyncActive() && System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) {
                 createNoSyncAlertDialog(getString(R.string.noKeyAlertMessageForDrl))

@@ -99,4 +99,5 @@
     <string name="messageDownloadStarted">L\'aggiornamento della lista dei certificati è in corso. Attendere la fine del download per poter utilizzare l\'app.</string>
     <string name="chunk_count">Pacchetto %1$d su %2$d</string>
     <string name="chunk_size">%1$.2f Mb su %2$.2f Mb</string>
+    <string name="drl_download_necessary">L\'applicazione deve terminare il download della lista dei certificati revocati per poter essere utilizzata.</string>
 </resources>
