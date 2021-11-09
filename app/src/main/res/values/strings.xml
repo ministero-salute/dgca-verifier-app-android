@@ -86,4 +86,7 @@
     <string name="faq_card_title">Domande frequenti</string>
     <string name="privacy_card_title">Rispetto della privacy</string>
     <string name="label_totem_mode">Modalità automatica</string>
+    <string name="impostazioni_avanzate">Impostazioni avanzate</string>
+    <string name="reset">Reset</string>
+    <string name="torna_indietro">Torna indietro</string>
 </resources>

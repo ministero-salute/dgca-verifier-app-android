@@ -33,6 +33,7 @@ import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -42,6 +43,7 @@ import androidx.lifecycle.observe
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
+import it.ministerodellasalute.verificaC19.VerificaApplication
 import it.ministerodellasalute.verificaC19.databinding.ActivityFirstBinding
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.util.Utility
@@ -117,6 +119,14 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
             val browserIntent =
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
             startActivity(browserIntent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (VerificaApplication.dataResetted) {
+            Toast.makeText(this, "Dati inizializzati.", Toast.LENGTH_SHORT).show()
+            VerificaApplication.dataResetted = false
         }
     }
 
