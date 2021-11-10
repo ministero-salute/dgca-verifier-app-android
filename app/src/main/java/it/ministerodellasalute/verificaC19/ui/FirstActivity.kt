@@ -191,10 +191,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun createCheckConnectionAlertDialog() {
         val builder = AlertDialog.Builder(this)
         var dialog: AlertDialog? = null
-        builder.setTitle("Connessione internet assente"
+        builder.setTitle(getString(R.string.no_internet_title)
         )
-        builder.setMessage("Connessione internet assente. Assicurati di essere connesso alla rete e riprova.")
-        builder.setPositiveButton("OK") { _, _ -> }
+        builder.setMessage(getString(R.string.no_internet_message))
+        builder.setPositiveButton(getString(R.string.ok_label)) { _, _ -> }
         dialog = builder.create()
         dialog.show()
     }
@@ -242,9 +242,14 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             builder.setMessage(getString(R.string.messageDownloadAlert))
             builder.setPositiveButton(getString(R.string.label_download)) { _, _ ->
                 dialog?.dismiss()
-                prepareForDownload()
-                binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
-                startSyncData()
+                if (Utility.isOnline(this)) {
+                    prepareForDownload()
+                    binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
+                    startSyncData()
+                } else {
+                    createCheckConnectionAlertDialog()
+                    enableInitDownload()
+                }
             }
             builder.setNegativeButton(getString(R.string.after_download)) { _, _ ->
                 enableInitDownload()
@@ -310,7 +315,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         }
         viewModel.getDrlDateLastSync().let {
             if (viewModel.getIsDrlSyncActive() && it == -1L) {
-                createNoSyncAlertDialog(getString(R.string.drl_download_necessary))
+                createNoSyncAlertDialog(getString(R.string.messageDownloadStarted))
                 return
             } else if (viewModel.getIsDrlSyncActive() && System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) {
                 createNoSyncAlertDialog(getString(R.string.noKeyAlertMessageForDrl))

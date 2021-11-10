@@ -99,5 +99,7 @@
     <string name="messageDownloadStarted">L\'aggiornamento della lista dei certificati è in corso. Attendere la fine del download per poter utilizzare l\'app.</string>
     <string name="chunk_count">Pacchetto %1$d su %2$d</string>
     <string name="chunk_size">%1$.2f Mb su %2$.2f Mb</string>
-    <string name="drl_download_necessary">L\'applicazione deve terminare il download della lista dei certificati revocati per poter essere utilizzata.</string>
+    <string name="no_internet_title">Connessione internet assente</string>
+    <string name="no_internet_message">Connessione internet assente. Assicurati di essere connesso alla rete e riprova.</string>
+    <string name="ok_label">OK</string>
 </resources>
