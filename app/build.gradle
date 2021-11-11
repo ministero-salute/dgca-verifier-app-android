@@ -93,8 +93,8 @@ android {
         applicationId "it.ministerodellasalute.verificaC19"
         minSdkVersion Config.minSdk
         targetSdkVersion Config.targetSdk
-        versionCode 584
-        versionName "1.1.6"
+        versionCode 585
+        versionName "1.1.7"
         testInstrumentationRunner Config.androidTestInstrumentation
     }
 
