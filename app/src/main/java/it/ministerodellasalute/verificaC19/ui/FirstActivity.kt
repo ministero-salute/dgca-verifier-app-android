@@ -97,7 +97,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
         binding.updateProgressBar.max = viewModel.getTotalChunk().toInt()
         updateDownloadedPackagesCount()
-        Log.i("viewModel.getauthorizedToDownload()", viewModel.getDownloadAvailable().toString())
+        Log.i("getauthorizedToDownload", viewModel.getDownloadAvailable().toString())
         viewModel.getDownloadAvailable().let { isAuthorizedToDownload ->
 
             if (isAuthorizedToDownload == 0L && !viewModel.getIsPendingDownload())
@@ -106,7 +106,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 binding.initDownload.visibility = View.GONE
             }
         }
-        Log.i("viewModel.getAuthResume()", viewModel.getResumeAvailable().toString())
+        Log.i("getAuthResume", viewModel.getResumeAvailable().toString())
 
         viewModel.getResumeAvailable().let {
             if (it == 0.toLong() || viewModel.getIsPendingDownload()) {
