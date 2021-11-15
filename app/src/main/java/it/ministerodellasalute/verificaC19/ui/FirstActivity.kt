@@ -251,7 +251,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                     ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
                 )
             )
-            builder.setMessage(getString(R.string.messageDownloadAlert))
+            builder.setMessage(getString(R.string.messageDownloadAlert, ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())))
             builder.setPositiveButton(getString(R.string.label_download)) { _, _ ->
                 dialog?.dismiss()
                 if (Utility.isOnline(this)) {
@@ -298,7 +298,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             }
             else ->
                 getString(
-                    R.string.titleDownloadAlert,
+                    R.string.label_download_alert_complete,
                     ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
                 )
         }
