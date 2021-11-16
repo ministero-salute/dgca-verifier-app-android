@@ -65,7 +65,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var binding: ActivityFirstBinding
-    private lateinit var shared: Preferences
+    private lateinit var shared: SharedPreferences
 
     private val viewModel by viewModels<FirstViewModel>()
 
@@ -81,14 +81,35 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFirstBinding.inflate(layoutInflater)
-        shared = PreferencesImpl(baseContext)
+        shared = this.getSharedPreferences(PrefKeys.USER_PREF, Context.MODE_PRIVATE)
         setContentView(binding.root)
         setSecureWindowFlags()
         setOnClickListeners()
         setupUI()
+        observeLiveData()
+    }
+
+    private fun observeLiveData() {
         observeSyncStatus()
         observeRetryCount()
+        observeSizeOverThreshold()
+        observeInitDownload()
+    }
 
+    private fun observeInitDownload() {
+        viewModel.initDownloadLiveData.observe(this) {
+            if (it) {
+                enableInitDownload()
+            }
+        }
+    }
+
+    private fun observeSizeOverThreshold() {
+        viewModel.sizeOverLiveData.observe(this) {
+            if (it) {
+                createDownloadAlert()
+            }
+        }
     }
 
     private fun observeRetryCount() {
@@ -114,7 +135,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                         )
                     }
                     binding.qrButton.background.alpha = 255
-                    hideRevokesDownloadViews()
+                    hideDownloadProgressViews()
                 }
             }
         }
@@ -132,26 +153,17 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         binding.updateProgressBar.max = viewModel.getTotalChunk().toInt()
         updateDownloadedPackagesCount()
 
-        Log.i("isDownloadAvailable", viewModel.getDownloadAvailable().toString())
-        viewModel.getDownloadAvailable().let { isAuthorizedToDownload ->
-
-            if (isAuthorizedToDownload == 0L && !viewModel.getIsPendingDownload())
-                binding.initDownload.show()
-            else {
-                binding.initDownload.hide()
-            }
-        }
-        Log.i("viewModel.getAuthResume()", viewModel.getResumeAvailable().toString())
-
         viewModel.getResumeAvailable().let {
-            if (it == 0.toLong() || viewModel.getIsPendingDownload()) {
-                binding.resumeDownload.show()
-                binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
-                binding.chunkCount.show()
-                binding.chunkSize.show()
-                binding.updateProgressBar.show()
-            } else {
-                binding.resumeDownload.hide()
+            if (it != -1L) {
+                if (it == 0.toLong() || viewModel.getIsPendingDownload()) {
+                    binding.resumeDownload.show()
+                    binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
+                    binding.chunkCount.show()
+                    binding.chunkSize.show()
+                    binding.updateProgressBar.show()
+                } else {
+                    binding.resumeDownload.hide()
+                }
             }
         }
     }
@@ -178,10 +190,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         }
         binding.initDownload.setOnClickListener {
             if (Utility.isOnline(this)) {
-                prepareForDownload()
-                binding.initDownload.hide()
-                binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
-                startSyncData()
+                startDownload()
             } else {
                 createCheckConnectionAlertDialog()
             }
@@ -197,6 +206,14 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 createCheckConnectionAlertDialog()
             }
         }
+    }
+
+    private fun startDownload() {
+        prepareForDownload()
+        showDownloadProgressViews()
+        binding.initDownload.hide()
+        binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
+        startSyncData()
     }
 
     private fun createCheckConnectionAlertDialog() {
@@ -251,13 +268,16 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                     ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
                 )
             )
-            builder.setMessage(getString(R.string.messageDownloadAlert, ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())))
+            builder.setMessage(
+                getString(
+                    R.string.messageDownloadAlert,
+                    ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
+                )
+            )
             builder.setPositiveButton(getString(R.string.label_download)) { _, _ ->
                 dialog?.dismiss()
                 if (Utility.isOnline(this)) {
-                    prepareForDownload()
-                    binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
-                    startSyncData()
+                    startDownload()
                 } else {
                     createCheckConnectionAlertDialog()
                     enableInitDownload()
@@ -288,10 +308,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun enableInitDownload() {
         binding.resumeDownload.hide()
         binding.initDownload.show()
-        hideRevokesDownloadViews()
+        hideDownloadProgressViews()
         binding.dateLastSyncText.text = when (viewModel.getTotalSizeInByte()) {
             0L -> {
-                hideRevokesDownloadViews()
+                hideDownloadProgressViews()
                 getString(
                     R.string.label_download_alert_simple
                 )
@@ -413,12 +433,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                         binding.resumeDownload.show()
                     }
                 }
-                PrefKeys.KEY_SIZE_OVER_THRESHOLD -> {
-                    val isSizeOverThreshold = viewModel.getIsSizeOverThreshold()
-                    if (isSizeOverThreshold) {
-                        createDownloadAlert()
-                    }
-                }
                 PrefKeys.KEY_DRL_DATE_LAST_FETCH -> {
                     viewModel.getDateLastSync().let { date ->
                         binding.dateLastSyncText.text = getString(
@@ -428,7 +442,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                             )
                         )
                     }
-                    hideRevokesDownloadViews()
+                    hideDownloadProgressViews()
                 }
                 else -> {
 
@@ -437,10 +451,16 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         }
     }
 
-    private fun hideRevokesDownloadViews() {
+    private fun hideDownloadProgressViews() {
         binding.updateProgressBar.hide()
         binding.chunkCount.hide()
         binding.chunkSize.hide()
+    }
+
+    private fun showDownloadProgressViews() {
+        binding.updateProgressBar.show()
+        binding.chunkCount.show()
+        binding.chunkSize.show()
     }
 
     override fun onDestroy() {
