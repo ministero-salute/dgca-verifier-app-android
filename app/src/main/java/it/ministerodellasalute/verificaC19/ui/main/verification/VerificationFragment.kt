@@ -228,12 +228,13 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private fun createForceUpdateDialog(message: String) {
         val builder = this.activity?.let { AlertDialog.Builder(requireContext()) }
         builder!!.setTitle(getString(R.string.updateTitle))
-        builder!!.setMessage(message)
-        builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+        builder.setMessage(message)
+        builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
             findNavController().popBackStack()
         }
         val dialog = builder.create()
-        dialog.setCancelable(true)
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
         dialog.show()
     }
 
