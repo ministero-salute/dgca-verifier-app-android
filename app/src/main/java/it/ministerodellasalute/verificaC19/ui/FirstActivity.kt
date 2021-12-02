@@ -165,6 +165,21 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
             Toast.makeText(this, "Dati inizializzati.", Toast.LENGTH_SHORT).show()
             VerificaApplication.dataResetted = false
         }
+        if (!sharedPreference.getBoolean("scan_mode_flag", false)) {
+            val s = SpannableStringBuilder()
+                .bold { append(getString(R.string.label_choose_scan_mode)) }
+            binding.scanModeButton.text = s
+        } else {
+            var chosenScanMode =
+                if (sharedPreference.getString("scan_mode", "3G") == "3G") getString(R.string.scan_mode_3G_header) else getString(R.string.scan_mode_2G_header)
+            chosenScanMode += "\n"
+            val chosenScanModeText =
+                if (sharedPreference.getString("scan_mode", "3G") == "3G") getString(R.string.scan_mode_3G) else getString(R.string.scan_mode_2G)
+            val s = SpannableStringBuilder()
+                .bold { append(chosenScanMode) }
+                .append(chosenScanModeText)
+            binding.scanModeButton.text = s
+        }
     }
 
     private fun checkCameraPermission() {
@@ -193,26 +208,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
             dialog.show()
         } catch (e: Exception) {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-        }
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        if (!sharedPreference.getBoolean("scan_mode_flag", false)) {
-            val s = SpannableStringBuilder()
-                .bold { append(getString(R.string.label_choose_scan_mode)) }
-            binding.scanModeButton.text = s
-        } else {
-            var chosenScanMode =
-                if (sharedPreference.getString("scan_mode", "3G") == "3G") getString(R.string.scan_mode_3G_header) else getString(R.string.scan_mode_2G_header)
-            chosenScanMode += "\n"
-            val chosenScanModeText =
-                if (sharedPreference.getString("scan_mode", "3G") == "3G") getString(R.string.scan_mode_3G) else getString(R.string.scan_mode_2G)
-            val s = SpannableStringBuilder()
-                .bold { append(chosenScanMode) }
-                .append(chosenScanModeText)
-            binding.scanModeButton.text = s
         }
     }
 
@@ -276,4 +271,5 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         val dialog = builder.create()
         dialog.show()
     }
+
 }
