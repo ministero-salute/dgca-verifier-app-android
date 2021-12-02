@@ -16,9 +16,6 @@
         android:theme="@style/AppTheme"
         tools:replace="android:name">
         <activity
-            android:name=".ui.DataActivity"
-            android:exported="true" />
-        <activity
             android:name=".ui.SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:exported="true"
