@@ -161,10 +161,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        if (VerificaApplication.dataResetted) {
-            Toast.makeText(this, "Dati inizializzati.", Toast.LENGTH_SHORT).show()
-            VerificaApplication.dataResetted = false
-        }
         if (!sharedPreference.getBoolean("scan_mode_flag", false)) {
             val s = SpannableStringBuilder()
                 .bold { append(getString(R.string.label_choose_scan_mode)) }
@@ -179,6 +175,15 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
                 .bold { append(chosenScanMode) }
                 .append(chosenScanModeText)
             binding.scanModeButton.text = s
+        }
+        viewModel.getAppMinVersion().let {
+            if (Utility.versionCompare(
+                    it,
+                    BuildConfig.VERSION_NAME
+                ) > 0 || viewModel.isSDKVersionObsoleted()
+            ) {
+                createForceUpdateDialog()
+            }
         }
     }
 
@@ -270,6 +275,32 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         }
         val dialog = builder.create()
         dialog.show()
+    }
+
+    private fun createForceUpdateDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.updateTitle))
+        builder.setMessage(getString(R.string.updateMessage))
+
+        builder.setPositiveButton(getString(R.string.updateLabel)) { _, _ ->
+            openGooglePlay()
+        }
+        val dialog = builder.create()
+        dialog.setCancelable(false)
+        dialog.show()
+    }
+
+    private fun openGooglePlay() {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+        } catch (e: ActivityNotFoundException) {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                )
+            )
+        }
     }
 
 }

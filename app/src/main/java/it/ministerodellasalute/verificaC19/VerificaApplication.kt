@@ -64,8 +64,4 @@ class VerificaApplication : Application(), Configuration.Provider {
             )
     }
 
-    companion object {
-        var dataResetted = false
-    }
-
 }
