@@ -36,6 +36,7 @@ import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -47,6 +48,7 @@ import androidx.lifecycle.observe
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
+import it.ministerodellasalute.verificaC19.VerificaApplication
 import it.ministerodellasalute.verificaC19.databinding.ActivityFirstBinding
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.util.Utility
@@ -157,6 +159,14 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (VerificaApplication.dataResetted) {
+            Toast.makeText(this, "Dati inizializzati.", Toast.LENGTH_SHORT).show()
+            VerificaApplication.dataResetted = false
+        }
+    }
+
     private fun checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -203,11 +213,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
                 .bold { append(chosenScanMode) }
                 .append(chosenScanModeText)
             binding.scanModeButton.text = s
-        }
-        viewModel.getAppMinVersion().let {
-            if (Utility.versionCompare(it, BuildConfig.VERSION_NAME) > 0 || viewModel.isSDKVersionObsoleted()) {
-                createForceUpdateDialog()
-            }
         }
     }
 
@@ -271,31 +276,4 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         val dialog = builder.create()
         dialog.show()
     }
-
-    private fun createForceUpdateDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.updateTitle))
-        builder.setMessage(getString(R.string.updateMessage))
-
-        builder.setPositiveButton(getString(R.string.updateLabel)) { _, _ ->
-            openGooglePlay()
-        }
-        val dialog = builder.create()
-        dialog.setCancelable(false)
-        dialog.show()
-    }
-
-    private fun openGooglePlay() {
-        try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
-        } catch (e: ActivityNotFoundException) {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
-                )
-            )
-        }
-    }
-
 }

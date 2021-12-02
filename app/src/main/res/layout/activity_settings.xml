@@ -242,8 +242,61 @@
 
             </androidx.cardview.widget.CardView>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/advanced_settings_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/titiliumfont"
+                android:textSize="@dimen/text_size_16sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="@dimen/margin_24dp"
+                android:background="@color/grey_light"
+                android:text="@string/impostazioni_avanzate"
+                android:textColor="@color/blue_dark"
+                android:layout_marginTop="@dimen/padding_30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/privacy_policy_card" />
 
+            <Button
+                android:id="@+id/reset_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="44dp"
+                android:background="@drawable/background_slightly_rounded_blue"
+                android:drawableTint="@color/white"
+                android:fontFamily="@font/titiliumfont"
+                android:paddingStart="@dimen/padding_10dp"
+                android:paddingEnd="@dimen/padding_10dp"
+                android:text="@string/reset"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/advanced_settings_text" />
+
+            <Button
+                android:id="@+id/view_data_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="44dp"
+                android:layout_marginEnd="64dp"
+                android:background="@drawable/background_slightly_rounded_blue"
+                android:drawableTint="@color/white"
+                android:fontFamily="@font/titiliumfont"
+                android:paddingStart="@dimen/padding_10dp"
+                android:paddingEnd="@dimen/padding_10dp"
+                android:text="Visualizza dati app"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/advanced_settings_text" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
 
