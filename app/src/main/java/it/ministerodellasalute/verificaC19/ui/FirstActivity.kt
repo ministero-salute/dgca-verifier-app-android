@@ -23,31 +23,40 @@ package it.ministerodellasalute.verificaC19.ui
 
 import android.Manifest
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.text.bold
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
+import it.ministerodellasalute.verificaC19.VerificaApplication
 import it.ministerodellasalute.verificaC19.databinding.ActivityFirstBinding
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.util.Utility
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
+import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
+import java.util.*
 
 @AndroidEntryPoint
 class FirstActivity : AppCompatActivity(), View.OnClickListener {
@@ -55,6 +64,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityFirstBinding
 
     private val viewModel by viewModels<FirstViewModel>()
+
+    private lateinit var sharedPreference: SharedPreferences
+
+    private lateinit var verificationViewModel: VerificationViewModel
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -75,6 +88,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.qrButton.setOnClickListener(this)
         binding.settings.setOnClickListener(this)
+        binding.scanModeButton.setOnClickListener(this)
 
         val string = getString(R.string.version, BuildConfig.VERSION_NAME)
         val spannableString = SpannableString(string).also {
@@ -94,10 +108,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
 
         viewModel.fetchStatus.observe(this) {
             if (it) {
-                binding.qrButton.isEnabled = false
                 binding.dateLastSyncText.text = getString(R.string.loading)
             } else {
-                binding.qrButton.isEnabled = true
                 viewModel.getDateLastSync().let { date ->
                     binding.dateLastSyncText.text = getString(
                         R.string.lastSyncDate,
@@ -118,6 +130,56 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
             startActivity(browserIntent)
         }
+
+        sharedPreference = getSharedPreferences("dgca.verifier.app.pref", Context.MODE_PRIVATE)
+        verificationViewModel = ViewModelProvider(this)[VerificationViewModel::class.java]
+
+        verificationViewModel.scanMode.observe(this, {
+            setScanModeTexts(it)
+        })
+    }
+
+    private fun setScanModeTexts(currentScanMode: String) {
+        if (!verificationViewModel.getScanModeFlag()) {
+            val s = SpannableStringBuilder()
+                .bold { append(getString(R.string.label_choose_scan_mode)) }
+            binding.scanModeButton.text = s
+        } else {
+            var chosenScanMode =
+                if (currentScanMode == "3G") getString(R.string.scan_mode_3G_header) else getString(
+                    R.string.scan_mode_2G_header
+                )
+            chosenScanMode += "\n"
+            val chosenScanModeText =
+                if (currentScanMode == "3G") getString(R.string.scan_mode_3G) else getString(R.string.scan_mode_2G)
+            val s = SpannableStringBuilder()
+                .bold { append(chosenScanMode) }
+                .append(chosenScanModeText)
+            binding.scanModeButton.text = s
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (VerificaApplication.dataResetted) {
+            Toast.makeText(this, "Dati inizializzati.", Toast.LENGTH_SHORT).show()
+            VerificaApplication.dataResetted = false
+        }
+        if (!sharedPreference.getBoolean("scan_mode_flag", false)) {
+            val s = SpannableStringBuilder()
+                .bold { append(getString(R.string.label_choose_scan_mode)) }
+            binding.scanModeButton.text = s
+        } else {
+            var chosenScanMode =
+                if (sharedPreference.getString("scan_mode", "3G") == "3G") getString(R.string.scan_mode_3G_header) else getString(R.string.scan_mode_2G_header)
+            chosenScanMode += "\n"
+            val chosenScanModeText =
+                if (sharedPreference.getString("scan_mode", "3G") == "3G") getString(R.string.scan_mode_3G) else getString(R.string.scan_mode_2G)
+            val s = SpannableStringBuilder()
+                .bold { append(chosenScanMode) }
+                .append(chosenScanModeText)
+            binding.scanModeButton.text = s
+        }
     }
 
     private fun checkCameraPermission() {
@@ -137,10 +199,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setTitle(getString(R.string.privacyTitle))
             builder.setMessage(getString(R.string.privacy))
-            builder.setPositiveButton(getString(R.string.next)) { dialog, which ->
+            builder.setPositiveButton(getString(R.string.next)) { _, _ ->
                 requestPermissionLauncher.launch(Manifest.permission.CAMERA)
             }
-            builder.setNegativeButton(getString(R.string.back)) { dialog, which ->
+            builder.setNegativeButton(getString(R.string.back)) { _, _ ->
             }
             val dialog = builder.create()
             dialog.show()
@@ -160,23 +222,51 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        viewModel.getDateLastSync().let {
-            if (it == -1L) {
-                createNoKeyAlert()
-                return
+        if (v?.id == R.id.qrButton) {
+            viewModel.getDateLastSync().let {
+                if (it == -1L) {
+                    createNoKeyAlert()
+                    return
+                } else if (!verificationViewModel.getScanModeFlag() && v.id != R.id.scan_mode_button) {
+                    createNoScanModeChosenAlert()
+                    return
+                }
             }
         }
         when (v?.id) {
             R.id.qrButton -> checkCameraPermission()
             R.id.settings -> openSettings()
+            R.id.scan_mode_button -> AlertDialogCaller.showScanModeChoiceAlertDialog(
+                this,
+                getString(R.string.label_scan_mode),
+                arrayOf(getString(R.string.label_alert_dialog_option, getString(R.string.label_scan_mode), getString(R.string.scan_mode_2G_header).substringAfter(
+                    ' '
+                ).toUpperCase(Locale.ROOT)),
+                    getString(R.string.label_alert_dialog_option, getString(R.string.label_scan_mode), getString(R.string.scan_mode_3G_header).substringAfter(' ').toUpperCase(
+                        Locale.ROOT
+                    )
+                    )
+                ),
+                ViewModelProvider(this)[VerificationViewModel::class.java]
+            )
         }
+    }
+
+    private fun createNoScanModeChosenAlert() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.noKeyAlertTitle))
+        builder.setMessage(getString(R.string.label_no_scan_mode_chosen))
+        builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
+        }
+        val dialog = builder.create()
+        dialog.show()
     }
 
     private fun createNoKeyAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.noKeyAlertTitle))
         builder.setMessage(getString(R.string.noKeyAlertMessage))
-        builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+        builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
         }
         val dialog = builder.create()
         dialog.show()

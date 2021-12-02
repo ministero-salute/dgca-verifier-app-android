@@ -22,21 +22,27 @@
 
 package it.ministerodellasalute.verificaC19.ui
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.R
+import it.ministerodellasalute.verificaC19.VerificaApplication
 import it.ministerodellasalute.verificaC19.databinding.ActivitySettingsBinding
+import it.ministerodellasalute.verificaC19sdk.BuildConfig
+import it.ministerodellasalute.verificaC19sdk.data.VerifierRepositoryImpl
 import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
 
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(), View.OnClickListener {
 
-    lateinit var binding: ActivitySettingsBinding
+    private lateinit var binding: ActivitySettingsBinding
     private val viewModel by viewModels<VerificationViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,12 +51,23 @@ class SettingsActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
 
         setSwitchesValue()
+        setButtonsListener()
+    }
 
+    private fun setButtonsListener() {
         binding.backImage.setOnClickListener(this)
         binding.backText.setOnClickListener(this)
         binding.totemSwitch.setOnClickListener(this)
         binding.faqCard.setOnClickListener(this)
         binding.privacyPolicyCard.setOnClickListener(this)
+        binding.resetButton.setOnClickListener(this)
+        binding.viewDataButton.setOnClickListener(this)
+
+        if (!BuildConfig.SHOW_DEBUG_BUTTONS.toBoolean()) {
+            binding.advancedSettingsText.isVisible = false
+            binding.resetButton.isVisible = false
+            binding.viewDataButton.isVisible = false
+        }
     }
 
     private fun setSwitchesValue() {
@@ -70,6 +87,33 @@ class SettingsActivity : AppCompatActivity(), View.OnClickListener {
             val browserIntent =
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
             startActivity(browserIntent)
+        } else if (v?.id == R.id.reset_button) {
+            showAlertDialog()
+        } else if (v?.id == R.id.view_data_button) {
+            val intent = Intent(this, DataActivity::class.java)
+            startActivity(intent)
         }
+    }
+
+    private fun showAlertDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Tutti i dati memorizzati nell'app verranno cancellati. Quest'operazione è irreversibile. Confermare?")
+            .setTitle("Attenzione")
+            .setCancelable(false)
+            .setPositiveButton("Sì") { dialog, id ->
+                resetAndRestart()
+            }
+            .setNegativeButton("No") { dialog, id ->
+                dialog.dismiss()
+            }
+        val alert = builder.create()
+        alert.show()
+    }
+
+    private fun resetAndRestart() {
+        VerificaApplication.dataResetted = true
+        viewModel.nukeData()
+        VerificaApplication().setWorkManager()
+        finish()
     }
 }

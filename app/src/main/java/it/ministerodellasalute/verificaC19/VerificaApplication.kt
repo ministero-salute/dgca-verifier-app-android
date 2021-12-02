@@ -48,7 +48,7 @@ class VerificaApplication : Application(), Configuration.Provider {
         setWorkManager()
     }
 
-    private fun setWorkManager(){
+    fun setWorkManager(){
         val uploadWorkRequest: WorkRequest =
             PeriodicWorkRequestBuilder<LoadKeysWorker>(1, TimeUnit.DAYS)
                 .setConstraints(Constraints.Builder()
@@ -62,6 +62,10 @@ class VerificaApplication : Application(), Configuration.Provider {
                 ExistingPeriodicWorkPolicy.REPLACE,
                 uploadWorkRequest as PeriodicWorkRequest
             )
+    }
+
+    companion object {
+        var dataResetted = false
     }
 
 }
