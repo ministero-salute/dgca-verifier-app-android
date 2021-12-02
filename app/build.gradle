@@ -93,15 +93,15 @@ android {
         applicationId "it.ministerodellasalute.verificaC19"
         minSdkVersion Config.minSdk
         targetSdkVersion Config.targetSdk
-        versionCode 585
-        versionName "1.1.7"
+        versionCode 611
+        versionName "1.1.8"
         testInstrumentationRunner Config.androidTestInstrumentation
     }
 
     buildTypes {
         debug {
             minifyEnabled false
-            debuggable true
+            debuggable false
         }
 
         release {
