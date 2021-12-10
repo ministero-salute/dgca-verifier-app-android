@@ -17,30 +17,11 @@
  *  limitations under the License.
  *  ---license-end
  *
- *  Created by nicolamcornelio on 11/29/21, 2:26 PM
+ *  Created by lucarinzivillo on 06/11/21, 19:31
  */
 
-package it.ministerodellasalute.verificaC19.ui
+package it.ministerodellasalute.verificaC19.ui.main
 
-import android.app.AlertDialog
-import android.content.Context
-import android.provider.Settings.Global.getString
-import it.ministerodellasalute.verificaC19.R
-import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
-
-class AlertDialogCaller {
-
-    companion object {
-        fun showScanModeChoiceAlertDialog(
-            context: Context,
-            title: String,
-            message: String,
-        ) {
-            val mBuilder = AlertDialog.Builder(context)
-            mBuilder.setTitle(title)
-            mBuilder.setMessage(message)
-            val mDialog = mBuilder.create()
-            mDialog.show()
-        }
-    }
+object Extras {
+    const val DEBUG_INFO = "DebugInfoWrapper"
 }
