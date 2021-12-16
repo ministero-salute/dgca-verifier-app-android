@@ -32,7 +32,7 @@
     <string name="privacyPolicy"><u>Leggi la Privacy policy</u></string>
     <string name="codiceFiscale">Codice fiscale</string>
     <string name="expirationText">Data scadenza certificato</string>
-    <string name="certificateValid">Certificazione valida in Italia e in Europa</string>
+    <string name="certificateValid">Certificazione valida</string>
     <string name="certificateNonValid">Certificazione non valida</string>
     <string name="certificateRevoked">Certificazione revocata</string>
     <string name="certificateNonValidYet">Certificazione non ancora valida</string>
@@ -74,7 +74,6 @@
     <string name="label_name">Nome/Name</string>
     <string name="label_close">Chiudi</string>
     <string name="label_return_home">Torna all\'inizio</string>
-    <string name="certificatePartiallyValid">Certificazione valida solo in Italia</string>
     <string name="label_what_can_be_done">Cosa si può fare con la certificazione verde COVID-19</string>
     <string name="label_why_qr_not_valid">Quali sono i motivi di non validità?</string>
     <string name="label_when_qr_valid">Quali sono i tempi di inizio validità?</string>
@@ -95,7 +94,13 @@
     <string name="scan_mode_3G">Vaccinazione/Guarigione/Tampone</string>
     <string name="scan_mode_2G">Vaccinazione/Guarigione</string>
     <string name="label_choose_scan_mode">Scegli tipologia di verifica</string>
-    <string name="label_no_scan_mode_chosen">Per procedere alla scansione è necessario selezionare una delle due tipologie di verifica della Certificazione verde Covid-19: BASE o RAFFORZATA.\nTipologia BASE: la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione, da tampone. Viene utilizzata per l\'accesso ai luoghi di lavoro.\nTipologia RAFFORZATA: la app considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione. Viene utilizzata - dal 6 dicembre 2021 - per accedere a spettacoli, eventi sportivi, ristorazione al chiuso, feste e discoteche, cerimonie pubbliche, ecc.</string>
+    <string name="label_no_scan_mode_chosen">Per procedere alla scansione selezionare una delle due tipologie di verifica della Certificazione verde Covid-19: BASE o RAFFORZATA.
+\nTipologia BASE: la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione, da tampone. Viene utilizzata per l\'accesso ai luoghi di lavoro, mezzi di trasporto pubblico o privato di linea, impianti sciistici chiusi, strutture ricettive, strutture sanitarie, attività sportive e culturali al chiuso, sagre e fiere, ecc .\n
+\nTipologia RAFFORZATA: la app considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione. Viene utilizzata per accedere a spettacoli, eventi sportivi, ristorazione al chiuso, feste e discoteche, cerimonie pubbliche, ecc. \n
+
+\nIndicazioni di dettaglio sulle attività consentite senza/con green pass BASE e RAFFORZATO (link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf)\n
+
+\nIl dettaglio dell\'uso è nella tabella della PCM al seguente link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf</string>
     <string name="label_alert_dialog_option">%1$s (%2$s)</string>
     <string name="label_verification_scan_mode">%1$s: %2$s</string>
     <string name="label_download">Scarica Ora</string>
