@@ -118,4 +118,7 @@
     <string name="no_internet_title">Connessione internet assente</string>
     <string name="no_internet_message">Connessione internet assente. Assicurati di essere connesso alla rete e riprova.</string>
     <string name="ok_label">OK</string>
+    <string name="impostazioni_avanzate">Impostazioni avanzate</string>
+    <string name="reset">Reset</string>
+    <string name="torna_indietro">Torna indietro</string>
 </resources>
