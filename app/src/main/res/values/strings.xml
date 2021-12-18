@@ -32,8 +32,9 @@
     <string name="privacyPolicy"><u>Leggi la Privacy policy</u></string>
     <string name="codiceFiscale">Codice fiscale</string>
     <string name="expirationText">Data scadenza certificato</string>
-    <string name="certificateValid">Certificazione valida in Italia e in Europa</string>
+    <string name="certificateValid">Certificazione valida</string>
     <string name="certificateNonValid">Certificazione non valida</string>
+    <string name="certificateRevoked">Certificazione revocata</string>
     <string name="certificateNonValidYet">Certificazione non ancora valida</string>
     <string name="certificateNotDCC">Errore di lettura del QR Code, oppure non è il Certificato verde COVID-19</string>
     <string name="certificateTechnicalError">Errore tecnico, non è stato possibile effettuare la verifica</string>
@@ -54,10 +55,11 @@
     <string name="loading">Ultimo aggiornamento dati e regole:\nAggiornamento in corso...</string>
     <string name="notAvailable">N/A</string>
     <string name="updateTitle">Aggiornamento richiesto</string>
-    <string name="updateMessage">Per continuare ad utilizzare l\'applicazione, scarica la nuova versione dallo store</string>
+    <string name="updateMessage">Per continuare ad utilizzare l\'applicazione, scarica la nuova versione dallo store.</string>
     <string name="updateLabel">Aggiorna</string>
     <string name="noKeyAlertTitle">Impossibile scansionare</string>
-    <string name="noKeyAlertMessage">L\'applicazione deve connettersi alla rete almeno una volta per essere utilizzata</string>
+    <string name="noKeyAlertMessage">L\'applicazione deve connettersi alla rete almeno una volta per essere utilizzata.</string>
+    <string name="noKeyAlertMessageForDrl">Per utilizzare l\'applicazione è necessario aggiornare la lista delle Certificazione verdi COVID-19 revocate.</string>
     <string name="ok">OK</string>
     <string name="next">Avanti</string>
     <string name="back">Indietro</string>
@@ -72,7 +74,6 @@
     <string name="label_name">Nome/Name</string>
     <string name="label_close">Chiudi</string>
     <string name="label_return_home">Torna all\'inizio</string>
-    <string name="certificatePartiallyValid">Certificazione valida solo in Italia</string>
     <string name="label_what_can_be_done">Cosa si può fare con la certificazione verde COVID-19</string>
     <string name="label_why_qr_not_valid">Quali sono i motivi di non validità?</string>
     <string name="label_when_qr_valid">Quali sono i tempi di inizio validità?</string>
@@ -93,7 +94,28 @@
     <string name="scan_mode_3G">Vaccinazione/Guarigione/Tampone</string>
     <string name="scan_mode_2G">Vaccinazione/Guarigione</string>
     <string name="label_choose_scan_mode">Scegli tipologia di verifica</string>
-    <string name="label_no_scan_mode_chosen">Per procedere alla scansione è necessario selezionare una delle due tipologie di verifica della Certificazione verde Covid-19: BASE o RAFFORZATA.\nTipologia BASE: la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione, da tampone. Viene utilizzata per l’accesso ai luoghi di lavoro.\nTipologia RAFFORZATA: la app considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione. Viene utilizzata - dal 6 dicembre 2021 - per accedere a spettacoli, eventi sportivi, ristorazione al chiuso, feste e discoteche, cerimonie pubbliche, ecc.</string>
-    <string name="label_alert_dialog_option">%1$s %2$s</string>
+    <string name="label_no_scan_mode_chosen">Per procedere alla scansione selezionare una delle due tipologie di verifica della Certificazione verde Covid-19: BASE o RAFFORZATA.
+\nTipologia BASE: la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione, da tampone. Viene utilizzata per l\'accesso ai luoghi di lavoro, mezzi di trasporto pubblico o privato di linea, impianti sciistici chiusi, strutture ricettive, strutture sanitarie, attività sportive e culturali al chiuso, sagre e fiere, ecc .
+\nTipologia RAFFORZATA: la app considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione. Viene utilizzata per accedere a spettacoli, eventi sportivi, ristorazione al chiuso, feste e discoteche, cerimonie pubbliche, ecc. \n
+
+\nIndicazioni di dettaglio sulle attività consentite senza/con green pass BASE e RAFFORZATO (link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf)</string>
+    <string name="label_alert_dialog_option">%1$s (%2$s)</string>
     <string name="label_verification_scan_mode">%1$s: %2$s</string>
+    <string name="label_download">Scarica Ora</string>
+    <string name="exit_download">Esci</string>
+    <string name="after_download">Più tardi</string>
+    <string name="resume_download">Riprendi</string>
+    <string name="updatingRevokedPass">È in corso l\'aggiornamento della lista delle Certificazioni verdi COVID-19 revocate.</string>
+    <string name="incompleteDownload">L\'aggiornamento della lista delle Certificazione verdi COVID-19 revocate è incompleto. Assicurati di essere connesso a Internet e clicca per continuare.</string>
+    <string name="titleDownloadAlert">Aggiornamento lista Certificazioni revocate da %1$.2fMb.</string>
+    <string name="label_download_alert_complete">È necessario aggiornare la lista delle Certificazione verdi COVID-19 revocate per un totale di %1$.2fMB.</string>
+    <string name="label_download_alert_simple">È necessario aggiornare la lista delle Certificazione verdi COVID-19 revocate.</string>
+    <string name="label_drl_download_in_progress">L\'aggiornamento della lista delle Certificazione verdi COVID-19 revocate è incompleto. Assicurati di essere connesso a Internet e clicca per continuare.</string>
+    <string name="messageDownloadAlert">È necessario aggiornare la lista delle Certificazione verdi COVID-19 revocate, per un totale di %1$.2fMB. Controlla il tuo piano dati oppure connettiti a una rete wi-fi prima di procedere. Il tempo di aggiornamento dipende dalla velocità di connessione e dal tipo di device in uso.La lista verrà aggiornata ogni 24 ore.</string>
+    <string name="messageDownloadStarted">È in corso l\'aggiornamento della lista delle Certificazioni verdi COVID-19 revocate. Attendere la fine del download per procedere con le scansioni.</string>
+    <string name="chunk_count">Pacchetto %1$d su %2$d</string>
+    <string name="chunk_size">%1$.2f Mb su %2$.2f Mb</string>
+    <string name="no_internet_title">Connessione internet assente</string>
+    <string name="no_internet_message">Connessione internet assente. Assicurati di essere connesso alla rete e riprova.</string>
+    <string name="ok_label">OK</string>
 </resources>
