@@ -404,15 +404,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 .append(chosenScanModeText)
             binding.scanModeButton.text = s
         }
-        viewModel.getAppMinVersion().let {
-            if (Utility.versionCompare(
-                    it,
-                    BuildConfig.VERSION_NAME
-                ) > 0 || viewModel.isSDKVersionObsoleted()
-            ) {
-                createForceUpdateDialog()
-            }
-        }
     }
 
     private fun openQrCodeReader() {
