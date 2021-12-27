@@ -3,7 +3,7 @@ package it.ministerodellasalute.verificaC19.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import it.ministerodellasalute.verificaC19.VerificaApplication
+import it.ministerodellasalute.verificaC19.WhiteLabelApplication
 
 class TimeChangeReceiver : BroadcastReceiver() {
 
@@ -12,7 +12,7 @@ class TimeChangeReceiver : BroadcastReceiver() {
         if (action == Intent.ACTION_TIME_CHANGED ||
             action == Intent.ACTION_TIMEZONE_CHANGED
         ) {
-            (context.applicationContext as VerificaApplication).startAppMaintenanceWorker(true)
+            (context.applicationContext as WhiteLabelApplication).startAppMaintenanceWorker(true)
         }
     }
 }
