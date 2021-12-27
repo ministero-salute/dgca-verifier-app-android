@@ -40,6 +40,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -395,24 +396,11 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onResume() {
         super.onResume()
-        if (VerificaApplication.dataResetted) {
+        if (WhiteLabelApplication.dataResetted) {
             Toast.makeText(this, "Dati inizializzati.", Toast.LENGTH_SHORT).show()
-            VerificaApplication.dataResetted = false
+            WhiteLabelApplication.dataResetted = false
         }
         setScanModeButtonText(viewModel.getScanMode()!!)
-        checkAppMinimumVersion()
-    }
-
-    private fun checkAppMinimumVersion() {
-        viewModel.getAppMinVersion().let {
-            if (Utility.versionCompare(
-                    it,
-                    BuildConfig.VERSION_NAME
-                ) > 0 || viewModel.isSDKVersionObsoleted()
-            ) {
-                createForceUpdateDialog()
-            }
-        }
     }
 
     private fun openQrCodeReader() {

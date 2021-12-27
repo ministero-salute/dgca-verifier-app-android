@@ -31,7 +31,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.R
-import it.ministerodellasalute.verificaC19.VerificaApplication
+import it.ministerodellasalute.verificaC19.WhiteLabelApplication
 import it.ministerodellasalute.verificaC19.databinding.ActivitySettingsBinding
 import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
 
@@ -101,9 +101,9 @@ class SettingsActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun resetAndRestart() {
-        VerificaApplication.dataResetted = true
+        WhiteLabelApplication.dataResetted = true
         viewModel.nukeData()
-        VerificaApplication().setWorkManager()
+        WhiteLabelApplication().setWorkManager()
         finish()
     }
 }
