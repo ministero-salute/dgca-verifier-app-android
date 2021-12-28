@@ -173,8 +173,8 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private fun setValidationSubText(certStatus: CertificateStatus) {
         binding.subtitleText.text =
             when (certStatus) {
-                CertificateStatus.VALID, CertificateStatus.TEST_NEEDED -> getString(R.string.subtitle_text)
-                CertificateStatus.NOT_VALID, CertificateStatus.NOT_VALID_YET -> getString(R.string.subtitle_text_notvalid)
+                CertificateStatus.VALID -> getString(R.string.subtitle_text)
+                CertificateStatus.TEST_NEEDED, CertificateStatus.NOT_VALID, CertificateStatus.NOT_VALID_YET -> getString(R.string.subtitle_text_notvalid)
                 else -> getString(R.string.subtitle_text_technicalError)
             }
     }
