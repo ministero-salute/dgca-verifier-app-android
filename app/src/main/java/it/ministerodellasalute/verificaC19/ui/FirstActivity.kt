@@ -77,7 +77,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     private val viewModel by viewModels<FirstViewModel>()
 
-    private val verificaApplication = VerificaApplication()
+    private val whiteLabelApplication = WhiteLabelApplication()
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
