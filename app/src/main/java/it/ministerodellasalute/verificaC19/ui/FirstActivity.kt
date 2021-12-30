@@ -218,11 +218,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             startActivity(browserIntent)
         }
         binding.initDownload.setOnClickListener {
-            if (Utility.isOnline(this)) {
-                startDownload()
-            } else {
-                createCheckConnectionAlertDialog()
-            }
+            startDownload()
         }
         binding.debugButton.setOnClickListener {
             val debugInfoIntent = Intent(this, DebugInfoActivity::class.java)
@@ -234,14 +230,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         }
 
         binding.resumeDownload.setOnClickListener {
-            if (Utility.isOnline(this)) {
-                viewModel.setResumeAsAvailable()
-                binding.resumeDownload.hide()
-                binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
-                startSyncData()
-            } else {
-                createCheckConnectionAlertDialog()
-            }
+            viewModel.setResumeAsAvailable()
+            binding.resumeDownload.hide()
+            binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
+            startSyncData()
         }
     }
 
@@ -345,12 +337,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             )
             builder.setPositiveButton(getString(R.string.label_download)) { _, _ ->
                 dialog?.dismiss()
-                if (Utility.isOnline(this)) {
-                    startDownload()
-                } else {
-                    createCheckConnectionAlertDialog()
-                    enableInitDownload()
-                }
+                startDownload()
             }
             builder.setNegativeButton(getString(R.string.after_download)) { _, _ ->
                 enableInitDownload()
