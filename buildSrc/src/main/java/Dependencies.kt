@@ -40,7 +40,7 @@ object Deps {
     const val tools_kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
     const val desugar_jdk_libs = "com.android.tools:desugar_jdk_libs:${Versions.desugar_jdk_libs}"
     const val test_junit = "junit:junit:${Versions.junit}"
-    const val test_mockk = "io.mockk:mockk:${Versions.mockk}"
+    const val test_mockk = "io.mockk:mockk-android:${Versions.mockk}"
 
 
     const val kotlinx_coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlinx_coroutines}"
