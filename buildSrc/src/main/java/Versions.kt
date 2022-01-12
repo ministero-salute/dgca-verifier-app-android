@@ -22,27 +22,36 @@
 
 object Versions {
 
+
     // Base
     const val gradle = "4.1.3"
     const val kotlin = "1.4.32"
     const val desugar_jdk_libs = "1.1.5"
+    const val mockk = "1.11.0"
 
-    const val androidx_core = "1.4.0-alpha01"
-    const val androidx_appcompat = "1.2.0"
+    const val androidx_core = "1.7.0"
+    const val androidx_startup = "1.1.0"
+    const val androidx_appcompat = "1.4.0"
     const val androidx_navigation = "2.3.5"
     const val androidx_material = "1.3.0"
-    const val androidx_constraint = "2.0.4"
+    const val androidx_constraint = "2.1.2"
+    const val logging_interceptor = "4.9.3"
+    const val okhttp = "4.9.3"
     const val kotlinx_coroutines = "1.3.9"
+    const val retrofit = "2.9.0"
+    const val androidx_room = "2.4.0"
+    const val androidx_core_testing = "2.1.0"
+    const val test_coroutines = "1.5.0"
+    const val gson_converter = "2.9.0"
+
+    const val dokka = "1.5.0"
+
     private const val work_hilt = "1.0.0-beta01"
     const val androidx_hilt_viewmodel = "1.0.0-alpha02"
     const val androidx_hilt_work = work_hilt
     const val androidx_hilt_compiler = work_hilt
-    const val androidx_room = "2.3.0"
-    const val androidx_worker_ktx = "2.5.0"
+    const val androidx_worker_ktx = "2.7.1"
     const val hilt_version = "2.33-beta"
-    const val retrofit = "2.9.0"
-    const val logging_interceptor = "4.0.1"
-    const val gson_converter = "2.6.0"
 
     // QR
     const val zxing = "4.2.0"
@@ -55,12 +64,8 @@ object Versions {
     const val jackson_datetype = "2.12.0"
     const val java_cose = "1.1.0"
     const val bouncy_castle = "1.68"
-
-    // Validation
     const val json_validation = "2.2.14"
     const val json_validation_rhino = "1.0"
-
-    // Tests
     const val junit = "4.13.1"
     const val junit_jupiter = "5.7.1"
     const val hamcrest = "2.2"
