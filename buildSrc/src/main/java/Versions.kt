@@ -50,7 +50,7 @@ object Versions {
     const val androidx_hilt_viewmodel = "1.0.0-alpha02"
     const val androidx_hilt_work = work_hilt
     const val androidx_hilt_compiler = work_hilt
-    const val androidx_worker_ktx = "2.5.0"
+    const val androidx_worker_ktx = "2.7.1"
     const val hilt_version = "2.33-beta"
 
     // QR
