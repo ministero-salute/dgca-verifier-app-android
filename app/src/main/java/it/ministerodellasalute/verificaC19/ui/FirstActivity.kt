@@ -244,7 +244,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         }
     }
 
-    private fun setScanModeButtonText(currentScanMode: String) {
+    private fun setScanModeButtonText(currentScanMode: ScanMode) {
         if (!viewModel.getScanModeFlag()) {
             val s = SpannableStringBuilder()
                 .bold { append(getString(R.string.label_choose_scan_mode)) }
@@ -257,7 +257,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                         R.string.scan_mode_2G_header
                     )
                     ScanMode.BOOSTER -> getString(R.string.title_scan_mode_booster)
-                    else -> getString(R.string.scan_mode_3G_header)
+                    ScanMode.WORK -> getString(R.string.scan_mode_work_header)
                 }
             chosenScanMode += "\n"
             val chosenModeDescription =
@@ -267,7 +267,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                         R.string.scan_mode_2G
                     )
                     ScanMode.BOOSTER -> getString(R.string.label_scan_mode_boost)
-                    else -> getString(R.string.scan_mode_3G)
+                    ScanMode.WORK -> getString(R.string.scan_mode_work)
                 }
             val s = SpannableStringBuilder()
                 .bold { append(chosenScanMode) }
@@ -459,7 +459,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             ScanMode.STANDARD -> 0
             ScanMode.STRENGTHENED -> 1
             ScanMode.BOOSTER -> 2
-            else -> 0
+            ScanMode.WORK -> 3
         }
         val scanModeChoices = arrayOf(
             getString(
@@ -484,7 +484,13 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                     Locale.ROOT
                 ),
                 getString(R.string.label_scan_mode_boost)
-
+            ),
+            getString(
+                R.string.label_alert_dialog_option,
+                getString(R.string.scan_mode_work_header).substringAfter(' ').toUpperCase(
+                    Locale.ROOT
+                ),
+                getString(R.string.scan_mode_work)
             )
         )
 
@@ -495,6 +501,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 0 -> viewModel.setScanMode(ScanMode.STANDARD)
                 1 -> viewModel.setScanMode(ScanMode.STRENGTHENED)
                 2 -> viewModel.setScanMode(ScanMode.BOOSTER)
+                3 -> viewModel.setScanMode(ScanMode.WORK)
             }
             dialog.dismiss()
         }

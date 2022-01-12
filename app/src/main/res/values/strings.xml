@@ -92,9 +92,11 @@
     <string name="scan_mode_3G_header">Verifica Base</string>
     <string name="scan_mode_2G_header">Verifica Rafforzata</string>
     <string name="title_scan_mode_booster">Verifica Booster</string>
+    <string name="scan_mode_work_header">Verifica Lavoro</string>
     <string name="scan_mode_3G">Vaccinazione/Guarigione/Tampone</string>
     <string name="scan_mode_2G">Vaccinazione/Guarigione</string>
     <string name="label_scan_mode_boost">Richiamo/ciclo completo+tampone/guarigione+tampone</string>
+    <string name="scan_mode_work">Vaccinazione/Guarigione</string>
     <string name="label_choose_scan_mode">Scegli tipologia di verifica</string>
     <string name="label_no_scan_mode_chosen">Per procedere alla scansione selezionare una delle tipologie di verifica della Certificazione verde Covid-19: BASE, RAFFORZATA, BOOSTER. \n
 \nTipologia BASE: la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione, da tampone. \n
