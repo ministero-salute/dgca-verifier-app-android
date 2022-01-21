@@ -37,12 +37,14 @@ The Italian version adds some medical rules to the validation of the DCCs, defin
 
 Whether you cloned or downloaded the 'zipped' sources you will either find the sources in the chosen checkout-directory or get a zip file with the source code, which you can expand to a folder of your choice.
 
-In order to successfully build and run the project, you must have also downloaded the corresponding core repository from [here](https://github.com/eu-digital-green-certificates/dgca-app-core-android). Both projects should be at the same folder level as eachother which would look something like
+In order to successfully build and run the project, you must have also downloaded the corresponding core repository from [here](https://github.com/eu-digital-green-certificates/dgca-app-core-android), sdk from [here](https://github.com/ministero-salute/it-dgc-verificac19-sdk-android) and certlogic from [here](https://github.com/eu-digital-green-certificates/dgc-certlogic-android). All projects should be at the same folder level as eachother which would look something like
 
 ```
 android-app
 |___dgca-verifier-app-android
 |___dgca-app-core-android
+|___it-dgc-verificac19-sdk-android
+|___dgc-certlogic-android
 ```
 
 #### Android Studio based build 
