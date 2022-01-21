@@ -28,6 +28,11 @@ allprojects {
         google()
         jcenter()
     }
+    project.configurations.all {
+        resolutionStrategy {
+            force Deps.androidx_worker_ktx
+        }
+    }
 }
 
 task clean(type: Delete) {
