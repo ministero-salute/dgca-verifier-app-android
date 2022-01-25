@@ -44,7 +44,7 @@ object Versions {
     const val androidx_core_testing = "2.1.0"
     const val test_coroutines = "1.5.0"
     const val gson_converter = "2.9.0"
-    const val gson = "2.8.8"
+    const val gson = "2.8.9"
 
     const val dokka = "1.5.0"
 
