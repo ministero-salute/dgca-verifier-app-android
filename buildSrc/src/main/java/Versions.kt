@@ -27,7 +27,6 @@ object Versions {
     const val gradle = "4.1.3"
     const val kotlin = "1.4.32"
     const val desugar_jdk_libs = "1.1.5"
-    const val mockk = "1.11.0"
 
     const val androidx_core = "1.7.0"
     const val androidx_startup = "1.1.0"
@@ -40,9 +39,9 @@ object Versions {
     const val kotlinx_coroutines = "1.3.9"
     const val retrofit = "2.9.0"
     const val androidx_room = "2.4.0"
-    const val androidx_core_testing = "2.1.0"
     const val test_coroutines = "1.5.0"
     const val gson_converter = "2.9.0"
+    const val gson = "2.8.9"
 
     const val dokka = "1.5.0"
 
@@ -64,7 +63,15 @@ object Versions {
     const val bouncy_castle = "1.68"
     const val json_validation = "2.2.14"
     const val json_validation_rhino = "1.0"
-    const val junit = "4.13.1"
     const val junit_jupiter = "5.7.1"
     const val hamcrest = "2.2"
+
+    // Tests
+    const val junit = "4.13.2"
+    const val mockk = "1.11.0"
+    const val androidx_core_testing = "2.1.0"
+    const val kotlinx_coroutines_test = "1.5.0"
+    const val truth = "1.1.3"
+    const val androidx_test_junit = "1.1.3"
+    const val androidx_test_espresso = "3.4.0"
 }

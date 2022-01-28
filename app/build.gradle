@@ -172,6 +172,15 @@ dependencies {
     implementation Deps.gson_converter
 
     testImplementation Deps.test_junit
+    testImplementation Deps.test_mockk
+    testImplementation Deps.androidx_core_testing
     testImplementation Deps.test_coroutines
+    testImplementation Deps.truth
+
+    androidTestImplementation Deps.androidx_core_testing
+    androidTestImplementation Deps.kotlinx_coroutines_test
+    androidTestImplementation Deps.truth
+    androidTestImplementation Deps.androidx_test_junit
+    androidTestImplementation Deps.androidx_test_espresso
 }
 

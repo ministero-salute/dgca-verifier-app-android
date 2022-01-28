@@ -39,9 +39,6 @@ object Deps {
     const val tools_gradle_android = "com.android.tools.build:gradle:${Versions.gradle}"
     const val tools_kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
     const val desugar_jdk_libs = "com.android.tools:desugar_jdk_libs:${Versions.desugar_jdk_libs}"
-    const val test_junit = "junit:junit:${Versions.junit}"
-    const val test_mockk = "io.mockk:mockk:${Versions.mockk}"
-
 
     const val kotlinx_coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlinx_coroutines}"
     const val androidx_core = "androidx.core:core-ktx:${Versions.androidx_core}"
@@ -55,14 +52,13 @@ object Deps {
     const val androidx_hilt_compiler = "androidx.hilt:hilt-compiler:${Versions.androidx_hilt_compiler}"
     const val androidx_room_runtime = "androidx.room:room-runtime:${Versions.androidx_room}"
     const val androidx_room_compiler = "androidx.room:room-compiler:${Versions.androidx_room}"
-    const val androidx_core_testing = "androidx.arch.core:core-testing:${Versions.androidx_core_testing}"
-    const val test_coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.test_coroutines}"
     const val androidx_worker_ktx = "androidx.work:work-runtime-ktx:${Versions.androidx_worker_ktx}"
     const val retrofit2 = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
 
     const val okhttp = "com.squareup.okhttp3:okhttp:${Versions.okhttp}"
     const val log_interceptor = "com.squareup.okhttp3:logging-interceptor:${Versions.logging_interceptor}"
     const val gson_converter = "com.squareup.retrofit2:converter-gson:${Versions.gson_converter}"
+    const val gson = "com.google.code.gson:gson:${Versions.gson}"
 
     const val dokka_plugin = "org.jetbrains.dokka:kotlin-as-java-plugin:${Versions.dokka}"
 
@@ -75,4 +71,13 @@ object Deps {
     const val zxing = "com.journeyapps:zxing-android-embedded:${Versions.zxing}"
     const val guava_conflict_resolver = "com.google.guava:listenablefuture:${Versions.guave_conflict_resolver_version}"
 
+    // Tests
+    const val test_junit = "junit:junit:${Versions.junit}"
+    const val test_mockk = "io.mockk:mockk:${Versions.mockk}"
+    const val test_coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.test_coroutines}"
+    const val androidx_core_testing = "androidx.arch.core:core-testing:${Versions.androidx_core_testing}"
+    const val kotlinx_coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinx_coroutines_test}"
+    const val truth = "com.google.truth:truth:${Versions.truth}"
+    const val androidx_test_junit = "androidx.test.ext:junit:${Versions.androidx_test_junit}"
+    const val androidx_test_espresso = "androidx.test.espresso:espresso-core:${Versions.androidx_test_espresso}"
 }
