@@ -93,20 +93,20 @@
     <string name="scan_mode_3G_header">Verifica Base</string>
     <string name="scan_mode_2G_header">Verifica Rafforzata</string>
     <string name="scan_mode_booster_header">Verifica Booster</string>
-    <string name="scan_mode_school_header">Verifica Scuola</string>
+    <string name="scan_mode_school_header">Verifica Studenti</string>
 
     <string name="label_scan_mode_3G">Vaccinazione/Guarigione/Tampone</string>
     <string name="label_scan_mode_2G">Vaccinazione/Guarigione</string>
     <string name="label_scan_mode_booster">Richiamo/ciclo completo+tampone/guarigione+tampone</string>
-    <string name="label_scan_mode_school">Test/Test/Test</string>
+    <string name="label_scan_mode_school">Richiamo/&lt;120gg ciclo completo e guarigione</string>
 
     <string name="label_choose_scan_mode">Scegli tipologia di verifica</string>
-    <string name="label_no_scan_mode_chosen">Per procedere alla scansione selezionare una delle tipologie di verifica della Certificazione verde Covid-19: BASE, RAFFORZATA, BOOSTER. \n
+    <string name="label_no_scan_mode_chosen">Per procedere alla scansione selezionare una delle tipologie di verifica della Certificazione verde Covid-19: BASE, RAFFORZATA, BOOSTER, STUDENTI. \n
 \nTipologia BASE: la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione, da tampone. \n
 \nTipologia RAFFORZATA: la app considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione. \n
-\nTipologia BOOSTER: la app considera valide le certificazioni verdi generate dopo dose di richiamo vaccinale. Considera valide, inoltre, le certificazioni verdi generate dopo ciclo vaccinale primario o guarigione con la contestuale presentazione di un documento, cartaceo o digitale, che attesti l’esito negativo di un test al SARS-CoV-2. \n
-        \nTipologia SCUOLA: lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ultrices mauris magna, quis iaculis quam sagittis non.. \n
-\nIndicazioni di dettaglio sulle attività consentite senza/con green pass BASE, RAFFORZATO, BOOSTER ( link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf )</string>
+\nTipologia BOOSTER: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo. Considera valide, inoltre, le certificazioni verdi generate da vaccinazione con ciclo primario completato o guarigione insieme alla contestuale presentazione di un documento, cartaceo o digitale, che attesti l’esito negativo di un test al SARS-CoV-2. \n
+        \nTipologia STUDENTI: la app considera valide solo le certificazioni verdi generate da vaccinazione con dose di richiamo. Considera valide, inoltre, le certificazioni verdi generate da vaccinazione con ciclo primario completato o guarigione fino a 120 giorni dalla loro emissione. \n
+\nConsulta la tabella sulle attività consentite senza o con green pass ( link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf )</string>
     <string name="label_alert_dialog_option">%1$s (%2$s)</string>
     <string name="label_verification_scan_mode">%1$s: %2$s</string>
     <string name="label_download">Scarica Ora</string>
