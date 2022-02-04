@@ -127,7 +127,9 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 .toUpperCase(Locale.ROOT)
             ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header).substringAfter(' ')
                 .toUpperCase(Locale.ROOT)
-            ScanMode.BOOSTER -> getString(R.string.title_scan_mode_booster).substringAfter(' ')
+            ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header).substringAfter(' ')
+                .toUpperCase(Locale.ROOT)
+            ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header).substringAfter(' ')
                 .toUpperCase(Locale.ROOT)
             else -> ""
         }
