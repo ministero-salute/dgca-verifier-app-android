@@ -47,7 +47,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.bold
 import androidx.core.view.isVisible
-import androidx.lifecycle.observe
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.BuildConfig
@@ -59,9 +58,9 @@ import it.ministerodellasalute.verificaC19.ui.extensions.hide
 import it.ministerodellasalute.verificaC19.ui.extensions.show
 import it.ministerodellasalute.verificaC19.ui.main.Extras
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
-import it.ministerodellasalute.verificaC19sdk.data.local.ScanMode
-import it.ministerodellasalute.verificaC19sdk.data.local.PrefKeys
+import it.ministerodellasalute.verificaC19sdk.data.local.prefs.PrefKeys
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
+import it.ministerodellasalute.verificaC19sdk.model.ScanMode
 import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
@@ -139,9 +138,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun observeScanMode() {
-        viewModel.scanMode.observe(this, {
+        viewModel.scanMode.observe(this) {
             setScanModeButtonText(it)
-        })
+        }
     }
 
     private fun observeSyncStatus() {

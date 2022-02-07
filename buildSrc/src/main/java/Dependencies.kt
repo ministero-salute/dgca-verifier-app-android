@@ -64,7 +64,7 @@ object Deps {
     const val okhttp = "com.squareup.okhttp3:okhttp:${Versions.okhttp}"
     const val log_interceptor = "com.squareup.okhttp3:logging-interceptor:${Versions.logging_interceptor}"
     const val gson_converter = "com.squareup.retrofit2:converter-gson:${Versions.gson_converter}"
-
+    const val gson = "com.google.code.gson:gson:${Versions.gson}"
     const val dokka_plugin = "org.jetbrains.dokka:kotlin-as-java-plugin:${Versions.dokka}"
 
     const val hilt_plugin = "com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt_version}"
