@@ -125,7 +125,8 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 .toUpperCase(Locale.ROOT)
             ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header).substringAfter(' ')
                 .toUpperCase(Locale.ROOT)
-            else -> ""
+            ScanMode.WORK -> getString(R.string.scan_mode_work_header).substringAfter(' ')
+                .toUpperCase(Locale.ROOT)
         }
         val scanModeLabel = getString(R.string.label_scan_mode_ver)
         binding.scanModeText.text =
