@@ -31,7 +31,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,11 +41,7 @@ import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
 import it.ministerodellasalute.verificaC19sdk.VerificaDownloadInProgressException
 import it.ministerodellasalute.verificaC19sdk.VerificaMinSDKVersionException
 import it.ministerodellasalute.verificaC19sdk.VerificaMinVersionException
-import it.ministerodellasalute.verificaC19sdk.data.local.ScanMode
-import it.ministerodellasalute.verificaC19sdk.model.CertificateStatus
-import it.ministerodellasalute.verificaC19sdk.model.CertificateViewBean
-import it.ministerodellasalute.verificaC19sdk.model.PersonModel
-import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
+import it.ministerodellasalute.verificaC19sdk.model.*
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_VALIDATION_DATE
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.formatDateOfBirth
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
@@ -93,7 +88,6 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         viewModel.inProgress.observe(viewLifecycleOwner) {
             binding.progressBar.isVisible = it
         }
-
         try {
             viewModel.init(args.qrCodeText, true)
         } catch (e: VerificaMinSDKVersionException) {
