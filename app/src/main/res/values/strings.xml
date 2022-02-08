@@ -108,7 +108,7 @@
 \nTipologia RAFFORZATA: la app considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione. \n
 \nTipologia VISITATORI RSA: da utilizzare per l\'accesso di visitatori alle strutture residenziali, socio-assistenziali, socio-sanitarie e hospice: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo. Considera valide, inoltre, le certificazioni verdi generate da vaccinazione con ciclo primario completato o guarigione insieme alla contestuale presentazione di un documento, cartaceo o digitale, che attesti l’esito negativo di un test al SARS-CoV-2. \n
         \nTipologia STUDENTI: da utilizzare nelle classi della scuola secondaria per la didattica in presenza in presenza di due casi positivi: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo e quelle con ciclo primario o guarigione, se emesse da meno di 120 giorni. \n
-        \nTipologia LAVORO: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt tristique quam non lobortis. Pellentesque nec interdum ligula, id molestie augue. Praesent eu velit ligula. Duis non tellus eu sem finibus blandit. Aliquam nec ultrices leo, quis aliquet turpis. \n
+        \nTipologia LAVORO: da utilizzare nei luoghi di lavoro. \n
 \nConsulta la tabella sulle attività consentite senza o con green pass ( link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf )</string>
     <string name="label_alert_dialog_option">%1$s (%2$s)</string>
     <string name="label_verification_scan_mode">%1$s: %2$s</string>
