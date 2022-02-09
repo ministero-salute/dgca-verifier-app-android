@@ -94,11 +94,13 @@
     <string name="scan_mode_2G_header">Verifica Rafforzata</string>
     <string name="scan_mode_booster_header">Verifica Visitatori RSA</string>
     <string name="scan_mode_school_header">Verifica Studenti</string>
+    <string name="scan_mode_work_header">Verifica Lavoro</string>
 
     <string name="label_scan_mode_3G">Vaccinazione/Guarigione/Tampone</string>
     <string name="label_scan_mode_2G">Vaccinazione/Guarigione</string>
     <string name="label_scan_mode_booster">Richiamo/ciclo completo+tampone/guarigione+tampone</string>
     <string name="label_scan_mode_school">Richiamo/ciclo completo e guarigione &lt;120gg</string>
+    <string name="scan_mode_work">Test/Test</string>
 
     <string name="label_choose_scan_mode">Scegli tipologia di verifica</string>
     <string name="label_no_scan_mode_chosen">Per procedere alla scansione selezionare una delle tipologie di verifica della Certificazione verde Covid-19: BASE, RAFFORZATA, VISITATORI RSA, STUDENTI. \n
@@ -106,6 +108,7 @@
 \nTipologia RAFFORZATA: la app considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione. \n
 \nTipologia VISITATORI RSA: da utilizzare per l\'accesso di visitatori alle strutture residenziali, socio-assistenziali, socio-sanitarie e hospice: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo. Considera valide, inoltre, le certificazioni verdi generate da vaccinazione con ciclo primario completato o guarigione insieme alla contestuale presentazione di un documento, cartaceo o digitale, che attesti l’esito negativo di un test al SARS-CoV-2. \n
         \nTipologia STUDENTI: da utilizzare nelle classi della scuola secondaria per la didattica in presenza in presenza di due casi positivi: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo e quelle con ciclo primario o guarigione, se emesse da meno di 120 giorni. \n
+        \nTipologia LAVORO: da utilizzare nei luoghi di lavoro. \n
 \nConsulta la tabella sulle attività consentite senza o con green pass ( link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf )</string>
     <string name="label_alert_dialog_option">%1$s (%2$s)</string>
     <string name="label_verification_scan_mode">%1$s: %2$s</string>
