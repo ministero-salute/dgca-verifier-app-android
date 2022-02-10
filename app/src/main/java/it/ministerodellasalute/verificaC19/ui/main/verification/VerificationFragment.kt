@@ -149,7 +149,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         val questionMap: Map<String, String> = when (certStatus) {
             CertificateStatus.VALID -> mapOf(getString(R.string.label_what_can_be_done) to "https://www.dgc.gov.it/web/faq.html#verifica19")
             CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19")
-            CertificateStatus.NOT_VALID, CertificateStatus.TEST_NEEDED, CertificateStatus.REVOKED -> mapOf(
+            CertificateStatus.NOT_VALID, CertificateStatus.EXPIRED, CertificateStatus.TEST_NEEDED, CertificateStatus.REVOKED -> mapOf(
                 getString(R.string.label_why_qr_not_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19"
             )
             CertificateStatus.NOT_EU_DCC -> mapOf(getString(R.string.label_which_qr_scan) to "https://www.dgc.gov.it/web/faq.html#verifica19")
@@ -173,7 +173,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         binding.subtitleText.text =
             when (certStatus) {
                 CertificateStatus.VALID, CertificateStatus.TEST_NEEDED -> getString(R.string.subtitle_text)
-                CertificateStatus.NOT_VALID, CertificateStatus.NOT_VALID_YET -> getString(R.string.subtitle_text_notvalid)
+                CertificateStatus.NOT_VALID, CertificateStatus.EXPIRED, CertificateStatus.NOT_VALID_YET -> getString(R.string.subtitle_text_notvalid)
                 else -> getString(R.string.subtitle_text_technicalError)
             }
     }
@@ -186,6 +186,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 R.string.certificateNonValid
             )
             CertificateStatus.NOT_VALID -> getString(R.string.certificateNonValid)
+            CertificateStatus.EXPIRED -> getString(R.string.certificateExpired)
             CertificateStatus.TEST_NEEDED -> getString(R.string.certificateValidTestNeeded)
             CertificateStatus.NOT_VALID_YET -> getString(R.string.certificateNonValidYet)
         }
@@ -206,7 +207,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setPersonDetailsVisibility(certStatus: CertificateStatus) {
         binding.containerPersonDetails.visibility = when (certStatus) {
-            CertificateStatus.VALID, CertificateStatus.REVOKED, CertificateStatus.TEST_NEEDED, CertificateStatus.NOT_VALID, CertificateStatus.NOT_VALID_YET -> View.VISIBLE
+            CertificateStatus.VALID, CertificateStatus.REVOKED, CertificateStatus.TEST_NEEDED, CertificateStatus.NOT_VALID,  CertificateStatus.EXPIRED, CertificateStatus.NOT_VALID_YET -> View.VISIBLE
             else -> View.GONE
         }
     }
