@@ -223,7 +223,11 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setPersonData(person: PersonModel?, dateOfBirth: String?) {
-        binding.nameStandardisedText.text = person?.familyName.plus(" ").plus(person?.givenName)
+        if (person?.familyName.isNullOrEmpty()) {
+            binding.nameStandardisedText.text = person?.standardisedFamilyName.plus(" ").plus(person?.standardisedGivenName).plus(" ").plus(person?.givenName)
+         } else {
+            binding.nameStandardisedText.text = person?.familyName.plus(" ").plus(person?.givenName)
+        }
         binding.birthdateText.text = dateOfBirth?.formatDateOfBirth().orEmpty()
     }
 
