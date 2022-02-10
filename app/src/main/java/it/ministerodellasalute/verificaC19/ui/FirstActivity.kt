@@ -256,6 +256,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                     ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
                     ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header)
                     ScanMode.WORK -> getString(R.string.scan_mode_work_header)
+                    ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
 
                     else -> getString(R.string.scan_mode_3G_header)
                 }
@@ -266,7 +267,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                     ScanMode.STRENGTHENED -> getString(R.string.label_scan_mode_2G)
                     ScanMode.BOOSTER -> getString(R.string.label_scan_mode_booster)
                     ScanMode.SCHOOL -> getString(R.string.label_scan_mode_school)
-                    ScanMode.WORK -> getString(R.string.scan_mode_work)
+                    ScanMode.WORK -> getString(R.string.label_scan_mode_work)
+                    ScanMode.ENTRY_ITALY -> getString(R.string.label_scan_mode_entry_italy)
                     else -> getString(R.string.label_scan_mode_3G)
                 }
             val s = SpannableStringBuilder()
@@ -461,6 +463,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             ScanMode.BOOSTER -> 2
             ScanMode.SCHOOL -> 3
             ScanMode.WORK -> 4
+            ScanMode.ENTRY_ITALY -> 5
             else -> 0
         }
         val scanModeChoices = arrayOf(
@@ -497,7 +500,14 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 getString(R.string.scan_mode_work_header).substringAfter(' ').toUpperCase(
                     Locale.ROOT
                 ),
-                getString(R.string.scan_mode_work)
+                getString(R.string.label_scan_mode_work)
+            ),
+            getString(
+                R.string.label_alert_dialog_option,
+                getString(R.string.scan_mode_entry_italy_header).substringAfter(' ').toUpperCase(
+                    Locale.ROOT
+                ),
+                getString(R.string.label_scan_mode_entry_italy)
             )
         )
 
@@ -510,6 +520,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 2 -> viewModel.setScanMode(ScanMode.BOOSTER)
                 3 -> viewModel.setScanMode(ScanMode.SCHOOL)
                 4 -> viewModel.setScanMode(ScanMode.WORK)
+                5 -> viewModel.setScanMode(ScanMode.ENTRY_ITALY)
             }
             dialog.dismiss()
         }
