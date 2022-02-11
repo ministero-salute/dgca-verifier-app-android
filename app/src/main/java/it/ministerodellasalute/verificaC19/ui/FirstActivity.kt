@@ -251,12 +251,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         } else {
             var chosenScanMode =
                 when (currentScanMode) {
-                    ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
-                    ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
-                    ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
-                    ScanMode.WORK -> getString(R.string.scan_mode_work_header)
-                    ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
-                    ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header)
+                    ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header).substringAfter(' ').toUpperCase(Locale.ROOT)
+                    ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header).substringAfter(' ').toUpperCase(Locale.ROOT)
+                    ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header).substringAfter(' ').toUpperCase(Locale.ROOT)
+                    ScanMode.WORK -> getString(R.string.scan_mode_work_header).substringAfter(' ').toUpperCase(Locale.ROOT)
+                    ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header).substringAfter(' ').toUpperCase(Locale.ROOT)
+                    ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header).substringAfter(' ').toUpperCase(Locale.ROOT)
                     else -> getString(R.string.scan_mode_3G_header)
                 }
             chosenScanMode += "\n"
