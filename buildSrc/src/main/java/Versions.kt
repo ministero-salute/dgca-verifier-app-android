@@ -23,6 +23,7 @@
 object Versions {
 
 
+
     // Base
     const val gradle = "4.1.3"
     const val kotlin = "1.4.32"
@@ -43,6 +44,7 @@ object Versions {
     const val androidx_core_testing = "2.1.0"
     const val test_coroutines = "1.5.0"
     const val gson_converter = "2.9.0"
+    const val gson = "2.8.9"
 
     const val dokka = "1.5.0"
 
