@@ -77,7 +77,7 @@ class DataActivity : AppCompatActivity(), View.OnClickListener {
         binding.resumeTokenValue.text = viewModel.getResumeToken().toString()
         binding.dateLastFetchValue.text = viewModel.getDateLastFetch().parseTo(FORMATTED_DATE_LAST_SYNC)
         binding.validationRulesValue.movementMethod = ScrollingMovementMethod()
-        binding.validationRulesValue.text = viewModel.callGetValidationRules().map { "[" + it.name + "\n" + it.type + "\n" + it.value + "]"}.joinToString("\n")
+        binding.validationRulesValue.text = viewModel.getValidationRulesJson().map { "[" + it.name + "\n" + it.type + "\n" + it.value + "]"}.joinToString("\n")
 
     }
 
