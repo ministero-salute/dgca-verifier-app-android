@@ -86,7 +86,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/torch_button"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_flip_camera"
+            app:srcCompat="@drawable/ic_switch_camera"
             android:padding="@dimen/padding_12dp"
             app:tint="@color/blue_dark" />
 

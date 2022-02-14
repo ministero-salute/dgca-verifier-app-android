@@ -119,7 +119,7 @@
 
         \nTipologia STUDENTI (S) - da utilizzare nelle classi della scuola primaria e secondaria per la didattica in presenza, in classi con casi di positività accertati: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo e quelle con ciclo primario o guarigione, se emesse da meno di 120 giorni e le certificazioni di esenzione dalla vaccinazione. \n
 
-        \nConsulta la tabella sulle attività consentite senza/ o con green pass base  rafforzato (link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf)"</string>
+        \nConsulta la tabella sulle attività consentite senza/ o con green pass base  rafforzato ( link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf )"</string>
     <string name="label_alert_dialog_option">%1$s (%2$s)</string>
     <string name="label_verification_scan_mode">%1$c\t\t%2$s</string>
     <string name="label_download">Scarica Ora</string>
