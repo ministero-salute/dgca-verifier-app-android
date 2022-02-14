@@ -34,6 +34,7 @@
     <string name="expirationText">Data scadenza certificato</string>
     <string name="certificateValid">Certificazione valida</string>
     <string name="certificateNonValid">Certificazione non valida</string>
+    <string name="certificateExpired">Certificazione scaduta</string>
     <string name="certificateRevoked">Certificazione revocata</string>
     <string name="certificateNonValidYet">Certificazione non ancora valida</string>
     <string name="certificateNotDCC">Errore di lettura del QR Code, oppure non è il Certificato verde COVID-19</string>
@@ -93,23 +94,32 @@
     <string name="scan_mode_3G_header">Verifica Base</string>
     <string name="scan_mode_2G_header">Verifica Rafforzata</string>
     <string name="scan_mode_booster_header">Verifica Visitatori RSA</string>
-    <string name="scan_mode_school_header">Verifica Studenti</string>
     <string name="scan_mode_work_header">Verifica Lavoro</string>
+    <string name="scan_mode_entry_italy_header">Verifica Ingresso IT</string>
+    <string name="scan_mode_school_header">Verifica Studenti</string>
 
-    <string name="label_scan_mode_3G">Vaccinazione/Guarigione/Tampone</string>
-    <string name="label_scan_mode_2G">Vaccinazione/Guarigione</string>
-    <string name="label_scan_mode_booster">Richiamo/ciclo completo+tampone/guarigione+tampone</string>
-    <string name="label_scan_mode_school">Richiamo/ciclo completo e guarigione &lt;120gg</string>
-    <string name="scan_mode_work">Test/Test</string>
+    <string name="label_scan_mode_3G">vaccinazione/guarigione/tampone</string>
+    <string name="label_scan_mode_2G">vaccinazione/guarigione</string>
+    <string name="label_scan_mode_booster">richiamo/ciclo completo+tampone/guarigione+tampone</string>
+    <string name="label_scan_mode_work">base &lt;50anni – rafforzata &gt;= 50anni</string>
+    <string name="label_scan_mode_entry_italy">richiamo/ciclo completo &lt;=270gg/guarigione/tampone</string>
+    <string name="label_scan_mode_school">richiamo/ciclo completo e guarigione &lt;120gg</string>
 
     <string name="label_choose_scan_mode">Scegli tipologia di verifica</string>
-    <string name="label_no_scan_mode_chosen">Per procedere alla scansione selezionare una delle tipologie di verifica della Certificazione verde Covid-19: BASE, RAFFORZATA, VISITATORI RSA, STUDENTI. \n
-\nTipologia BASE: la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione, da tampone. \n
-\nTipologia RAFFORZATA: la app considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione. \n
-\nTipologia VISITATORI RSA: da utilizzare per l\'accesso di visitatori alle strutture residenziali, socio-assistenziali, socio-sanitarie e hospice: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo. Considera valide, inoltre, le certificazioni verdi generate da vaccinazione con ciclo primario completato o guarigione insieme alla contestuale presentazione di un documento, cartaceo o digitale, che attesti l’esito negativo di un test al SARS-CoV-2. \n
-        \nTipologia STUDENTI: da utilizzare nelle classi della scuola secondaria per la didattica in presenza in presenza di due casi positivi: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo e quelle con ciclo primario o guarigione, se emesse da meno di 120 giorni. \n
-        \nTipologia LAVORO: da utilizzare nei luoghi di lavoro. \n
-\nConsulta la tabella sulle attività consentite senza o con green pass ( link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf )</string>
+    <string name="label_no_scan_mode_chosen">Per procedere alla scansione selezionare una delle tipologie di verifica della Certificazione verde Covid-19: BASE, RAFFORZATA, VISITATORI RSA, LAVORO, INGRESSO IT, STUDENTI. \n
+        \n Tipologia BASE: la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione, da tampone e le certificazioni di esenzione dalla vaccinazione. \n
+
+        \n Tipologia RAFFORZATA: la app considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione e le certificazioni di esenzione dalla vaccinazione. \n
+
+        \n Tipologia VISITATORI RSA - da utilizzare per l\'accesso di visitatori alle strutture residenziali, socio-assistenziali, socio-sanitarie e hospice: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo. Considera valide, inoltre, le certificazioni verdi generate da vaccinazione con ciclo primario completato o guarigione insieme alla contestuale presentazione di un esito negativo di un test al SARS-CoV-2 eseguito nelle 48 ore precedenti.  \n
+
+        \n Tipologia LAVORO - da utilizzare per l\’accesso ai luoghi di lavoro dal 15 febbraio: fino ai 49 anni di età la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione o da tampone. Dai 50 anni compiuti in su, considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione. La app considera comunque valide le certificazioni di esenzione dalla vaccinazione. \n
+
+        \n Tipologia INGRESSO IT - da utilizzare all\’atto dell\'ingresso in Italia dall\'estero: la app considera valide tutte le tipologie di certificazione verde COVID-19 (vaccinazione, guarigione o tampone) secondo le regole di validazione europee per la circolazione tra gli Stati Membri. Sulla base del tipo di vaccino o ciclo completato da più di 180gg e fino a 270gg può richiedere la contestuale presentazione di un esito negativo di un test al SARS-CoV-2 eseguito nelle 48 ore precedenti \n
+
+        \n Tipologia STUDENTI - da utilizzare nelle classi della scuola primaria e secondaria per la didattica in presenza, in classi con casi di positività accertati: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo e quelle con ciclo primario o guarigione, se emesse da meno di 120 giorni e le certificazioni di esenzione dalla vaccinazione. \n
+
+        \n Consulta la tabella sulle attività consentite senza/ o con green pass base  rafforzato (link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf)"</string>
     <string name="label_alert_dialog_option">%1$s (%2$s)</string>
     <string name="label_verification_scan_mode">%1$s: %2$s</string>
     <string name="label_download">Scarica Ora</string>
