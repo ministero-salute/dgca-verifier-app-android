@@ -44,7 +44,9 @@ import com.journeyapps.barcodescanner.camera.CameraSettings
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.FragmentCodeReaderBinding
+import it.ministerodellasalute.verificaC19sdk.model.ScanMode
 import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
+import java.util.*
 
 @AndroidEntryPoint
 class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListener,
@@ -104,6 +106,18 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
         binding.barcodeScanner.barcodeView.decoderFactory = DefaultDecoderFactory(formats, hintsMap, null, 0)
         binding.barcodeScanner.cameraSettings.isAutoFocusEnabled = true
 
+        val chosenScanMode = when (viewModel.getScanMode()) {
+            ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
+            ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
+            ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
+            ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header)
+            ScanMode.WORK -> getString(R.string.scan_mode_work_header)
+            ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
+        }
+
+        binding.scanModeInitials.text = chosenScanMode.first().toString()
+        binding.scanModeText.text = chosenScanMode.substringAfter(" - ").toUpperCase(Locale.ROOT)
+
         if (viewModel.getFrontCameraStatus()) {
             binding.barcodeScanner.barcodeView.cameraSettings.focusMode =
                 CameraSettings.FocusMode.INFINITY
@@ -132,7 +146,6 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
         beepManager = BeepManager(requireActivity())
 
         binding.backImage.setOnClickListener(this)
-        binding.backText.setOnClickListener(this)
         binding.flipCamera.setOnClickListener(this)
     }
 

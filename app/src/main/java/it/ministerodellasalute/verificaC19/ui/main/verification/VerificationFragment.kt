@@ -117,22 +117,15 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setScanModeText() {
         val chosenScanMode = when (viewModel.getScanMode()) {
-            ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header).substringAfter(' ')
-                .toUpperCase(Locale.ROOT)
-            ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header).substringAfter(' ')
-                .toUpperCase(Locale.ROOT)
-            ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header).substringAfter(' ')
-                .toUpperCase(Locale.ROOT)
-            ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header).substringAfter(' ')
-                .toUpperCase(Locale.ROOT)
-            ScanMode.WORK -> getString(R.string.scan_mode_work_header).substringAfter(' ')
-                .toUpperCase(Locale.ROOT)
-            ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header).substringAfter(' ')
-                .toUpperCase(Locale.ROOT)
+            ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
+            ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
+            ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
+            ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header)
+            ScanMode.WORK -> getString(R.string.scan_mode_work_header)
+            ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
         }
-        val scanModeLabel = getString(R.string.label_scan_mode_ver)
-        binding.scanModeText.text =
-            getString(R.string.label_verification_scan_mode, scanModeLabel, chosenScanMode)
+        binding.scanModeInitials.text = chosenScanMode.first().toString()
+        binding.scanModeText.text = chosenScanMode.substringAfter(" - ").toUpperCase(Locale.ROOT)
     }
 
     private fun setupTimeStamp(cert: CertificateViewBean) {
@@ -207,7 +200,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setPersonDetailsVisibility(certStatus: CertificateStatus) {
         binding.containerPersonDetails.visibility = when (certStatus) {
-            CertificateStatus.VALID, CertificateStatus.REVOKED, CertificateStatus.TEST_NEEDED, CertificateStatus.NOT_VALID,  CertificateStatus.EXPIRED, CertificateStatus.NOT_VALID_YET -> View.VISIBLE
+            CertificateStatus.VALID, CertificateStatus.REVOKED, CertificateStatus.TEST_NEEDED, CertificateStatus.NOT_VALID, CertificateStatus.EXPIRED, CertificateStatus.NOT_VALID_YET -> View.VISIBLE
             else -> View.GONE
         }
     }
