@@ -78,6 +78,7 @@
     <string name="label_why_qr_not_valid">Quali sono i motivi di non validità?</string>
     <string name="label_when_qr_valid">Quali sono i tempi di inizio validità?</string>
     <string name="label_which_qr_scan">Quale QR Code scansionare?</string>
+    <string name="label_why_is_test_needed">Perché è richiesto il tampone seppur valida?</string>
     <string name="label_scan_error_meaning">Cosa significa errore di lettura?</string>
     <string name="label_scan_times_needed">Quante volte devo riprovare a scansionare</string>
     <string name="label_validation_timestamp">Ora e data di validazione %1$s</string>
@@ -138,5 +139,5 @@
     <string name="no_internet_title">Connessione internet assente</string>
     <string name="no_internet_message">Connessione internet assente. Assicurati di essere connesso alla rete e riprova.</string>
     <string name="ok_label">OK</string>
-    <string name="certificateValidTestNeeded">Certificazione valida, è richiesto il controllo del tampone</string>
+    <string name="certificateValidTestNeeded">Certificazione valida richiesto tampone</string>
 </resources>

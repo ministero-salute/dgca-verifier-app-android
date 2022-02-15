@@ -98,7 +98,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/barcode_scanner">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/close_text"
             style="@style/H3.Black.Bold"
             android:layout_width="wrap_content"
@@ -108,7 +108,7 @@
             android:textAllCaps="true"
             android:textColor="@color/blue_dark"
             android:textSize="@dimen/text_size_12sp"
-            android:layout_marginTop="@dimen/margin_15dp"
+            android:layout_marginTop="@dimen/margin_8dp"
             app:layout_constraintBottom_toTopOf="@id/arrow"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -119,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="@dimen/margin_15dp"
+            android:layout_marginBottom="@dimen/margin_8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/close_button"
             app:layout_constraintStart_toStartOf="parent"

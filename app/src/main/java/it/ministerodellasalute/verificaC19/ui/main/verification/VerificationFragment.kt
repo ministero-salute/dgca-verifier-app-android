@@ -141,9 +141,10 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         val questionMap: Map<String, String> = when (certStatus) {
             CertificateStatus.VALID -> mapOf(getString(R.string.label_what_can_be_done) to "https://www.dgc.gov.it/web/faq.html#verifica19")
             CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19")
-            CertificateStatus.NOT_VALID, CertificateStatus.EXPIRED, CertificateStatus.TEST_NEEDED, CertificateStatus.REVOKED -> mapOf(
+            CertificateStatus.NOT_VALID, CertificateStatus.EXPIRED, CertificateStatus.REVOKED -> mapOf(
                 getString(R.string.label_why_qr_not_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19"
             )
+            CertificateStatus.TEST_NEEDED -> mapOf(getString(R.string.label_why_is_test_needed) to "https://www.dgc.gov.it/web/faq.html#verifica19")
             CertificateStatus.NOT_EU_DCC -> mapOf(getString(R.string.label_which_qr_scan) to "https://www.dgc.gov.it/web/faq.html#verifica19")
         }
         questionMap.map {
