@@ -241,6 +241,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 createCheckConnectionAlertDialog()
             }
         }
+        binding.circleInfo.setOnClickListener(this)
     }
 
     private fun setScanModeButtonText(currentScanMode: ScanMode) {
@@ -451,6 +452,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             R.id.qrButton -> checkCameraPermission()
             R.id.settings -> openSettings()
             R.id.scan_mode_button -> showScanModeChoiceAlertDialog()
+            R.id.circle_info -> createScanModeInfoAlert()
         }
     }
 
@@ -520,6 +522,21 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.noKeyAlertTitle))
         val string = SpannableString(getString(R.string.label_no_scan_mode_chosen)).also {
+            Linkify.addLinks(it, Linkify.ALL)
+        }
+        builder.setMessage(string)
+        builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
+        }
+        val dialog = builder.create()
+        dialog.show()
+        val alertMessage = dialog.findViewById<TextView>(android.R.id.message) as TextView
+        alertMessage.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    private fun createScanModeInfoAlert() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.label_scan_mode_types))
+        val string = SpannableString(getString(R.string.label_scan_mode_types_description)).also {
             Linkify.addLinks(it, Linkify.ALL)
         }
         builder.setMessage(string)
