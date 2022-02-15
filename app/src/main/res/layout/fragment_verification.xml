@@ -52,48 +52,20 @@
                     android:minHeight="@dimen/size_60dp">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/scan_mode_initials"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:fontFamily="@font/titiliumfont"
-                        android:textAllCaps="true"
-                        android:textColor="@color/blue_dark"
-                        android:textSize="@dimen/text_size_20sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="B" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/scan_mode_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
                         android:fontFamily="@font/titiliumfont"
                         android:textAllCaps="true"
-                        android:textStyle="bold"
                         android:textColor="@color/blue_dark"
                         android:textSize="@dimen/text_size_18sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="@dimen/margin_32dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/scan_mode_initials"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Base" />
+                        tools:text="B - Base" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/validation_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_16dp"
-                        android:layout_marginEnd="@dimen/margin_16dp"
-                        android:fontFamily="@font/titiliumfont"
-                        android:textAlignment="textEnd"
-                        android:text="@string/label_validation_timestamp"
-                        android:textColor="@color/blue_dark"
-                        android:textSize="@dimen/text_size_12sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -179,9 +151,9 @@
                                 android:layout_marginHorizontal="@dimen/margin_24dp"
                                 android:layout_marginStart="24dp"
                                 android:layout_marginEnd="24dp"
-                                android:layout_marginBottom="32dp"
+                                android:layout_marginBottom="24dp"
                                 android:visibility="gone"
-                                app:layout_constraintBottom_toTopOf="@+id/close_button"
+                                app:layout_constraintBottom_toTopOf="@+id/validation_date"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 tools:visibility="visible">
@@ -246,6 +218,20 @@
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/validation_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/titiliumfont"
+                                android:text="@string/label_validation_timestamp"
+                                android:textColor="@color/blue_dark"
+                                android:textSize="@dimen/text_size_12sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="@dimen/margin_24dp"
+                                app:layout_constraintBottom_toTopOf="@id/close_button"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent" />
+
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:id="@+id/close_button"
                                 android:layout_width="match_parent"
@@ -253,10 +239,7 @@
                                 android:gravity="bottom|center"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.0"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/checkmark"
-                                app:layout_constraintVertical_bias="1.0">
+                                app:layout_constraintStart_toStartOf="parent">
 
                                 <TextView
                                     android:id="@+id/close_text"

@@ -46,7 +46,6 @@ import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.FragmentCodeReaderBinding
 import it.ministerodellasalute.verificaC19sdk.model.ScanMode
 import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
-import java.util.*
 
 @AndroidEntryPoint
 class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListener,
@@ -114,9 +113,8 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
             ScanMode.WORK -> getString(R.string.scan_mode_work_header)
             ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
         }
-
-        binding.scanModeInitials.text = chosenScanMode.first().toString()
-        binding.scanModeText.text = chosenScanMode.substringAfter(" - ").toUpperCase(Locale.ROOT)
+        binding.scanModeText.text = chosenScanMode
+        binding.closeButton.setOnClickListener(this)
 
         if (viewModel.getFrontCameraStatus()) {
             binding.barcodeScanner.barcodeView.cameraSettings.focusMode =
@@ -145,7 +143,6 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
         binding.barcodeScanner.statusView.text = ""
         beepManager = BeepManager(requireActivity())
 
-        binding.backImage.setOnClickListener(this)
         binding.flipCamera.setOnClickListener(this)
     }
 
@@ -214,6 +211,7 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
                     binding.barcodeScanner.setTorchOn()
                 }
             }
+            R.id.close_button -> activity?.onBackPressed()
         }
     }
 

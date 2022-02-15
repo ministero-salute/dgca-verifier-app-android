@@ -124,8 +124,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             ScanMode.WORK -> getString(R.string.scan_mode_work_header)
             ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
         }
-        binding.scanModeInitials.text = chosenScanMode.first().toString()
-        binding.scanModeText.text = chosenScanMode.substringAfter(" - ").toUpperCase(Locale.ROOT)
+        binding.scanModeText.text = chosenScanMode
     }
 
     private fun setupTimeStamp(cert: CertificateViewBean) {
