@@ -72,7 +72,7 @@ class SettingsActivity : AppCompatActivity(), View.OnClickListener {
             startActivity(browserIntent)
         } else if (v?.id == R.id.privacy_policy_card) {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/pn.html"))
+                Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVACY_POLICY_URL))
             startActivity(browserIntent)
         }
     }

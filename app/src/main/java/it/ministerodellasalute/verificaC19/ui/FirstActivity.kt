@@ -207,7 +207,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         binding.scanModeButton.setOnClickListener(this)
         binding.privacyPolicyCard.setOnClickListener {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/pn.html"))
+                Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVACY_POLICY_URL))
             startActivity(browserIntent)
         }
         binding.faqCard.setOnClickListener {

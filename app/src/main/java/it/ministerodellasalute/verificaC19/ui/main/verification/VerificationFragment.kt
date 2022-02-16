@@ -34,6 +34,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
+import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.FragmentVerificationBinding
 import it.ministerodellasalute.verificaC19.ui.base.isDebug
@@ -141,13 +142,13 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private fun setLinkViews(certStatus: CertificateStatus) {
         binding.questionContainer.removeAllViews()
         val questionMap: Map<String, String> = when (certStatus) {
-            CertificateStatus.VALID -> mapOf(getString(R.string.label_what_can_be_done) to "https://www.dgc.gov.it/web/faq.html#verifica19")
-            CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19")
+            CertificateStatus.VALID -> mapOf(getString(R.string.label_what_can_be_done) to BuildConfig.VERIFICATION_FAQ_URL)
+            CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to BuildConfig.VERIFICATION_FAQ_URL)
             CertificateStatus.NOT_VALID, CertificateStatus.EXPIRED, CertificateStatus.REVOKED -> mapOf(
-                getString(R.string.label_why_qr_not_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19"
+                getString(R.string.label_why_qr_not_valid) to BuildConfig.VERIFICATION_FAQ_URL
             )
-            CertificateStatus.TEST_NEEDED -> mapOf(getString(R.string.label_why_is_test_needed) to "https://www.dgc.gov.it/web/faq.html#verifica19")
-            CertificateStatus.NOT_EU_DCC -> mapOf(getString(R.string.label_which_qr_scan) to "https://www.dgc.gov.it/web/faq.html#verifica19")
+            CertificateStatus.TEST_NEEDED -> mapOf(getString(R.string.label_why_is_test_needed) to BuildConfig.VERIFICATION_FAQ_URL)
+            CertificateStatus.NOT_EU_DCC -> mapOf(getString(R.string.label_which_qr_scan) to BuildConfig.VERIFICATION_FAQ_URL)
         }
         questionMap.map {
             val compound = QuestionCompound(context)
