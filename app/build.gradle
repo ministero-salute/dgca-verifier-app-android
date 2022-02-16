@@ -99,7 +99,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "FAQ_URL", "\"https://www.dgc.gov.it/web/faq.html#verifica19\""
+            buildConfigField "String", "FAQ_URL", "\"https://www.dgc.gov.it/web/app.html\""
             buildConfigField "String", "PRIVACY_POLICY_URL", "\"https://www.dgc.gov.it/web/pn.html\""
             buildConfigField "String", "VERIFICATION_FAQ_URL", "\"https://www.dgc.gov.it/web/faq.html#verifica19\""
             minifyEnabled false
@@ -107,7 +107,7 @@ android {
         }
 
         release {
-            buildConfigField "String", "FAQ_URL", "\"https://www.dgc.gov.it/web/faq.html#verifica19\""
+            buildConfigField "String", "FAQ_URL", "\"https://www.dgc.gov.it/web/app.html\""
             buildConfigField "String", "PRIVACY_POLICY_URL", "\"https://www.dgc.gov.it/web/pn.html\""
             buildConfigField "String", "VERIFICATION_FAQ_URL", "\"https://www.dgc.gov.it/web/faq.html#verifica19\""
             //signingConfig signingConfigs.debug
