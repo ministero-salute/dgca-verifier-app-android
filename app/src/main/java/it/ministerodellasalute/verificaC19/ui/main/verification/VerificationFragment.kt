@@ -75,6 +75,8 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 setPersonData(it.person, it.dateOfBirth)
                 setupCertStatusView(it)
                 setupTimeStamp(it)
+                binding.closeButton.visibility = View.VISIBLE
+                binding.validationDate.visibility = View.VISIBLE
                 if (
                     viewModel.getTotemMode() &&
                     (certificate.certificateStatus == CertificateStatus.VALID)

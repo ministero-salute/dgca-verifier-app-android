@@ -227,6 +227,8 @@
                                 android:textColor="@color/blue_dark"
                                 android:textSize="@dimen/text_size_12sp"
                                 android:textStyle="bold"
+                                android:visibility="invisible"
+                                tools:visibility="visible"
                                 android:layout_marginBottom="@dimen/margin_24dp"
                                 app:layout_constraintBottom_toTopOf="@id/close_button"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -237,6 +239,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="bottom|center"
+                                android:visibility="invisible"
+                                tools:visibility="visible"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent">
