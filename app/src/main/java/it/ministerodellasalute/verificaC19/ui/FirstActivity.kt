@@ -212,7 +212,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         }
         binding.faqCard.setOnClickListener {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
+                Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.FAQ_URL))
             startActivity(browserIntent)
         }
         binding.initDownload.setOnClickListener {
