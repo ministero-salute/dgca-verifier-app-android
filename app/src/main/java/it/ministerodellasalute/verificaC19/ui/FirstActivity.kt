@@ -521,7 +521,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun createNoScanModeChosenAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.noKeyAlertTitle))
-        val string = SpannableString(getString(R.string.label_no_scan_mode_chosen)).also {
+        val string = SpannableString(getText(R.string.label_no_scan_mode_chosen)).also {
             Linkify.addLinks(it, Linkify.ALL)
         }
         builder.setMessage(string)
@@ -536,7 +536,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun createScanModeInfoAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.label_scan_mode_types))
-        val string = SpannableString(getString(R.string.label_scan_mode_types_description)).also {
+        val string = SpannableString(getText(R.string.label_scan_mode_types_description)).also {
             Linkify.addLinks(it, Linkify.ALL)
         }
         builder.setMessage(string)
