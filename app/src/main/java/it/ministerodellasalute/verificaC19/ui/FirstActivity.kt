@@ -56,6 +56,7 @@ import it.ministerodellasalute.verificaC19.databinding.ActivityFirstBinding
 import it.ministerodellasalute.verificaC19.ui.base.doOnDebug
 import it.ministerodellasalute.verificaC19.ui.extensions.hide
 import it.ministerodellasalute.verificaC19.ui.extensions.show
+import it.ministerodellasalute.verificaC19.ui.main.ExternalLink
 import it.ministerodellasalute.verificaC19.ui.main.Extras
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.data.local.prefs.PrefKeys
@@ -207,12 +208,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         binding.scanModeButton.setOnClickListener(this)
         binding.privacyPolicyCard.setOnClickListener {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVACY_POLICY_URL))
+                Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.PRIVACY_POLICY_URL))
             startActivity(browserIntent)
         }
         binding.faqCard.setOnClickListener {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.FAQ_URL))
+                Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.FAQ_URL))
             startActivity(browserIntent)
         }
         binding.initDownload.setOnClickListener {
@@ -241,7 +242,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 createCheckConnectionAlertDialog()
             }
         }
-        binding.circleInfo.setOnClickListener(this)
+        binding.circleInfoContainer.setOnClickListener(this)
     }
 
     private fun setScanModeButtonText(currentScanMode: ScanMode) {
@@ -424,7 +425,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onClick(v: View?) {
-
         if (v?.id == R.id.qrButton) {
             viewModel.getDateLastSync().let {
                 if (!viewModel.getScanModeFlag() && v.id != R.id.scan_mode_button) {
@@ -452,7 +452,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             R.id.qrButton -> checkCameraPermission()
             R.id.settings -> openSettings()
             R.id.scan_mode_button -> showScanModeChoiceAlertDialog()
-            R.id.circle_info -> createScanModeInfoAlert()
+            R.id.circle_info_container -> createScanModeInfoAlert()
         }
     }
 
