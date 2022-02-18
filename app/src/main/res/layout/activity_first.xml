@@ -365,7 +365,6 @@
                     android:fontFamily="@font/titiliumfont"
                     android:textColor="@color/blue"
                     android:textSize="@dimen/text_size_12sp"
-                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/settings"
                     app:layout_constraintTop_toTopOf="@id/logo"

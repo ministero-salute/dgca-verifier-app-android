@@ -168,8 +168,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun setupUI() {
         val string = getString(R.string.version, BuildConfig.VERSION_NAME)
         val spannableString = SpannableString(string).also {
-            it.setSpan(UnderlineSpan(), 0, it.length, 0)
-            it.setSpan(StyleSpan(Typeface.BOLD), 0, it.length, 0)
+            it.setSpan(StyleSpan(Typeface.NORMAL), 0, it.length, 0)
         }
         binding.versionText.text = spannableString
         binding.dateLastSyncText.text = getString(R.string.loading)
