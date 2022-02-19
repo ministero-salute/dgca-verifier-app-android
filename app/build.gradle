@@ -92,7 +92,7 @@ android {
         applicationId "it.ministerodellasalute.verificaC19"
         minSdkVersion Config.minSdk
         targetSdkVersion Config.targetSdk
-        versionCode 655
+        versionCode 651
         versionName "1.2.6"
         testInstrumentationRunner Config.androidTestInstrumentation
 
