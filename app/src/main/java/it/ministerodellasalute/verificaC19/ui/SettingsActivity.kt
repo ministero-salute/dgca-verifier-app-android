@@ -32,9 +32,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
+import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.ActivitySettingsBinding
 import it.ministerodellasalute.verificaC19sdk.BuildConfig
+import it.ministerodellasalute.verificaC19.ui.main.ExternalLink
 import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
 
 @AndroidEntryPoint
@@ -71,11 +73,11 @@ class SettingsActivity : AppCompatActivity(), View.OnClickListener {
             viewModel.setTotemMode(binding.totemSwitch.isChecked)
         } else if (v?.id == R.id.faq_card) {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
+                Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.FAQ_URL))
             startActivity(browserIntent)
         } else if (v?.id == R.id.privacy_policy_card) {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/pn.html"))
+                Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.PRIVACY_POLICY_URL))
             startActivity(browserIntent)
         }
     }
