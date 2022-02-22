@@ -159,4 +159,5 @@
     <string name="certificateValidTestNeeded">Certificazione valida richiesto tampone</string>
 
     <string name="scan_mode_fragment_title">Modalità di verifica della <b>Certificazione</b></string>
+    <string name="confirm_scan_mode_button">Conferma</string>
 </resources>

@@ -22,10 +22,7 @@
 package it.ministerodellasalute.verificaC19.ui
 
 import android.Manifest
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
@@ -38,21 +35,14 @@ import android.text.style.UnderlineSpan
 import android.text.util.Linkify
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.text.bold
-import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.BuildConfig
@@ -60,8 +50,6 @@ import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.WhiteLabelApplication
 import it.ministerodellasalute.verificaC19.databinding.ActivityFirstBinding
 import it.ministerodellasalute.verificaC19.ui.base.doOnDebug
-import it.ministerodellasalute.verificaC19.ui.extensions.hide
-import it.ministerodellasalute.verificaC19.ui.extensions.show
 import it.ministerodellasalute.verificaC19.ui.main.Extras
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.data.local.prefs.PrefKeys
@@ -72,19 +60,12 @@ import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
 import it.ministerodellasalute.verificaC19sdk.util.Utility
 
-
 @AndroidEntryPoint
 class FirstActivity : AppCompatActivity(), View.OnClickListener,
-    SharedPreferences.OnSharedPreferenceChangeListener {
+    SharedPreferences.OnSharedPreferenceChangeListener, DialogInterface.OnDismissListener {
 
     private lateinit var binding: ActivityFirstBinding
     private lateinit var shared: SharedPreferences
-    private lateinit var sheetDialog: BottomSheetDialog
-
-    private lateinit var scanModeAdapter: ScanModeAdapter
-    private lateinit var scanModeBodyLayout: RecyclerView
-    private lateinit var scanModes: List<ScanModeChoice>
-
 
     private val viewModel by viewModels<FirstViewModel>()
 
@@ -300,7 +281,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     private fun createCheckConnectionAlertDialog() {
         val builder = AlertDialog.Builder(this)
-        var dialog: AlertDialog? = null
+        val dialog: AlertDialog?
         builder.setTitle(
             getString(R.string.no_internet_title)
         )
@@ -409,7 +390,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onResume() {
         super.onResume()
-        setScanModeButtonText(viewModel.getScanMode()!!)
+        setScanModeButtonText(viewModel.getScanMode())
         checkAppMinimumVersion()
     }
 
@@ -464,64 +445,11 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             R.id.qrButton -> checkCameraPermission()
             R.id.settings -> openSettings()
             R.id.scan_mode_button -> {
-                sheetDialog = BottomSheetDialog(this)
-                val view = layoutInflater.inflate(R.layout.fragment_scan_mode_dialog, null)
-                setScanModeList()
-                val chosenScanMode = getChosenScanMode()
 
-                scanModeBodyLayout = view.findViewById<ViewGroup>(R.id.bodyLayout) as RecyclerView
-                scanModeBodyLayout.layoutManager = LinearLayoutManager(this)
-                scanModeAdapter = ScanModeAdapter(scanModes, chosenScanMode)
-                scanModeBodyLayout.adapter = scanModeAdapter
-
-                val btnClose = view.findViewById<AppCompatImageView>(R.id.closeImageView)
-                btnClose.setOnClickListener {
-                    if (!viewModel.getScanModeFlag()) viewModel.setScanModeFlag(true)
-                    setChosenScanMode()
-                    sheetDialog.dismiss()
-                }
-                sheetDialog.setCancelable(false)
-                sheetDialog.setContentView(view)
-                sheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                sheetDialog.show()
+                ScanModeDialogFragment().show(supportFragmentManager, "SCAN_MODE_DIALOG_FRAGMENT")
             }
             R.id.circle_info -> createScanModeInfoAlert()
         }
-    }
-
-    private fun setChosenScanMode() {
-        when (scanModeAdapter.mSelectedItem) {
-            0 -> viewModel.setScanMode(ScanMode.STANDARD)
-            1 -> viewModel.setScanMode(ScanMode.STRENGTHENED)
-            2 -> viewModel.setScanMode(ScanMode.BOOSTER)
-            3 -> viewModel.setScanMode(ScanMode.WORK)
-            4 -> viewModel.setScanMode(ScanMode.ENTRY_ITALY)
-            5 -> viewModel.setScanMode(ScanMode.SCHOOL)
-        }
-    }
-
-    private fun getChosenScanMode(): Int {
-        val chosenScanMode = when (viewModel.getScanMode()) {
-            ScanMode.STANDARD -> 0
-            ScanMode.STRENGTHENED -> 1
-            ScanMode.BOOSTER -> 2
-            ScanMode.WORK -> 3
-            ScanMode.ENTRY_ITALY -> 4
-            ScanMode.SCHOOL -> 5
-            else -> 0
-        }
-        return chosenScanMode
-    }
-
-    private fun setScanModeList() {
-        scanModes = mutableListOf(
-            ScanModeChoice(getString(R.string.scan_mode_3G_header), getString(R.string.label_scan_mode_3G)),
-            ScanModeChoice(getString(R.string.scan_mode_2G_header), getString(R.string.label_scan_mode_2G)),
-            ScanModeChoice(getString(R.string.scan_mode_booster_header), getString(R.string.label_scan_mode_booster)),
-            ScanModeChoice(getString(R.string.scan_mode_work_header), getString(R.string.label_scan_mode_work)),
-            ScanModeChoice(getString(R.string.scan_mode_entry_italy_header), getString(R.string.label_scan_mode_entry_italy)),
-            ScanModeChoice(getString(R.string.scan_mode_school_header), getString(R.string.label_scan_mode_school))
-        )
     }
 
     private fun createNoScanModeChosenAlert() {
@@ -678,4 +606,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         var longDescription: String = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test",
         var isChecked: Boolean = false
     )
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        setScanModeButtonText(viewModel.getScanMode())
+    }
 }
