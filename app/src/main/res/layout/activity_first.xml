@@ -123,21 +123,39 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/verify_cert_title"
                 style="@style/H1.Regular"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/titiliumfont"
                 android:lineSpacingExtra="0sp"
-                android:paddingHorizontal="@dimen/margin_24dp"
                 android:paddingVertical="@dimen/margin_16dp"
+                android:paddingStart="@dimen/margin_24dp"
                 android:text="@string/label_verify_green_pass"
                 android:textColor="@color/blue_dark"
                 android:textSize="30sp"
                 app:layout_constraintBottom_toTopOf="@id/scan_mode_button"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/privacy_policy_card"
                 app:layout_constraintVertical_bias="1.0" />
+
+            <LinearLayout
+                android:id="@+id/circle_info_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_24dp"
+                app:layout_constraintBottom_toBottomOf="@+id/verify_cert_title"
+                app:layout_constraintStart_toEndOf="@+id/verify_cert_title">
+
+                <ImageView
+                    android:id="@+id/circle_info"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_circle_info_solid_1"
+                    app:layout_constraintBottom_toBottomOf="@+id/verify_cert_title"
+                    app:layout_constraintStart_toEndOf="@+id/verify_cert_title" />
+
+            </LinearLayout>
+
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/last_update_card"
@@ -328,7 +346,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_logo" />
+                    app:srcCompat="@drawable/ic_app_icon" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/settings"
@@ -347,7 +365,6 @@
                     android:fontFamily="@font/titiliumfont"
                     android:textColor="@color/blue"
                     android:textSize="@dimen/text_size_12sp"
-                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/settings"
                     app:layout_constraintTop_toTopOf="@id/logo"

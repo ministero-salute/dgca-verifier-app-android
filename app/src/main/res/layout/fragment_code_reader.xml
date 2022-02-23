@@ -20,7 +20,8 @@
   ~  Created by Mykhailo Nester on 4/23/21 9:53 AM
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -30,37 +31,26 @@
         android:id="@+id/toolbar_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/grey_light"
         android:minHeight="@dimen/size_60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/back_image"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/scan_mode_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/titiliumfont"
+            android:textAllCaps="true"
+            android:textColor="@color/blue_dark"
+            android:textSize="@dimen/text_size_18sp"
+            android:textStyle="bold"
             android:layout_marginStart="@dimen/margin_32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_arrow_back"
-            app:tint="@color/blue_dark" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/back_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_16dp"
-            android:fontFamily="@font/titiliumfont"
-            android:text="@string/label_return_home"
-            android:textAllCaps="true"
-            android:textColor="@color/blue_dark"
-            android:textSize="@dimen/text_size_16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/back_image"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:text="B - Base" />
 
         <ImageView
             android:id="@+id/flip_camera"
@@ -70,7 +60,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/torch_button"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_flip_camera"
+            app:srcCompat="@drawable/ic_switch_camera"
             android:padding="@dimen/padding_12dp"
             app:tint="@color/blue_dark" />
 
@@ -78,26 +68,66 @@
             android:id="@+id/torch_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_24dp"
+            android:layout_marginEnd="@dimen/margin_16dp"
+            android:padding="@dimen/padding_12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_baseline_flash"
-            android:padding="@dimen/padding_12dp"
             app:tint="@color/blue_dark" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.journeyapps.barcodescanner.DecoratedBarcodeView
-
         android:id="@+id/barcode_scanner"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/close_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_layout" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/close_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barcode_scanner">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/close_text"
+            style="@style/H3.Black.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/titiliumfont"
+            android:text="@string/label_close"
+            android:textAllCaps="true"
+            android:textColor="@color/blue_dark"
+            android:textSize="@dimen/text_size_12sp"
+            android:layout_marginTop="@dimen/margin_8dp"
+            app:layout_constraintBottom_toTopOf="@id/arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="@dimen/margin_8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/close_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/close_text"
+            app:srcCompat="@drawable/ic_arrow_up"
+            app:tint="@color/blue_dark" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

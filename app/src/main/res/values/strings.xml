@@ -46,26 +46,26 @@
     <string name="subtitle_text_expired">La Certificazione è scaduta.</string>
     <string name="subtitle_text_future">La Certificazione non è ancora valida.</string>
     <string name="subtitle_text_technicalError">La Certificazione non è valida o non è stato possibile verificarla.</string>
-    <string name="validation_datetime_text">Ora e data di validazione: %1$s</string>
     <string name="scanQrCertificate">Scansiona il QR Code. </string>
     <string name="scanQr">Avvia scansione </string>
     <string name="nextQR">Prossima scansione</string>
     <string name="repeatQR">Ripeti scansione</string>
     <string name="dateOfBirth">Data di nascita/Birth date</string>
     <string name="lastSyncDate">Ultimo aggiornamento dati e regole:\n%1$s</string>
-    <string name="loading">Ultimo aggiornamento dati e regole:\nAggiornamento in corso...</string>
+    <string name="loading">Ultimo aggiornamento dati e regole:\nAggiornamento in corso…</string>
     <string name="notAvailable">N/A</string>
     <string name="updateTitle">Aggiornamento richiesto</string>
     <string name="updateMessage">Per continuare ad utilizzare l\'applicazione, scarica la nuova versione dallo store.</string>
     <string name="updateLabel">Aggiorna</string>
     <string name="noKeyAlertTitle">Impossibile scansionare</string>
+    <string name="label_scan_mode_types">Quali sono le tipologie di verifica</string>
     <string name="noKeyAlertMessage">L\'applicazione deve connettersi alla rete almeno una volta per essere utilizzata.</string>
     <string name="noKeyAlertMessageForDrl">Per utilizzare l\'applicazione è necessario aggiornare la lista delle Certificazione verdi COVID-19 revocate.</string>
     <string name="ok">OK</string>
     <string name="next">Avanti</string>
     <string name="back">Indietro</string>
     <string name="version"><u><b>versione %1$s</b></u></string>
-    <string name="privacyTitle"></string>
+    <string name="privacyTitle" />
     <string name="privacy">VerificaC19 è l\'app ufficiale del Ministero della Salute per la verifica di validità e autenticità delle Certificazioni Verdi Covid19. La verifica avviene scansionando il QRcode presente sulla certificazione tramite la fotocamera del dispositivo. Nessun dato letto dalla Certificazione viene memorizzato sul dispositivo con cui si effettua la verifica.
 \n\nPer utilizzare l\'app è necessario fornire il consenso all\'uso della fotocamera.</string>
     <string name="label_verify_green_pass">Verifica una\n<b>Certificazione\nverde Covid-19</b></string>
@@ -79,9 +79,10 @@
     <string name="label_why_qr_not_valid">Quali sono i motivi di non validità?</string>
     <string name="label_when_qr_valid">Quali sono i tempi di inizio validità?</string>
     <string name="label_which_qr_scan">Quale QR Code scansionare?</string>
+    <string name="label_why_is_test_needed">Perché è richiesto il tampone seppur valida?</string>
     <string name="label_scan_error_meaning">Cosa significa errore di lettura?</string>
     <string name="label_scan_times_needed">Quante volte devo riprovare a scansionare</string>
-    <string name="label_validation_timestamp">Ora e data di validazione: %1$s</string>
+    <string name="label_validation_timestamp">Ora e data di validazione %1$s</string>
     <string name="settings_title">Impostazioni</string>
     <string name="preferences_title">Preferenze</string>
     <string name="info_title">Informazioni</string>
@@ -91,12 +92,12 @@
     <string name="label_scan_mode">Tipologia verifica</string>
     <string name="label_scan_mode_ver">Tipologia di verifica</string>
 
-    <string name="scan_mode_3G_header">Verifica Base</string>
-    <string name="scan_mode_2G_header">Verifica Rafforzata</string>
-    <string name="scan_mode_booster_header">Verifica Visitatori RSA</string>
-    <string name="scan_mode_work_header">Verifica Lavoro</string>
-    <string name="scan_mode_entry_italy_header">Verifica Ingresso IT</string>
-    <string name="scan_mode_school_header">Verifica Studenti</string>
+    <string name="scan_mode_3G_header">B - Base</string>
+    <string name="scan_mode_2G_header">R - Rafforzata</string>
+    <string name="scan_mode_booster_header">V - Visitatori RSA</string>
+    <string name="scan_mode_work_header">L - Lavoro</string>
+    <string name="scan_mode_entry_italy_header">I - Ingresso IT</string>
+    <string name="scan_mode_school_header">S - Studenti</string>
 
     <string name="label_scan_mode_3G">vaccinazione/guarigione/tampone</string>
     <string name="label_scan_mode_2G">vaccinazione/guarigione</string>
@@ -106,22 +107,37 @@
     <string name="label_scan_mode_school">richiamo/ciclo completo e guarigione &lt;120gg</string>
 
     <string name="label_choose_scan_mode">Scegli tipologia di verifica</string>
-    <string name="label_no_scan_mode_chosen">Per procedere alla scansione selezionare una delle tipologie di verifica della Certificazione verde Covid-19: BASE, RAFFORZATA, VISITATORI RSA, LAVORO, INGRESSO IT, STUDENTI. \n
-        \n Tipologia BASE: la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione, da tampone e le certificazioni di esenzione dalla vaccinazione. \n
+    <string name="label_no_scan_mode_chosen">Per procedere alla scansione selezionare una delle tipologie di verifica della Certificazione verde Covid-19: <b>BASE, RAFFORZATA, VISITATORI RSA, LAVORO, INGRESSO IT, STUDENTI</b>. \n
+        \n<b>Tipologia BASE (B)</b> - <i>da utilizzare dove è richiesto il green pass base</i>: la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione, da tampone e le certificazioni di esenzione dalla vaccinazione. \n
 
-        \n Tipologia RAFFORZATA: la app considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione e le certificazioni di esenzione dalla vaccinazione. \n
+        \n<b>Tipologia RAFFORZATA (R)</b> - <i>da utilizzare dove è richiesto il green pass rafforzato</i>: la app considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione e le certificazioni di esenzione dalla vaccinazione. \n
 
-        \n Tipologia VISITATORI RSA - da utilizzare per l\'accesso di visitatori alle strutture residenziali, socio-assistenziali, socio-sanitarie e hospice: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo. Considera valide, inoltre, le certificazioni verdi generate da vaccinazione con ciclo primario completato o guarigione insieme alla contestuale presentazione di un esito negativo di un test al SARS-CoV-2 eseguito nelle 48 ore precedenti.  \n
+        \n<b>Tipologia VISITATORI RSA (V)</b> - <i>da utilizzare per l\'accesso di visitatori alle strutture residenziali, socio-assistenziali, socio-sanitarie e hospice</i>: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo. Considera valide, inoltre, le certificazioni verdi generate da vaccinazione con ciclo primario completato o guarigione oppure le certificazioni di esenzione dalla vaccinazione, in tutti e tre i casi insieme alla contestuale presentazione di un esito negativo di un test al SARS-CoV-2 eseguito nelle 48 ore precedenti.  \n
 
-        \n Tipologia LAVORO - da utilizzare per l\’accesso ai luoghi di lavoro dal 15 febbraio: fino ai 49 anni di età la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione o da tampone. Dai 50 anni compiuti in su, considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione. La app considera comunque valide le certificazioni di esenzione dalla vaccinazione. \n
+        \n<b>Tipologia LAVORO (L)</b> - <i>da utilizzare per l\’accesso ai luoghi di lavoro dal 15 febbraio</i>: fino ai 49 anni di età la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione o da tampone. Dai 50 anni compiuti in su, considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione. La app considera comunque valide le certificazioni di esenzione dalla vaccinazione. \n
 
-        \n Tipologia INGRESSO IT - da utilizzare all\’atto dell\'ingresso in Italia dall\'estero: la app considera valide tutte le tipologie di certificazione verde COVID-19 (vaccinazione, guarigione o tampone) secondo le regole di validazione europee per la circolazione tra gli Stati Membri. Sulla base del tipo di vaccino o ciclo completato da più di 180gg e fino a 270gg può richiedere la contestuale presentazione di un esito negativo di un test al SARS-CoV-2 eseguito nelle 48 ore precedenti \n
+        \n<b>Tipologia INGRESSO IT (I)</b> - <i>da utilizzare all\’atto dell\'ingresso in Italia dall\'estero</i>: la app considera valide tutte le tipologie di certificazione verde COVID-19 (vaccinazione, guarigione o tampone) secondo le regole di validazione europee per la circolazione tra gli Stati Membri. In caso di vaccini non autorizzati EMA o non riconosciuti equivalenti, l\’App richiede la contestuale presentazione dell\'esito di un test rapido negativo eseguito nelle 48 ore precedenti oppure un test molecolare negativo eseguito nelle 72 ore. \n
 
-        \n Tipologia STUDENTI - da utilizzare nelle classi della scuola primaria e secondaria per la didattica in presenza, in classi con casi di positività accertati: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo e quelle con ciclo primario o guarigione, se emesse da meno di 120 giorni e le certificazioni di esenzione dalla vaccinazione. \n
+        \n<b>Tipologia STUDENTI (S)</b> - <i>da utilizzare nelle classi della scuola primaria e secondaria per la didattica in presenza, in classi con casi di positività accertati</i>: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo e quelle con ciclo primario o guarigione, se emesse da meno di 120 giorni e le certificazioni di esenzione dalla vaccinazione. \n
 
-        \n Consulta la tabella sulle attività consentite senza/ o con green pass base  rafforzato (link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf)"</string>
+        \nConsulta la tabella sulle attività consentite senza/ o con green pass base  rafforzato ( link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf )"</string>
+
+    <string name="label_scan_mode_types_description">Le tipologie di verifica della Certificazione verde Covid-19 sono: <b>BASE, RAFFORZATA, VISITATORI RSA, LAVORO, INGRESSO IT, STUDENTI</b>. \n
+          \n<b>Tipologia BASE (B)</b> - <i>da utilizzare dove è richiesto il green pass base</i>: la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione, da tampone e le certificazioni di esenzione dalla vaccinazione. \n
+
+        \n<b>Tipologia RAFFORZATA (R)</b> - <i>da utilizzare dove è richiesto il green pass rafforzato</i>: la app considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione e le certificazioni di esenzione dalla vaccinazione. \n
+
+        \n<b>Tipologia VISITATORI RSA (V)</b> - <i>da utilizzare per l\'accesso di visitatori alle strutture residenziali, socio-assistenziali, socio-sanitarie e hospice</i>: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo. Considera valide, inoltre, le certificazioni verdi generate da vaccinazione con ciclo primario completato o guarigione oppure le certificazioni di esenzione dalla vaccinazione, in tutti e tre i casi insieme alla contestuale presentazione di un esito negativo di un test al SARS-CoV-2 eseguito nelle 48 ore precedenti.  \n
+
+        \n<b>Tipologia LAVORO (L)</b> - <i>da utilizzare per l\’accesso ai luoghi di lavoro dal 15 febbraio</i>: fino ai 49 anni di età la app considera valide le certificazioni verdi generate da vaccinazione, da guarigione o da tampone. Dai 50 anni compiuti in su, considera valide solo le certificazioni verdi generate da vaccinazione o da guarigione. La app considera comunque valide le certificazioni di esenzione dalla vaccinazione. \n
+
+        \n<b>Tipologia INGRESSO IT (I)</b> - <i>da utilizzare all\’atto dell\'ingresso in Italia dall\'estero</i>: la app considera valide tutte le tipologie di certificazione verde COVID-19 (vaccinazione, guarigione o tampone) secondo le regole di validazione europee per la circolazione tra gli Stati Membri. In caso di vaccini non autorizzati EMA o non riconosciuti equivalenti, l\’App richiede la contestuale presentazione dell\'esito di un test rapido negativo eseguito nelle 48 ore precedenti oppure un test molecolare negativo eseguito nelle 72 ore. \n
+
+        \n<b>Tipologia STUDENTI (S)</b> - <i>da utilizzare nelle classi della scuola primaria e secondaria per la didattica in presenza, in classi con casi di positività accertati</i>: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo e quelle con ciclo primario o guarigione, se emesse da meno di 120 giorni e le certificazioni di esenzione dalla vaccinazione. \n
+
+        \nConsulta la tabella sulle attività consentite senza/ o con green pass base  rafforzato ( link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf )"</string>
     <string name="label_alert_dialog_option">%1$s (%2$s)</string>
-    <string name="label_verification_scan_mode">%1$s: %2$s</string>
+    <string name="label_verification_scan_mode">%1$c\t\t%2$s</string>
     <string name="label_download">Scarica Ora</string>
     <string name="exit_download">Esci</string>
     <string name="after_download">Più tardi</string>
