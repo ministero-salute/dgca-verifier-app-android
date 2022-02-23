@@ -47,21 +47,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/scan_mode_3G_header"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/scanModeShortDescriptionTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/padding_16dp"
-        android:paddingEnd="@dimen/padding_16dp"
-        android:fontFamily="@font/titiliumfont"
-        android:textAllCaps="true"
-        android:textColor="@color/blue_dark"
-        android:textSize="@dimen/text_size_16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scanModeRadioButton"
-        tools:text="@string/label_scan_mode_3G" />
-
     <androidx.cardview.widget.CardView
         android:id="@+id/scanModeLongDescriptionCardView"
         android:layout_width="0dp"
@@ -75,7 +60,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scanModeShortDescriptionTextView"
+        app:layout_constraintTop_toBottomOf="@+id/scanModeRadioButton"
         tools:visibility="visible">
 
         <androidx.appcompat.widget.AppCompatTextView

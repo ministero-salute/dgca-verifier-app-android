@@ -246,7 +246,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 .bold { append(getString(R.string.label_choose_scan_mode)) }
             binding.scanModeButton.text = s
         } else {
-            var chosenScanMode =
+            val chosenScanMode =
                 when (currentScanMode) {
                     ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
                     ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
@@ -256,21 +256,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                     ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header)
                     else -> getString(R.string.scan_mode_3G_header)
                 }
-            chosenScanMode += "\n"
-            val chosenModeDescription =
-                when (currentScanMode) {
-                    ScanMode.STANDARD -> getString(R.string.label_scan_mode_3G)
-                    ScanMode.STRENGTHENED -> getString(R.string.label_scan_mode_2G)
-                    ScanMode.BOOSTER -> getString(R.string.label_scan_mode_booster)
-                    ScanMode.WORK -> getString(R.string.label_scan_mode_work)
-                    ScanMode.ENTRY_ITALY -> getString(R.string.label_scan_mode_entry_italy)
-                    ScanMode.SCHOOL -> getString(R.string.label_scan_mode_school)
-                    else -> getString(R.string.label_scan_mode_3G)
-                }
-            val s = SpannableStringBuilder()
-                .bold { append(chosenScanMode) }
-                .append(chosenModeDescription)
-            binding.scanModeButton.text = s
+            binding.scanModeButton.text = chosenScanMode
         }
     }
 
@@ -602,13 +588,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
         )
     }
-
-    data class ScanModeChoice(
-        val name: String,
-        val shortDescription: String,
-        var longDescription: String = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test",
-        var isChecked: Boolean = false
-    )
 
     override fun onDismiss(dialog: DialogInterface?) {
         setScanModeButtonText(viewModel.getScanMode())

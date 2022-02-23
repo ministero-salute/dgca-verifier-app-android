@@ -45,7 +45,7 @@ class ScanModeDialogFragment : DialogFragment(), ScanModeDialogCallback {
     private val viewModel by viewModels<FirstViewModel>()
     private lateinit var scanModeAdapter: ScanModeAdapter
     private lateinit var scanModeBodyLayout: RecyclerView
-    private lateinit var scanModes: List<FirstActivity.ScanModeChoice>
+    private lateinit var scanModes: List<ScanModeChoice>
     private lateinit var confirmButton: Button
 
     override fun onStart() {
@@ -115,14 +115,20 @@ class ScanModeDialogFragment : DialogFragment(), ScanModeDialogCallback {
 
     private fun setScanModeList() {
         scanModes = mutableListOf(
-            FirstActivity.ScanModeChoice(getString(R.string.scan_mode_3G_header), getString(R.string.label_scan_mode_3G)),
-            FirstActivity.ScanModeChoice(getString(R.string.scan_mode_2G_header), getString(R.string.label_scan_mode_2G)),
-            FirstActivity.ScanModeChoice(getString(R.string.scan_mode_booster_header), getString(R.string.label_scan_mode_booster)),
-            FirstActivity.ScanModeChoice(getString(R.string.scan_mode_work_header), getString(R.string.label_scan_mode_work)),
-            FirstActivity.ScanModeChoice(getString(R.string.scan_mode_entry_italy_header), getString(R.string.label_scan_mode_entry_italy)),
-            FirstActivity.ScanModeChoice(getString(R.string.scan_mode_school_header), getString(R.string.label_scan_mode_school))
+            ScanModeChoice(getString(R.string.scan_mode_3G_header), getString(R.string.label_scan_mode_3G)),
+            ScanModeChoice(getString(R.string.scan_mode_2G_header), getString(R.string.label_scan_mode_2G)),
+            ScanModeChoice(getString(R.string.scan_mode_booster_header), getString(R.string.label_scan_mode_booster)),
+            ScanModeChoice(getString(R.string.scan_mode_work_header), getString(R.string.label_scan_mode_work)),
+            ScanModeChoice(getString(R.string.scan_mode_entry_italy_header), getString(R.string.label_scan_mode_entry_italy)),
+            ScanModeChoice(getString(R.string.scan_mode_school_header), getString(R.string.label_scan_mode_school))
         )
     }
+
+    data class ScanModeChoice(
+        val name: String,
+        var longDescription: String = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test",
+        var isChecked: Boolean = false
+    )
 
     override fun enableConfirmButton() {
         confirmButton.isEnabled = true

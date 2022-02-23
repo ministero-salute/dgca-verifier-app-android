@@ -28,9 +28,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import it.ministerodellasalute.verificaC19.databinding.ScanModeChoiceLayoutBinding
+import it.ministerodellasalute.verificaC19.ui.ScanModeDialogFragment.ScanModeChoice
 
 class ScanModeAdapter(
-    private var adapterList: List<FirstActivity.ScanModeChoice>,
+    private var adapterList: List<ScanModeChoice>,
     var mSelectedItem: Int,
     private val scanModeDialogFragment: ScanModeDialogCallback
 ) : RecyclerView.Adapter<ScanModeAdapter.ViewHolder>() {
@@ -49,12 +50,11 @@ class ScanModeAdapter(
 
         @SuppressLint("NotifyDataSetChanged")
         fun bind(
-            scanMode: FirstActivity.ScanModeChoice,
+            scanMode: ScanModeChoice,
             position: Int,
             selectedPosition: Int
         ) {
             binding.scanModeRadioButton.text = scanMode.name
-            binding.scanModeShortDescriptionTextView.text = scanMode.shortDescription
             binding.scanModeLongDescriptionTextView.text = scanMode.longDescription
             binding.scanModeRadioButton.isChecked = scanMode.isChecked
 
