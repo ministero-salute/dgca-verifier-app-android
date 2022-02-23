@@ -56,6 +56,7 @@ import it.ministerodellasalute.verificaC19.databinding.ActivityFirstBinding
 import it.ministerodellasalute.verificaC19.ui.base.doOnDebug
 import it.ministerodellasalute.verificaC19.ui.extensions.hide
 import it.ministerodellasalute.verificaC19.ui.extensions.show
+import it.ministerodellasalute.verificaC19.ui.main.ExternalLink
 import it.ministerodellasalute.verificaC19.ui.main.Extras
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.data.local.prefs.PrefKeys
@@ -167,8 +168,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun setupUI() {
         val string = getString(R.string.version, BuildConfig.VERSION_NAME)
         val spannableString = SpannableString(string).also {
-            it.setSpan(UnderlineSpan(), 0, it.length, 0)
-            it.setSpan(StyleSpan(Typeface.BOLD), 0, it.length, 0)
+            it.setSpan(StyleSpan(Typeface.NORMAL), 0, it.length, 0)
         }
         binding.versionText.text = spannableString
         binding.dateLastSyncText.text = getString(R.string.loading)
@@ -207,12 +207,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         binding.scanModeButton.setOnClickListener(this)
         binding.privacyPolicyCard.setOnClickListener {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/pn.html"))
+                Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.PRIVACY_POLICY_URL))
             startActivity(browserIntent)
         }
         binding.faqCard.setOnClickListener {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
+                Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.FAQ_URL))
             startActivity(browserIntent)
         }
         binding.initDownload.setOnClickListener {
@@ -241,6 +241,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 createCheckConnectionAlertDialog()
             }
         }
+        binding.circleInfoContainer.setOnClickListener(this)
     }
 
     private fun setScanModeButtonText(currentScanMode: ScanMode) {
@@ -251,12 +252,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         } else {
             var chosenScanMode =
                 when (currentScanMode) {
-                    ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header).substringAfter(' ').toUpperCase(Locale.ROOT)
-                    ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header).substringAfter(' ').toUpperCase(Locale.ROOT)
-                    ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header).substringAfter(' ').toUpperCase(Locale.ROOT)
-                    ScanMode.WORK -> getString(R.string.scan_mode_work_header).substringAfter(' ').toUpperCase(Locale.ROOT)
-                    ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header).substringAfter(' ').toUpperCase(Locale.ROOT)
-                    ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header).substringAfter(' ').toUpperCase(Locale.ROOT)
+                    ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
+                    ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
+                    ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
+                    ScanMode.WORK -> getString(R.string.scan_mode_work_header)
+                    ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
+                    ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header)
                     else -> getString(R.string.scan_mode_3G_header)
                 }
             chosenScanMode += "\n"
@@ -423,7 +424,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onClick(v: View?) {
-
         if (v?.id == R.id.qrButton) {
             viewModel.getDateLastSync().let {
                 if (!viewModel.getScanModeFlag() && v.id != R.id.scan_mode_button) {
@@ -451,6 +451,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             R.id.qrButton -> checkCameraPermission()
             R.id.settings -> openSettings()
             R.id.scan_mode_button -> showScanModeChoiceAlertDialog()
+            R.id.circle_info_container -> createScanModeInfoAlert()
         }
     }
 
@@ -468,44 +469,32 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         val scanModeChoices = arrayOf(
             getString(
                 R.string.label_alert_dialog_option,
-                getString(R.string.scan_mode_3G_header).substringAfter(' ').toUpperCase(
-                    Locale.ROOT
-                ),
+                getString(R.string.scan_mode_3G_header),
                 getString(R.string.label_scan_mode_3G)
             ),
             getString(
                 R.string.label_alert_dialog_option,
-                getString(R.string.scan_mode_2G_header).substringAfter(
-                    ' '
-                ).toUpperCase(Locale.ROOT),
+                getString(R.string.scan_mode_2G_header),
                 getString(R.string.label_scan_mode_2G)
             ),
             getString(
                 R.string.label_alert_dialog_option,
-                getString(R.string.scan_mode_booster_header).substringAfter(' ').toUpperCase(
-                    Locale.ROOT
-                ),
+                getString(R.string.scan_mode_booster_header),
                 getString(R.string.label_scan_mode_booster)
             ),
             getString(
                 R.string.label_alert_dialog_option,
-                getString(R.string.scan_mode_work_header).substringAfter(' ').toUpperCase(
-                    Locale.ROOT
-                ),
+                getString(R.string.scan_mode_work_header),
                 getString(R.string.label_scan_mode_work)
             ),
             getString(
                 R.string.label_alert_dialog_option,
-                getString(R.string.scan_mode_entry_italy_header).substringAfter(' ').toUpperCase(
-                    Locale.ROOT
-                ),
+                getString(R.string.scan_mode_entry_italy_header),
                 getString(R.string.label_scan_mode_entry_italy)
             ),
             getString(
                 R.string.label_alert_dialog_option,
-                getString(R.string.scan_mode_school_header).substringAfter(' ').toUpperCase(
-                    Locale.ROOT
-                ),
+                getString(R.string.scan_mode_school_header),
                 getString(R.string.label_scan_mode_school)
             ),
         )
@@ -531,7 +520,22 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun createNoScanModeChosenAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.noKeyAlertTitle))
-        val string = SpannableString(getString(R.string.label_no_scan_mode_chosen)).also {
+        val string = SpannableString(getText(R.string.label_no_scan_mode_chosen)).also {
+            Linkify.addLinks(it, Linkify.ALL)
+        }
+        builder.setMessage(string)
+        builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
+        }
+        val dialog = builder.create()
+        dialog.show()
+        val alertMessage = dialog.findViewById<TextView>(android.R.id.message) as TextView
+        alertMessage.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    private fun createScanModeInfoAlert() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.label_scan_mode_types))
+        val string = SpannableString(getText(R.string.label_scan_mode_types_description)).also {
             Linkify.addLinks(it, Linkify.ALL)
         }
         builder.setMessage(string)

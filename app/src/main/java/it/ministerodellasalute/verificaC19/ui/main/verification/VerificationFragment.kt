@@ -34,10 +34,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
+import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.FragmentVerificationBinding
 import it.ministerodellasalute.verificaC19.ui.base.isDebug
 import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
+import it.ministerodellasalute.verificaC19.ui.main.ExternalLink
 import it.ministerodellasalute.verificaC19sdk.VerificaDownloadInProgressException
 import it.ministerodellasalute.verificaC19sdk.VerificaMinSDKVersionException
 import it.ministerodellasalute.verificaC19sdk.VerificaMinVersionException
@@ -75,6 +77,8 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 setPersonData(it.person, it.dateOfBirth)
                 setupCertStatusView(it)
                 setupTimeStamp(it)
+                binding.closeButton.visibility = View.VISIBLE
+                binding.validationDate.visibility = View.VISIBLE
                 if (
                     viewModel.getTotemMode() &&
                     (certificate.certificateStatus == CertificateStatus.VALID)
@@ -117,22 +121,14 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setScanModeText() {
         val chosenScanMode = when (viewModel.getScanMode()) {
-            ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header).substringAfter(' ')
-                .toUpperCase(Locale.ROOT)
-            ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header).substringAfter(' ')
-                .toUpperCase(Locale.ROOT)
-            ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header).substringAfter(' ')
-                .toUpperCase(Locale.ROOT)
-            ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header).substringAfter(' ')
-                .toUpperCase(Locale.ROOT)
-            ScanMode.WORK -> getString(R.string.scan_mode_work_header).substringAfter(' ')
-                .toUpperCase(Locale.ROOT)
-            ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header).substringAfter(' ')
-                .toUpperCase(Locale.ROOT)
+            ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
+            ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
+            ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
+            ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header)
+            ScanMode.WORK -> getString(R.string.scan_mode_work_header)
+            ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
         }
-        val scanModeLabel = getString(R.string.label_scan_mode_ver)
-        binding.scanModeText.text =
-            getString(R.string.label_verification_scan_mode, scanModeLabel, chosenScanMode)
+        binding.scanModeText.text = chosenScanMode
     }
 
     private fun setupTimeStamp(cert: CertificateViewBean) {
@@ -147,14 +143,15 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private fun setLinkViews(certStatus: CertificateStatus) {
         binding.questionContainer.removeAllViews()
         val questionMap: Map<String, String> = when (certStatus) {
-            CertificateStatus.VALID -> mapOf(getString(R.string.label_what_can_be_done) to "https://www.dgc.gov.it/web/faq.html#verifica19")
-            CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19")
-            CertificateStatus.NOT_VALID, CertificateStatus.EXPIRED, CertificateStatus.TEST_NEEDED, CertificateStatus.REVOKED -> mapOf(
-                getString(R.string.label_why_qr_not_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19"
+            CertificateStatus.VALID -> mapOf(getString(R.string.label_what_can_be_done) to ExternalLink.VERIFICATION_FAQ_URL)
+            CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to ExternalLink.VERIFICATION_FAQ_URL)
+            CertificateStatus.NOT_VALID, CertificateStatus.EXPIRED, CertificateStatus.REVOKED -> mapOf(
+                getString(R.string.label_why_qr_not_valid) to ExternalLink.VERIFICATION_FAQ_URL
             )
-            CertificateStatus.NOT_EU_DCC -> mapOf(getString(R.string.label_which_qr_scan) to "https://www.dgc.gov.it/web/faq.html#verifica19")
+            CertificateStatus.TEST_NEEDED -> mapOf(getString(R.string.label_why_is_test_needed) to ExternalLink.VERIFICATION_FAQ_URL)
+            CertificateStatus.NOT_EU_DCC -> mapOf(getString(R.string.label_which_qr_scan) to ExternalLink.VERIFICATION_FAQ_URL)
         }
-        questionMap.map {
+        questionMap.forEach {
             val compound = QuestionCompound(context)
             compound.setupWithLabels(it.key, it.value)
             binding.questionContainer.addView(compound)
@@ -207,7 +204,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setPersonDetailsVisibility(certStatus: CertificateStatus) {
         binding.containerPersonDetails.visibility = when (certStatus) {
-            CertificateStatus.VALID, CertificateStatus.REVOKED, CertificateStatus.TEST_NEEDED, CertificateStatus.NOT_VALID,  CertificateStatus.EXPIRED, CertificateStatus.NOT_VALID_YET -> View.VISIBLE
+            CertificateStatus.VALID, CertificateStatus.REVOKED, CertificateStatus.TEST_NEEDED, CertificateStatus.NOT_VALID, CertificateStatus.EXPIRED, CertificateStatus.NOT_VALID_YET -> View.VISIBLE
             else -> View.GONE
         }
     }
