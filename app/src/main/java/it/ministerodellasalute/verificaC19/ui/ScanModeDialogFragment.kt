@@ -40,27 +40,28 @@ import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
 import it.ministerodellasalute.verificaC19sdk.model.ScanMode
 
 @AndroidEntryPoint
-class ScanModeDialogFragment : DialogFragment() {
+class ScanModeDialogFragment : DialogFragment(), ScanModeDialogCallback {
 
     private val viewModel by viewModels<FirstViewModel>()
     private lateinit var scanModeAdapter: ScanModeAdapter
     private lateinit var scanModeBodyLayout: RecyclerView
     private lateinit var scanModes: List<FirstActivity.ScanModeChoice>
+    private lateinit var confirmButton: Button
 
     override fun onStart() {
         super.onStart()
-        dialog?.window?.setLayout(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
+        dialog?.window?.setLayout(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_scan_mode_dialog, container)
         setScanModeList()
-        val chosenScanMode = getChosenScanMode()
+        val chosenScanMode = if (viewModel.getScanModeFlag()) getChosenScanMode() else -1
 
         scanModeBodyLayout = view.findViewById<ViewGroup>(R.id.bodyLayout) as RecyclerView
         scanModeBodyLayout.layoutManager = LinearLayoutManager(this.activity)
-        scanModeAdapter = ScanModeAdapter(scanModes, chosenScanMode)
+        scanModeAdapter = ScanModeAdapter(scanModes, chosenScanMode, this)
         scanModeBodyLayout.adapter = scanModeAdapter
 
         val btnClose = view.findViewById<AppCompatImageView>(R.id.closeImageView)
@@ -68,8 +69,12 @@ class ScanModeDialogFragment : DialogFragment() {
             dismiss()
         }
 
-        val confirmButton = view.findViewById<Button>(R.id.confirmButton)
-        confirmButton?.setOnClickListener {
+        confirmButton = view.findViewById(R.id.confirmButton)
+        if (!viewModel.getScanModeFlag()) {
+            confirmButton.isEnabled = false
+            confirmButton.background.alpha = 128
+        }
+        confirmButton.setOnClickListener {
             if (!viewModel.getScanModeFlag()) viewModel.setScanModeFlag(true)
             setChosenScanMode()
             dismiss()
@@ -80,7 +85,7 @@ class ScanModeDialogFragment : DialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        val activity = activity;
+        val activity = activity
         if (activity is DialogInterface.OnDismissListener) activity.onDismiss(dialog)
     }
 
@@ -103,7 +108,7 @@ class ScanModeDialogFragment : DialogFragment() {
             ScanMode.WORK -> 3
             ScanMode.ENTRY_ITALY -> 4
             ScanMode.SCHOOL -> 5
-            else -> -1
+            else -> 0
         }
         return chosenScanMode
     }
@@ -117,5 +122,10 @@ class ScanModeDialogFragment : DialogFragment() {
             FirstActivity.ScanModeChoice(getString(R.string.scan_mode_entry_italy_header), getString(R.string.label_scan_mode_entry_italy)),
             FirstActivity.ScanModeChoice(getString(R.string.scan_mode_school_header), getString(R.string.label_scan_mode_school))
         )
+    }
+
+    override fun enableConfirmButton() {
+        confirmButton.isEnabled = true
+        confirmButton.background.alpha = 255
     }
 }

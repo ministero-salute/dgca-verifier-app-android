@@ -31,7 +31,8 @@ import it.ministerodellasalute.verificaC19.databinding.ScanModeChoiceLayoutBindi
 
 class ScanModeAdapter(
     private var adapterList: List<FirstActivity.ScanModeChoice>,
-    var mSelectedItem: Int
+    var mSelectedItem: Int,
+    private val scanModeDialogFragment: ScanModeDialogCallback
 ) : RecyclerView.Adapter<ScanModeAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -57,7 +58,7 @@ class ScanModeAdapter(
             binding.scanModeLongDescriptionTextView.text = scanMode.longDescription
             binding.scanModeRadioButton.isChecked = scanMode.isChecked
 
-            if (selectedPosition == -1 && position == 0 || (selectedPosition == position)) {
+            if (selectedPosition == position) {
                 binding.scanModeRadioButton.isChecked = true
                 binding.scanModeLongDescriptionCardView.visibility = View.VISIBLE
             } else {
@@ -66,6 +67,7 @@ class ScanModeAdapter(
             }
 
             binding.scanModeRadioButton.setOnClickListener {
+                scanModeDialogFragment.enableConfirmButton()
                 mSelectedItem = adapterPosition
                 notifyDataSetChanged()
             }

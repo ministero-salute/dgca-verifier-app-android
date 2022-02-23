@@ -34,9 +34,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/titiliumfont"
-        android:paddingStart="@dimen/margin_16dp"
-        android:paddingEnd="@dimen/margin_16dp"
+        android:paddingStart="@dimen/padding_16dp"
+        android:paddingEnd="@dimen/padding_16dp"
         android:layout_marginTop="@dimen/margin_10dp"
+        android:layoutDirection="rtl"
         android:textAllCaps="true"
         android:textColor="@color/blue_dark"
         android:textSize="@dimen/text_size_18sp"
@@ -48,16 +49,18 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/scanModeShortDescriptionTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_16dp"
+        android:paddingEnd="@dimen/padding_16dp"
         android:fontFamily="@font/titiliumfont"
-        android:layout_marginStart="@dimen/margin_44dp"
         android:textAllCaps="true"
         android:textColor="@color/blue_dark"
         android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scanModeRadioButton"
-        tools:text="@string/label_scan_mode_3G"/>
+        tools:text="@string/label_scan_mode_3G" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/scanModeLongDescriptionCardView"
