@@ -27,8 +27,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -149,7 +151,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             CertificateStatus.TEST_NEEDED -> mapOf(ruleSet.getVerificationNeededFaqText() to ruleSet.getVerificationNeededFaqLink())
             CertificateStatus.NOT_EU_DCC -> mapOf(ruleSet.getNotEuDgcFaqText() to ruleSet.getNotEuDgcFaqLink())
         }
-        questionMap.map {
+        questionMap.forEach {
             val compound = QuestionCompound(context)
             compound.setupWithLabels(it.key, it.value)
             binding.questionContainer.addView(compound)
@@ -159,7 +161,13 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setValidationSubTextVisibility(certStatus: CertificateStatus) {
         binding.subtitleText.visibility = when (certStatus) {
-            CertificateStatus.NOT_EU_DCC -> View.GONE
+            CertificateStatus.NOT_EU_DCC -> {
+                binding.questionContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    bottomToTop = binding.validationDate.id
+                    bottomMargin = 64
+                }
+                View.GONE
+            }
             else -> View.VISIBLE
         }
     }
@@ -221,7 +229,12 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setPersonData(person: PersonModel?, dateOfBirth: String?) {
-        binding.nameStandardisedText.text = person?.familyName.plus(" ").plus(person?.givenName)
+        if (person?.familyName.isNullOrEmpty()) {
+            binding.nameStandardisedText.text =
+                person?.standardisedFamilyName.plus(" ").plus(person?.standardisedGivenName).plus(" ").plus(person?.givenName)
+        } else {
+            binding.nameStandardisedText.text = person?.familyName.plus(" ").plus(person?.givenName)
+        }
         binding.birthdateText.text = dateOfBirth?.formatDateOfBirth().orEmpty()
     }
 
