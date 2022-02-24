@@ -55,7 +55,7 @@ class ScanModeAdapter(
             selectedPosition: Int
         ) {
             binding.scanModeRadioButton.text = scanMode.name
-            binding.scanModeLongDescriptionTextView.text = scanMode.longDescription
+            binding.scanModeLongDescriptionTextView.text = scanMode.description
             binding.scanModeRadioButton.isChecked = scanMode.isChecked
 
             if (selectedPosition == position) {

@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.R
+import it.ministerodellasalute.verificaC19.ui.FirstActivity.Companion.ruleSet
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
 import it.ministerodellasalute.verificaC19sdk.model.ScanMode
 
@@ -115,18 +116,18 @@ class ScanModeDialogFragment : DialogFragment(), ScanModeDialogCallback {
 
     private fun setScanModeList() {
         scanModes = mutableListOf(
-            ScanModeChoice(getString(R.string.scan_mode_3G_header), getString(R.string.label_scan_mode_3G)),
-            ScanModeChoice(getString(R.string.scan_mode_2G_header), getString(R.string.label_scan_mode_2G)),
-            ScanModeChoice(getString(R.string.scan_mode_booster_header), getString(R.string.label_scan_mode_booster)),
-            ScanModeChoice(getString(R.string.scan_mode_work_header), getString(R.string.label_scan_mode_work)),
-            ScanModeChoice(getString(R.string.scan_mode_entry_italy_header), getString(R.string.label_scan_mode_entry_italy)),
-            ScanModeChoice(getString(R.string.scan_mode_school_header), getString(R.string.label_scan_mode_school))
+            ScanModeChoice(getString(R.string.scan_mode_3G_header), ruleSet.getBaseScanModeDescription()),
+            ScanModeChoice(getString(R.string.scan_mode_2G_header), ruleSet.getReinforcedScanModeDescription()),
+            ScanModeChoice(getString(R.string.scan_mode_booster_header), ruleSet.getBoosterScanModeDescription()),
+            ScanModeChoice(getString(R.string.scan_mode_work_header), ruleSet.getWorkScanModeDescription()),
+            ScanModeChoice(getString(R.string.scan_mode_entry_italy_header), ruleSet.getItalyEntryScanModeDescription()),
+            ScanModeChoice(getString(R.string.scan_mode_school_header), ruleSet.getSchoolScanModeDescription())
         )
     }
 
     data class ScanModeChoice(
         val name: String,
-        var longDescription: String = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test",
+        var description: String,
         var isChecked: Boolean = false
     )
 

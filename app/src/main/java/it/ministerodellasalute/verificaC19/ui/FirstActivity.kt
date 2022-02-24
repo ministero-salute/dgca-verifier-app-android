@@ -58,6 +58,7 @@ import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.data.local.prefs.PrefKeys
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
 import it.ministerodellasalute.verificaC19sdk.model.ScanMode
+import it.ministerodellasalute.verificaC19sdk.model.validation.RuleSet
 import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
@@ -153,6 +154,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                             )
                         )
                     }
+                    ruleSet = RuleSet(viewModel.getValidationRulesString())
                     binding.qrButton.background.alpha = 255
                     hideDownloadProgressViews()
                 }
@@ -409,11 +411,11 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
         if (v?.id == R.id.qrButton) {
             viewModel.getDateLastSync().let {
-                if (!viewModel.getScanModeFlag() && v.id != R.id.scan_mode_button) {
-                    createNoScanModeChosenAlert()
-                    return
-                } else if (it == -1L) {
+                if (it == -1L) {
                     createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
+                    return
+                } else if (!viewModel.getScanModeFlag() && v.id != R.id.scan_mode_button) {
+                    createNoScanModeChosenAlert()
                     return
                 }
             }
@@ -434,17 +436,20 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             R.id.qrButton -> checkCameraPermission()
             R.id.settings -> openSettings()
             R.id.scan_mode_button -> {
-
-                ScanModeDialogFragment().show(supportFragmentManager, "SCAN_MODE_DIALOG_FRAGMENT")
+                if (viewModel.getDateLastSync() == -1L) createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
+                else ScanModeDialogFragment().show(supportFragmentManager, "SCAN_MODE_DIALOG_FRAGMENT")
             }
-            R.id.circle_info -> createScanModeInfoAlert()
+            R.id.circle_info -> {
+                if (viewModel.getDateLastSync() == -1L) createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
+                else createScanModeInfoAlert()
+            }
         }
     }
 
     private fun createNoScanModeChosenAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.noKeyAlertTitle))
-        val string = SpannableString(getText(R.string.label_no_scan_mode_chosen)).also {
+        val string = SpannableString(ruleSet.getErrorScanModePopup()).also {
             Linkify.addLinks(it, Linkify.ALL)
         }
         builder.setMessage(string)
@@ -459,7 +464,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun createScanModeInfoAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.label_scan_mode_types))
-        val string = SpannableString(getText(R.string.label_scan_mode_types_description)).also {
+        val string = SpannableString(ruleSet.getInfoScanModePopup()).also {
             Linkify.addLinks(it, Linkify.ALL)
         }
         builder.setMessage(string)
@@ -591,5 +596,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onDismiss(dialog: DialogInterface?) {
         setScanModeButtonText(viewModel.getScanMode())
+    }
+
+    companion object {
+        lateinit var ruleSet: RuleSet
     }
 }

@@ -34,9 +34,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.FragmentVerificationBinding
+import it.ministerodellasalute.verificaC19.ui.FirstActivity.Companion.ruleSet
 import it.ministerodellasalute.verificaC19.ui.base.isDebug
 import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
 import it.ministerodellasalute.verificaC19sdk.VerificaDownloadInProgressException
@@ -46,7 +46,6 @@ import it.ministerodellasalute.verificaC19sdk.model.*
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_VALIDATION_DATE
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.formatDateOfBirth
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
-import java.util.*
 
 @ExperimentalUnsignedTypes
 @AndroidEntryPoint
@@ -142,13 +141,13 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private fun setLinkViews(certStatus: CertificateStatus) {
         binding.questionContainer.removeAllViews()
         val questionMap: Map<String, String> = when (certStatus) {
-            CertificateStatus.VALID -> mapOf(getString(R.string.label_what_can_be_done) to BuildConfig.VERIFICATION_FAQ_URL)
-            CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to BuildConfig.VERIFICATION_FAQ_URL)
+            CertificateStatus.VALID -> mapOf(ruleSet.getValidFaqText() to ruleSet.getValidFaqLink())
+            CertificateStatus.NOT_VALID_YET -> mapOf(ruleSet.getNotValidYetFaqText() to ruleSet.getNotValidYetFaqLink())
             CertificateStatus.NOT_VALID, CertificateStatus.EXPIRED, CertificateStatus.REVOKED -> mapOf(
-                getString(R.string.label_why_qr_not_valid) to BuildConfig.VERIFICATION_FAQ_URL
+                ruleSet.getNotValidFaqText() to ruleSet.getNotValidFaqLink()
             )
-            CertificateStatus.TEST_NEEDED -> mapOf(getString(R.string.label_why_is_test_needed) to BuildConfig.VERIFICATION_FAQ_URL)
-            CertificateStatus.NOT_EU_DCC -> mapOf(getString(R.string.label_which_qr_scan) to BuildConfig.VERIFICATION_FAQ_URL)
+            CertificateStatus.TEST_NEEDED -> mapOf(ruleSet.getVerificationNeededFaqText() to ruleSet.getVerificationNeededFaqLink())
+            CertificateStatus.NOT_EU_DCC -> mapOf(ruleSet.getNotEuDgcFaqText() to ruleSet.getNotEuDgcFaqLink())
         }
         questionMap.map {
             val compound = QuestionCompound(context)
