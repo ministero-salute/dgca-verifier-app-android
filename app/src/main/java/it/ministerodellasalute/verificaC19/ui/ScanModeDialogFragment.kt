@@ -36,12 +36,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.R
-import it.ministerodellasalute.verificaC19.ui.FirstActivity.Companion.ruleSet
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
 import it.ministerodellasalute.verificaC19sdk.model.ScanMode
+import it.ministerodellasalute.verificaC19sdk.model.validation.RuleSet
 
 @AndroidEntryPoint
-class ScanModeDialogFragment : DialogFragment(), ScanModeDialogCallback {
+class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), ScanModeDialogCallback {
 
     private val viewModel by viewModels<FirstViewModel>()
     private lateinit var scanModeAdapter: ScanModeAdapter

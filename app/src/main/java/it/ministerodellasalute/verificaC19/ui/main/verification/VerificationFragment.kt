@@ -38,7 +38,6 @@ import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.FragmentVerificationBinding
-import it.ministerodellasalute.verificaC19.ui.FirstActivity.Companion.ruleSet
 import it.ministerodellasalute.verificaC19.ui.base.isDebug
 import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
 import it.ministerodellasalute.verificaC19sdk.VerificaDownloadInProgressException
@@ -142,6 +141,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setLinkViews(certStatus: CertificateStatus) {
         binding.questionContainer.removeAllViews()
+        val ruleSet = viewModel.getRuleSet()
         val questionMap: Map<String, String> = when (certStatus) {
             CertificateStatus.VALID -> mapOf(ruleSet.getValidFaqText() to ruleSet.getValidFaqLink())
             CertificateStatus.NOT_VALID_YET -> mapOf(ruleSet.getNotValidYetFaqText() to ruleSet.getNotValidYetFaqLink())

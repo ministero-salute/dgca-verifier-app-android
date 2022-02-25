@@ -156,7 +156,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                             )
                         )
                     }
-                    ruleSet = RuleSet(viewModel.getValidationRulesString())
                     binding.qrButton.background.alpha = 255
                     hideDownloadProgressViews()
                 }
@@ -436,12 +435,14 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             R.id.qrButton -> checkCameraPermission()
             R.id.settings -> openSettings()
             R.id.scan_mode_button -> {
-                if (viewModel.getDateLastSync() == -1L) createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
-                else ScanModeDialogFragment().show(supportFragmentManager, "SCAN_MODE_DIALOG_FRAGMENT")
+                viewModel.getRuleSet()?.getBaseScanModeDescription()?.run {
+                    ScanModeDialogFragment(viewModel.getRuleSet()!!).show(supportFragmentManager, "SCAN_MODE_DIALOG_FRAGMENT")
+                } ?: run { createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage)) }
             }
             R.id.circle_info_container -> {
-                if (viewModel.getDateLastSync() == -1L) createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
-                else createScanModeInfoAlert()
+                viewModel.getRuleSet()?.getBaseScanModeDescription()?.run {
+                    createScanModeInfoAlert()
+                } ?: run { createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage)) }
             }
         }
     }
@@ -450,7 +451,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.noKeyAlertTitle))
         val string =
-            SpannableString(Html.fromHtml(ruleSet.getErrorScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
+            SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getErrorScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
                 Linkify.addLinks(it, Linkify.ALL)
             }
         builder.setMessage(string)
@@ -465,7 +466,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun createScanModeInfoAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.label_scan_mode_types))
-        val string = SpannableString(Html.fromHtml(ruleSet.getInfoScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
+        val string = SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getInfoScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
             Linkify.addLinks(it, Linkify.ALL)
         }
         builder.setMessage(string)
@@ -599,7 +600,4 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         setScanModeButtonText(viewModel.getScanMode())
     }
 
-    companion object {
-        lateinit var ruleSet: RuleSet
-    }
 }
