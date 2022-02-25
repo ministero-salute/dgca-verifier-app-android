@@ -408,36 +408,40 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onClick(v: View?) {
-        if (v?.id == R.id.qrButton) {
-            viewModel.getDateLastSync().let {
-                if (it == -1L) {
-                    createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
-                    return
-                } else if (!viewModel.getScanModeFlag() && v.id != R.id.scan_mode_button) {
-                    createNoScanModeChosenAlert()
-                    return
-                }
-            }
-            viewModel.getDrlDateLastSync().let {
-                if (binding.resumeDownload.isVisible) {
-                    createNoSyncAlertDialog(getString(R.string.label_drl_download_in_progress))
-                    return
-                }
-                if ((viewModel.getIsDrlSyncActive() && System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) ||
-                    (viewModel.getIsDrlSyncActive() && it == -1L)
-                ) {
-                    createNoSyncAlertDialog(getString(R.string.noKeyAlertMessageForDrl))
-                    return
-                }
-            }
-        }
         when (v?.id) {
-            R.id.qrButton -> checkCameraPermission()
+            R.id.qrButton -> {
+                viewModel.getDateLastSync().let {
+                    if (it == -1L) {
+                        createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
+                        return
+                    } else if (!viewModel.getScanModeFlag() && v.id != R.id.scan_mode_button) {
+                        viewModel.getRuleSet()?.getErrorScanModePopup()?.run {
+                            createNoScanModeChosenAlert()
+                        } ?: run { createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage)) }
+                        return
+                    }
+                }
+                viewModel.getDrlDateLastSync().let {
+                    if (binding.resumeDownload.isVisible) {
+                        createNoSyncAlertDialog(getString(R.string.label_drl_download_in_progress))
+                        return
+                    }
+                    if ((viewModel.getIsDrlSyncActive() && System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) ||
+                        (viewModel.getIsDrlSyncActive() && it == -1L)
+                    ) {
+                        createNoSyncAlertDialog(getString(R.string.noKeyAlertMessageForDrl))
+                        return
+                    }
+                }
+                checkCameraPermission()
+            }
             R.id.settings -> openSettings()
             R.id.scan_mode_button -> {
-                viewModel.getRuleSet()?.getBaseScanModeDescription()?.run {
+                viewModel.getRuleSet()?.run {
                     ScanModeDialogFragment(viewModel.getRuleSet()!!).show(supportFragmentManager, "SCAN_MODE_DIALOG_FRAGMENT")
-                } ?: run { createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage)) }
+                } ?: run {
+                    createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
+                }
             }
             R.id.circle_info_container -> {
                 viewModel.getRuleSet()?.getBaseScanModeDescription()?.run {

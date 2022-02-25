@@ -116,7 +116,7 @@ class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), S
 
     private fun setScanModeList() {
         scanModes = mutableListOf(
-            ScanModeChoice(getString(R.string.scan_mode_3G_header), ruleSet.getBaseScanModeDescription()),
+            ScanModeChoice(getString(R.string.scan_mode_3G_header), ruleSet.getBaseScanModeDescription() ?: ""),
             ScanModeChoice(getString(R.string.scan_mode_2G_header), ruleSet.getReinforcedScanModeDescription()),
             ScanModeChoice(getString(R.string.scan_mode_booster_header), ruleSet.getBoosterScanModeDescription()),
             ScanModeChoice(getString(R.string.scan_mode_work_header), ruleSet.getWorkScanModeDescription()),

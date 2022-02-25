@@ -23,6 +23,7 @@
 package it.ministerodellasalute.verificaC19.ui
 
 import android.annotation.SuppressLint
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,19 +55,12 @@ class ScanModeAdapter(
             position: Int,
             selectedPosition: Int
         ) {
-            binding.scanModeRadioButton.text = scanMode.name
-            binding.scanModeLongDescriptionTextView.text = scanMode.description
-            binding.scanModeRadioButton.isChecked = scanMode.isChecked
+            binding.title.text = scanMode.name
+            binding.description.text = scanMode.description
+            binding.radioButton.isChecked = selectedPosition == position
+            binding.cardView.visibility = if (selectedPosition == position) View.VISIBLE else View.GONE
 
-            if (selectedPosition == position) {
-                binding.scanModeRadioButton.isChecked = true
-                binding.scanModeLongDescriptionCardView.visibility = View.VISIBLE
-            } else {
-                binding.scanModeRadioButton.isChecked = selectedPosition == position
-                binding.scanModeLongDescriptionCardView.visibility = View.GONE
-            }
-
-            binding.scanModeRadioButton.setOnClickListener {
+            binding.radioButton.setOnClickListener {
                 scanModeDialogFragment.enableConfirmButton()
                 mSelectedItem = adapterPosition
                 notifyDataSetChanged()

@@ -23,6 +23,7 @@
 <resources>
     <color name="blue">#004494</color>
     <color name="blue_dark">#255A88</color>
+    <color name="blue_alpha">#4D00456B</color>
     <color name="blue_bg">#0066CC</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
@@ -35,6 +36,7 @@
     <color name="grey_75">#707070</color>
     <color name="grey_50">#9F9F9F</color>
     <color name="grey_light">#eeeeee</color>
+    <color name="grey_light_2">#F3F3F3</color>
 
     <color name="blue_light">#B7CCE6</color>
 
