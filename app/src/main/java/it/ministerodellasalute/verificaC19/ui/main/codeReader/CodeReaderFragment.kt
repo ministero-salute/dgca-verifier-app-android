@@ -26,6 +26,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -144,6 +145,12 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
         beepManager = BeepManager(requireActivity())
 
         binding.flipCamera.setOnClickListener(this)
+
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                callOnBack()
+            }
+        })
     }
 
     override fun onDestroyView() {
@@ -185,8 +192,6 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.back_image -> requireActivity().finish()
-            R.id.back_text -> requireActivity().finish()
             R.id.flip_camera -> {
                 binding.barcodeScanner.pause()
                 binding.barcodeScanner.cameraSettings.requestedCameraId *= -1
@@ -211,10 +216,21 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
                     binding.barcodeScanner.setTorchOn()
                 }
             }
-            R.id.close_button -> activity?.onBackPressed()
+            R.id.close_button -> callOnBack()
         }
     }
 
+    private fun callOnBack() {
+        if (viewModel.getDoubleScanFlag()) {
+            viewModel.setDoubleScanFlag(false)
+            findNavController().popBackStack()
+        } else {
+            // TODO: consider to empty the pop back stack.
+            /*val intent = Intent(activity, FirstActivity::class.java)
+            startActivity(intent)*/
+            findNavController().navigate(R.id.action_codeReaderFragment_to_firstActivity)
+        }
+    }
 
     private fun hasFlash(): Boolean {
         return requireActivity().packageManager
@@ -228,4 +244,5 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
     override fun onTorchOff() {
         torchOn = false
     }
+
 }

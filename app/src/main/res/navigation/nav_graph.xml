@@ -20,7 +20,8 @@
   ~  Created by Mykhailo Nester on 4/23/21 9:53 AM
   -->
 
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
@@ -37,6 +38,10 @@
             app:destination="@id/verificationFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/action_codeReaderFragment_to_firstActivity"
+            app:launchSingleTop="true"
+            app:destination="@id/firstActivity" />
 
     </fragment>
 
@@ -49,7 +54,16 @@
         <argument
             android:name="qrCodeText"
             app:argType="string" />
+        <action
+            android:id="@+id/action_verificationFragment_to_codeReaderFragment"
+            app:destination="@id/codeReaderFragment" />
 
     </fragment>
+
+    <activity
+        android:id="@+id/firstActivity"
+        android:name="it.ministerodellasalute.verificaC19.ui.FirstActivity"
+        android:label="FirstActivity" />
+
 
 </navigation>
