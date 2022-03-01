@@ -641,7 +641,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onBackPressed() {
-        moveTaskToBack(false)
+        this.finishAffinity()
     }
 
     override fun onDestroy() {

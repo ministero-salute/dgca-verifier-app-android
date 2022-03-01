@@ -225,9 +225,6 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
             viewModel.setDoubleScanFlag(false)
             findNavController().popBackStack()
         } else {
-            // TODO: consider to empty the pop back stack.
-            /*val intent = Intent(activity, FirstActivity::class.java)
-            startActivity(intent)*/
             findNavController().navigate(R.id.action_codeReaderFragment_to_firstActivity)
         }
     }

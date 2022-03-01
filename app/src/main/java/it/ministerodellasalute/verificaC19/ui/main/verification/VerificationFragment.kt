@@ -121,7 +121,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             setDoubleScanButtons(it)
             setScanModeText()
 
-            if (viewModel.getDoubleScanFlag() && it != CertificateStatus.NOT_EU_DCC && it != CertificateStatus.TEST_NEEDED) {
+            if (viewModel.getDoubleScanFlag() && it != CertificateStatus.NOT_EU_DCC) {
                 binding.doubleScanResultsContainer.visibility = View.VISIBLE
 
                 addDoubleScanResult(R.drawable.ic_valid_cert, R.string.certificateValid)
@@ -132,7 +132,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                     }
                 })
 
-                if (it == CertificateStatus.NOT_VALID) {
+                if (it.isANonValidCertificate()) {
 
                     addDoubleScanResult(R.drawable.ic_invalid, R.string.certificateTestNotValid)
                     setValidationLayout(CertificateStatus.NOT_VALID)
@@ -149,6 +149,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                         setValidationLayout(CertificateStatus.VALID)
                     }
                 }
+                viewModel.setUserName("")
             } else {
                 setValidationLayout(it)
             }
@@ -170,6 +171,15 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         setValidationSubTextVisibility(it)
         setValidationSubText(it)
         setLinkViews(it)
+
+        if (viewModel.getDoubleScanFlag() && it == CertificateStatus.NOT_EU_DCC) {
+            viewModel.setDoubleScanFlag(false)
+            activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    findNavController().popBackStack()
+                }
+            })
+        }
     }
 
     private fun setDoubleScanButtons(status: CertificateStatus) {
