@@ -82,20 +82,17 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             certificate?.let {
                 certificateModel = it
 
+                if (
+                    viewModel.getTotemMode() &&
+                    (certificate.certificateStatus == CertificateStatus.VALID) &&
+                    !viewModel.getDoubleScanFlag()
+                ) setOnBackTimer()
                 setPersonData(it.person, it.dateOfBirth)
-
                 binding.closeButton.visibility = View.VISIBLE
                 setupCertStatusView(it)
                 setupTimeStamp(it)
+
                 binding.validationDate.visibility = View.VISIBLE
-                if (
-                    viewModel.getTotemMode() &&
-                    (certificate.certificateStatus == CertificateStatus.VALID)
-                ) {
-                    Handler().postDelayed({
-                        activity?.onBackPressed()
-                    }, 5000)
-                }
             }
         }
         viewModel.inProgress.observe(viewLifecycleOwner) {
@@ -147,6 +144,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                         setValidationLayout(CertificateStatus.NOT_VALID)
                     } else {
                         setValidationLayout(CertificateStatus.VALID)
+                        setOnBackTimer()
                     }
                 }
                 viewModel.setUserName("")
@@ -154,6 +152,12 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 setValidationLayout(it)
             }
         }
+    }
+
+    private fun setOnBackTimer() {
+        Handler().postDelayed({
+            activity?.onBackPressed()
+        }, 5000)
     }
 
     private fun addDoubleScanResult(icon: Int, text: Int) {
@@ -203,9 +207,6 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                     Toast.makeText(activity, "Per proseguire è necessario scegliere un'opzione.", Toast.LENGTH_SHORT).show()
                 }
             })
-
-            //val fm: FragmentManager = requireActivity().supportFragmentManager
-            //for (i in 0 until fm.backStackEntryCount) fm.popBackStack()
 
         } else if (viewModel.getDoubleScanFlag()) {
             binding.scanTestButton.visibility = View.GONE
