@@ -221,6 +221,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header)
             ScanMode.WORK -> getString(R.string.scan_mode_work_header)
             ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
+            ScanMode.DOUBLE_SCAN -> getString(R.string.scan_mode_booster_header)
         }
         binding.scanModeText.text = chosenScanMode
     }
