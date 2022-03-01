@@ -65,6 +65,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private lateinit var certificateModel: CertificateViewBean
 
     private var userName: String = ""
+    private var callback: OnBackPressedCallback? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -82,6 +83,13 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             certificate?.let {
                 certificateModel = it
 
+                callback = object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        findNavController().popBackStack()
+                    }
+                }
+
+                setOnBackPressed(callback)
                 if (
                     viewModel.getTotemMode() &&
                     (certificate.certificateStatus == CertificateStatus.VALID) &&
@@ -123,12 +131,6 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
                 addDoubleScanResult(R.drawable.ic_valid_cert, R.string.certificateValid)
 
-                activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-                    override fun handleOnBackPressed() {
-                        findNavController().popBackStack()
-                    }
-                })
-
                 if (it.isANonValidCertificate()) {
                     addDoubleScanResult(R.drawable.ic_invalid, R.string.certificateTestNotValid)
                     setValidationLayout(CertificateStatus.NOT_VALID)
@@ -141,7 +143,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                         setValidationLayout(CertificateStatus.NOT_VALID)
                     } else {
                         setValidationLayout(CertificateStatus.VALID)
-                        setOnBackTimer()
+                        if (viewModel.getTotemMode()) setOnBackTimer()
                     }
                 }
                 viewModel.setUserName("")
@@ -172,15 +174,6 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         setValidationSubTextVisibility(it)
         setValidationSubText(it)
         setLinkViews(it)
-
-        if (viewModel.getDoubleScanFlag() && it == CertificateStatus.NOT_EU_DCC) {
-            viewModel.setDoubleScanFlag(false)
-            activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    findNavController().popBackStack()
-                }
-            })
-        }
     }
 
     private fun setDoubleScanButtons(status: CertificateStatus) {
@@ -199,11 +192,12 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 it.findNavController().navigate(R.id.action_verificationFragment_to_codeReaderFragment)
             }
 
-            activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            val callback = object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     Toast.makeText(activity, "Per proseguire è necessario scegliere un'opzione.", Toast.LENGTH_SHORT).show()
                 }
-            })
+            }
+            setOnBackPressed(callback)
 
         } else if (viewModel.getDoubleScanFlag()) {
             binding.scanTestButton.visibility = View.GONE
@@ -224,6 +218,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header)
             ScanMode.WORK -> getString(R.string.scan_mode_work_header)
             ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
+            ScanMode.DOUBLE_SCAN -> getString(R.string.scan_mode_booster_header)
         }
         binding.scanModeText.text = chosenScanMode
     }
@@ -353,12 +348,19 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 binding.scanTestButton.visibility = View.GONE
                 binding.noTestAvailableButton.visibility = View.GONE
 
-                activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                val callback = object : OnBackPressedCallback(true) {
                     override fun handleOnBackPressed() {
                         findNavController().popBackStack()
                     }
-                })
+                }
+                setOnBackPressed(callback)
             }
+        }
+    }
+
+    private fun setOnBackPressed(callback: OnBackPressedCallback?) {
+        callback?.let {
+            activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, callback)
         }
     }
 
