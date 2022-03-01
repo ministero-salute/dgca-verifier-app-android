@@ -1,10 +1,10 @@
 publiccodeYmlVersion: "0.2"
 applicationSuite: it-dgc
 url: "https://github.com/ministero-salute/it-dgc-verificaC19-android"
-name: VerificaC19
-releaseDate: '2022-02-14'
+name: VerificaC19 (Android)
+releaseDate: '2022-02-25'
 softwareType: standalone/mobile
-softwareVersion: 1.2.5
+softwareVersion: 1.2.7
 developmentStatus: stable
 logo: logo.png
 platforms:
@@ -14,6 +14,63 @@ usedBy:
 categories:
   - data-visualization
 description:
+  it:
+    apiDocumentation: "https://github.com/ministero-salute/it-dgc-documentation"
+    documentation: "https://github.com/ministero-salute/it-dgc-verificaC19-android"
+    features:
+      - Verifica della validità e dell'autenticità dei Certificati Verdi COVID-19
+    genericName: Mobile App
+    longDescription: >
+      VerificaC19 è l'app ufficiale del governo italiano, sviluppata
+      dal Ministero della Salute in collaborazione con il Ministero per
+      l' Innovazione tecnologica e la transizione digitale, il Ministero dell'
+      Economia e Finanza e il Commissario Straordinario per l'Emergenza COVID-19,
+      per consentire agli operatori di verificare la validità e l'autenticità 
+      dei Certificati Verdi COVID-19emessi dalla Piattaforma Nazionale DCC del 
+      Ministero della Salute e dagli altri Stati membri dell'Unione Europea.
+      L'app è stata sviluppata e rilasciata nel pieno rispetto della protezione
+      dei dati personali dell'utente e della normativa vigente, in particolare
+      il decreto-legge 22 aprile 2021, n. 52, nonché le specifiche tecniche
+      europee approvate dalla rete eHealth per il COVID digitale dell'UE
+      Certificato (ex Certificato Verde Digitale).
+
+      L'app VerificaC19 consente agli operatori incaricati di verificare la
+      validità delle certificazioni verdi COVID-19 e del
+      "Certificati EU Digital COVID" leggendo il codice QR del certificato.
+      L'app non memorizza né comunica a terzi le informazioni scansionate. 
+      Quando viene utilizzata, l'app esegue la verifica in modalità offline,
+      cioè senza invocare un servizio di sistema remoto.
+      Per verificare l'autenticità del certificato l'app deve accedere al
+      backend della piattaforma nazionale DCC almeno una volta al giorno, 
+      collegato al gateway europeo, contenente tutte le chiavi pubbliche
+      che firmano i “Certificati EU Digital COVID”.
+
+      Il flusso di lavoro dell'app VerificationC19 è suddiviso nelle seguenti 
+      fasi:
+      - La persona che deve verificare la certificazione chiede all'utente
+      di mostrare il codice QR del suo certificato
+      - Utilizzando l'app, viene letto il codice QR e ne viene verificata 
+      l'autenticità utilizzando la chiave pubblica che ha firmato il certificato
+      - Una volta che le informazioni contenute nella Certificazione Verde 
+      COVID-19 o il "Certificato EU Digital COVID" è stato decodificato, 
+      l'app mostra le informazioni principali:
+      - Nome, cognome e data di nascita del titolare del certificato
+      - Codice indentificatore univoco del certificato
+      - Validità del certificato
+      - Il certificato viene verificato rispetto alle informazioni sulla data 
+      decodificata e le norme italiane per le certificazioni verdi COVID-19.
+      - L'incaricato procede al controllo visivo della corrispondenza dei dati 
+      personali del titolare mostrati dall'app VerificaC19 e della
+      carta d'identità del titolare del certificato.
+    shortDescription: >-
+      VerificaC19 è l'app ufficiale del governo italiano per abilitare gli
+      operatori alla verifica dei Certificati Verdi COVID-19.
+    screenshots:
+      - screenshots/Main.png
+      - screenshots/Valid.png
+      - screenshots/NotValid.png
+      - screenshots/ValidItaly.png
+      - screenshots/Error.png
   en:
     apiDocumentation: "https://github.com/ministero-salute/it-dgc-documentation"
     documentation: "https://github.com/ministero-salute/it-dgc-verificaC19-android"
@@ -26,7 +83,7 @@ description:
       Technological Innovation and Digitization, the Ministry of Economy and 
       Finance and the Extraordinary Commissioner for the COVID-19 Emergency, 
       for enable operators to verify the validity and authenticity of COVID-19 
-      Green Certificates issued by Italy National DGC Platform of the Ministry 
+      Green Certificates issued by Italy National DCC Platform of the Ministry 
       of Health and by the other Member States of the European Union.
       The app is developed and released in full compliance with the protection 
       of the user's personal data and current legislation, in particular 
@@ -41,7 +98,7 @@ description:
       parties. The app performs the verification in offline mode, 
       i.e. without invoking a remote system service when it is used. 
       In order to verify the certificate authenticity the app must access the 
-      backend of the DGC national platfor at least once a day, connected to 
+      backend of the DCC national platfor at least once a day, connected to 
       the European gateway (DGCG), where all the public keys used to sign 
       the "EU Digital COVID Certificate” are collected.
 
