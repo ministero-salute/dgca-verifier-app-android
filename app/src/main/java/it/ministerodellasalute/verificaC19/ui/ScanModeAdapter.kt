@@ -60,7 +60,7 @@ class ScanModeAdapter(
             binding.radioButton.isChecked = selectedPosition == position
             binding.cardView.visibility = if (selectedPosition == position) View.VISIBLE else View.GONE
 
-            binding.radioButton.setOnClickListener {
+            binding.root.setOnClickListener {
                 scanModeDialogFragment.enableConfirmButton()
                 mSelectedItem = adapterPosition
                 notifyDataSetChanged()
