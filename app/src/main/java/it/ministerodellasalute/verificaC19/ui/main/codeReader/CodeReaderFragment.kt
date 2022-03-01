@@ -47,6 +47,7 @@ import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.FragmentCodeReaderBinding
 import it.ministerodellasalute.verificaC19sdk.model.ScanMode
 import it.ministerodellasalute.verificaC19sdk.model.VerificationViewModel
+import java.util.*
 
 @AndroidEntryPoint
 class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListener,
@@ -100,7 +101,7 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val hintsMap: MutableMap<DecodeHintType, Any> = HashMap()
+        val hintsMap: MutableMap<DecodeHintType, Any> = EnumMap(com.google.zxing.DecodeHintType::class.java)
         val formats: Collection<BarcodeFormat> = listOf(BarcodeFormat.QR_CODE, BarcodeFormat.AZTEC)
         hintsMap[DecodeHintType.TRY_HARDER] = false
         binding.barcodeScanner.barcodeView.decoderFactory = DefaultDecoderFactory(formats, hintsMap, null, 0)

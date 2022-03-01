@@ -22,6 +22,7 @@ package it.ministerodellasalute.verificaC19.ui.main.verification
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -154,8 +155,8 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setOnBackTimer() {
-        Handler().postDelayed({
-            activity?.onBackPressed()
+        Handler(Looper.getMainLooper()).postDelayed({
+            findNavController().navigate(R.id.action_verificationFragment_to_codeReaderFragment)
         }, 5000)
     }
 
