@@ -130,16 +130,13 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 })
 
                 if (it.isANonValidCertificate()) {
-
                     addDoubleScanResult(R.drawable.ic_invalid, R.string.certificateTestNotValid)
                     setValidationLayout(CertificateStatus.NOT_VALID)
                     viewModel.setDoubleScanFlag(false)
                 } else if (it == CertificateStatus.VALID) {
-
                     addDoubleScanResult(R.drawable.ic_valid_cert, R.string.certificateTestValid)
                     viewModel.setDoubleScanFlag(false)
                     if (viewModel.getUserName() != userName) {
-
                         addDoubleScanResult(R.drawable.ic_invalid, R.string.userDataDoesNotMatch)
                         setValidationLayout(CertificateStatus.NOT_VALID)
                     } else {

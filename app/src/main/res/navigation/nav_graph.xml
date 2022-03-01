@@ -20,8 +20,7 @@
   ~  Created by Mykhailo Nester on 4/23/21 9:53 AM
   -->
 
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
@@ -40,8 +39,8 @@
             app:exitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/action_codeReaderFragment_to_firstActivity"
-            app:launchSingleTop="true"
-            app:destination="@id/firstActivity" />
+            app:destination="@id/firstActivity"
+            app:popUpTo="@id/firstActivity" />
 
     </fragment>
 
