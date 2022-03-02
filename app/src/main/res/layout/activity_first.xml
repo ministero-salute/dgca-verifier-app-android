@@ -105,7 +105,6 @@
                 android:textAlignment="textStart"
                 android:textColor="@color/blue_dark"
                 android:textSize="15sp"
-
                 app:layout_constraintBottom_toTopOf="@id/qrButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
