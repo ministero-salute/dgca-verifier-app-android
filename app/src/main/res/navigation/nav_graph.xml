@@ -37,6 +37,10 @@
             app:destination="@id/verificationFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/action_codeReaderFragment_to_firstActivity"
+            app:destination="@id/firstActivity"
+            app:popUpTo="@id/firstActivity" />
 
     </fragment>
 
@@ -49,7 +53,16 @@
         <argument
             android:name="qrCodeText"
             app:argType="string" />
+        <action
+            android:id="@+id/action_verificationFragment_to_codeReaderFragment"
+            app:destination="@id/codeReaderFragment" />
 
     </fragment>
+
+    <activity
+        android:id="@+id/firstActivity"
+        android:name="it.ministerodellasalute.verificaC19.ui.FirstActivity"
+        android:label="FirstActivity" />
+
 
 </navigation>
