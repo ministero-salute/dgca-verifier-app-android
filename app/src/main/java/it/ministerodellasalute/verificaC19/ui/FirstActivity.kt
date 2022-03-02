@@ -578,7 +578,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onBackPressed() {
-        moveTaskToBack(false)
+        moveTaskToBack(true)
     }
 
     override fun onDestroy() {

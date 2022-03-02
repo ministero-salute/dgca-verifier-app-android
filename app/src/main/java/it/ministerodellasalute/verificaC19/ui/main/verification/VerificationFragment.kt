@@ -193,9 +193,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             }
 
             val callback = object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    Toast.makeText(activity, "Per proseguire è necessario scegliere un'opzione.", Toast.LENGTH_SHORT).show()
-                }
+                override fun handleOnBackPressed() {}
             }
             setOnBackPressed(callback)
 
