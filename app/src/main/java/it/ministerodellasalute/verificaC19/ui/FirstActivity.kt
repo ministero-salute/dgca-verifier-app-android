@@ -286,7 +286,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     private fun createCheckConnectionAlertDialog() {
         val builder = AlertDialog.Builder(this)
-        var dialog: AlertDialog? = null
+        val dialog: AlertDialog?
         builder.setTitle(
             getString(R.string.no_internet_title)
         )
@@ -395,7 +395,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onResume() {
         super.onResume()
-        setScanModeButtonText(viewModel.getScanMode()!!)
+        setScanModeButtonText(viewModel.getScanMode())
         checkAppMinimumVersion()
     }
 
@@ -404,7 +404,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             if (Utility.versionCompare(
                     it,
                     BuildConfig.VERSION_NAME
-                ) > 0 || viewModel.isSDKVersionObsoleted()
+                ) > 0 || viewModel.isSDKVersionObsolete()
             ) {
                 createForceUpdateDialog()
             }
