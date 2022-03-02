@@ -40,7 +40,6 @@ import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.FragmentVerificationBinding
 import it.ministerodellasalute.verificaC19.ui.base.isDebug
 import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
-import it.ministerodellasalute.verificaC19.ui.main.ExternalLink
 import it.ministerodellasalute.verificaC19sdk.VerificaDownloadInProgressException
 import it.ministerodellasalute.verificaC19sdk.VerificaMinSDKVersionException
 import it.ministerodellasalute.verificaC19sdk.VerificaMinVersionException
@@ -142,14 +141,15 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setLinkViews(certStatus: CertificateStatus) {
         binding.questionContainer.removeAllViews()
+        val ruleSet = viewModel.getRuleSet()
         val questionMap: Map<String, String> = when (certStatus) {
-            CertificateStatus.VALID -> mapOf(getString(R.string.label_what_can_be_done) to ExternalLink.VERIFICATION_FAQ_URL)
-            CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to ExternalLink.VERIFICATION_FAQ_URL)
+            CertificateStatus.VALID -> mapOf(ruleSet.getValidFaqText() to ruleSet.getValidFaqLink())
+            CertificateStatus.NOT_VALID_YET -> mapOf(ruleSet.getNotValidYetFaqText() to ruleSet.getNotValidYetFaqLink())
             CertificateStatus.NOT_VALID, CertificateStatus.EXPIRED, CertificateStatus.REVOKED -> mapOf(
-                getString(R.string.label_why_qr_not_valid) to ExternalLink.VERIFICATION_FAQ_URL
+                ruleSet.getNotValidFaqText() to ruleSet.getNotValidFaqLink()
             )
-            CertificateStatus.TEST_NEEDED -> mapOf(getString(R.string.label_why_is_test_needed) to ExternalLink.VERIFICATION_FAQ_URL)
-            CertificateStatus.NOT_EU_DCC -> mapOf(getString(R.string.label_which_qr_scan) to ExternalLink.VERIFICATION_FAQ_URL)
+            CertificateStatus.TEST_NEEDED -> mapOf(ruleSet.getVerificationNeededFaqText() to ruleSet.getVerificationNeededFaqLink())
+            CertificateStatus.NOT_EU_DCC -> mapOf(ruleSet.getNotEuDgcFaqText() to ruleSet.getNotEuDgcFaqLink())
         }
         questionMap.forEach {
             val compound = QuestionCompound(context)

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~  license-start
+  ~  eu-digital-green-certificates / dgca-verifier-app-android
+  ~
+  ~  Copyright (C) 2022 T-Systems International GmbH and all other contributors
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  ~  license-end
+  ~
+  ~  Created by nicolamcornelio on 2/16/22, 4:18 PM
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scanModeParentLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/closeImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_32dp"
+                android:contentDescription="@string/label_close"
+                android:src="@drawable/ic_close_dialog"
+                android:layout_marginTop="@dimen/margin_32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/scanModeChoiceTitle"
+                style="@style/H1.Regular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/titiliumfont"
+                android:paddingHorizontal="@dimen/margin_24dp"
+                android:text="@string/label_scan_mode"
+                android:textColor="@color/blue_dark"
+                android:textSize="30sp"
+                app:layout_constraintBottom_toBottomOf="@id/closeImageView"
+                app:layout_constraintEnd_toStartOf="@id/closeImageView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/closeImageView" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonContainer"
+        android:layout_below="@+id/headerLayout"
+        android:layout_marginTop="@dimen/margin_16dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bodyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:itemCount="2"
+            tools:listitem="@layout/scan_mode_choice_layout" />
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/confirmButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_16dp"
+            android:layout_marginTop="@dimen/margin_16dp"
+            android:layout_marginEnd="@dimen/margin_16dp"
+            android:layout_marginBottom="@dimen/margin_16dp"
+            android:background="@drawable/background_slightly_rounded_blue"
+            android:drawableTint="@color/white"
+            android:fontFamily="@font/titiliumfont"
+            android:text="@string/confirm_scan_mode_button"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
+
