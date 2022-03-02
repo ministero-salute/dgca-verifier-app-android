@@ -390,7 +390,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             if (Utility.versionCompare(
                     it,
                     BuildConfig.VERSION_NAME
-                ) > 0 || viewModel.isSDKVersionObsoleted()
+                ) > 0 || viewModel.isSDKVersionObsolete()
             ) {
                 createForceUpdateDialog()
             }
@@ -578,7 +578,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onBackPressed() {
-        moveTaskToBack(false)
+        moveTaskToBack(true)
     }
 
     override fun onDestroy() {
