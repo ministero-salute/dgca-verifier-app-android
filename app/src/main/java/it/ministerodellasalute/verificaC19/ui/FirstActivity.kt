@@ -455,8 +455,14 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.noKeyAlertTitle))
         val string =
-            SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getErrorScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
-                Linkify.addLinks(it, Linkify.ALL)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getErrorScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
+                    Linkify.addLinks(it, Linkify.ALL)
+                }
+            } else {
+                SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getErrorScanModePopup())).also {
+                    Linkify.addLinks(it, Linkify.ALL)
+                }
             }
         builder.setMessage(string)
         builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
@@ -470,8 +476,14 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun createScanModeInfoAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.label_scan_mode_types))
-        val string = SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getInfoScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
-            Linkify.addLinks(it, Linkify.ALL)
+        val string = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getInfoScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
+                Linkify.addLinks(it, Linkify.ALL)
+            }
+        } else {
+            SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getInfoScanModePopup())).also {
+                Linkify.addLinks(it, Linkify.ALL)
+            }
         }
         builder.setMessage(string)
         builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
