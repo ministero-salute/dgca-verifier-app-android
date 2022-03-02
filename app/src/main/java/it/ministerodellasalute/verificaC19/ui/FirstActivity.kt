@@ -26,7 +26,6 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.SpannableString
@@ -456,14 +455,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.noKeyAlertTitle))
         val string =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getErrorScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
-                    Linkify.addLinks(it, Linkify.ALL)
-                }
-            } else {
-                SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getErrorScanModePopup())).also {
-                    Linkify.addLinks(it, Linkify.ALL)
-                }
+            SpannableString(HtmlCompat.fromHtml(viewModel.getRuleSet()?.getErrorScanModePopup().toString(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
+                Linkify.addLinks(it, Linkify.ALL)
             }
         builder.setMessage(string)
         builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
@@ -477,14 +470,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun createScanModeInfoAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.label_scan_mode_types))
-        val string = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getInfoScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
-                Linkify.addLinks(it, Linkify.ALL)
-            }
-        } else {
-            SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getInfoScanModePopup())).also {
-                Linkify.addLinks(it, Linkify.ALL)
-            }
+        val string = SpannableString(HtmlCompat.fromHtml(viewModel.getRuleSet()?.getInfoScanModePopup().toString(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
+            Linkify.addLinks(it, Linkify.ALL)
         }
         builder.setMessage(string)
         builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
