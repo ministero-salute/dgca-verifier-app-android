@@ -32,8 +32,8 @@
     <string name="privacyPolicy"><u>Leggi la Privacy policy</u></string>
     <string name="codiceFiscale">Codice fiscale</string>
     <string name="expirationText">Data scadenza certificato</string>
-    <string name="certificateValid">Certificazione valida</string>
-    <string name="certificateNonValid">Certificazione non valida</string>
+    <string name="certificateValid">Verifica valida</string>
+    <string name="certificateNonValid">Verifica non valida</string>
     <string name="certificateExpired">Certificazione scaduta</string>
     <string name="certificateRevoked">Certificazione revocata</string>
     <string name="certificateNonValidYet">Certificazione non ancora valida</string>
@@ -136,6 +136,7 @@
         \n<b>Tipologia STUDENTI (S)</b> - <i>da utilizzare nelle classi della scuola primaria e secondaria per la didattica in presenza, in classi con casi di positività accertati</i>: la app considera valide le certificazioni verdi generate da vaccinazione con dose di richiamo e quelle con ciclo primario o guarigione, se emesse da meno di 120 giorni e le certificazioni di esenzione dalla vaccinazione. \n
 
         \nConsulta la tabella sulle attività consentite senza/ o con green pass base  rafforzato ( link https://www.governo.it/sites/governo.it/files/documenti/documenti/Notizie-allegati/tabella_attivita_consentite.pdf )"</string>
+
     <string name="label_alert_dialog_option">%1$s (%2$s)</string>
     <string name="label_verification_scan_mode">%1$c\t\t%2$s</string>
     <string name="label_download">Scarica Ora</string>
@@ -156,4 +157,11 @@
     <string name="no_internet_message">Connessione internet assente. Assicurati di essere connesso alla rete e riprova.</string>
     <string name="ok_label">OK</string>
     <string name="certificateValidTestNeeded">Certificazione valida richiesto tampone</string>
+    <string name="no_test_available_label">Nessun tampone disponibile</string>
+    <string name="scan_test_label">Scansiona il tampone</string>
+    <string name="certificateTestNotValid">Certificazione tampone non valida</string>
+    <string name="certificateTestValid">Certificazione tampone valida</string>
+    <string name="userDataDoesNotMatch">Dati anagrafici non congruenti</string>
+    <string name="scan_mode_fragment_title">Modalità di verifica della <b>Certificazione</b></string>
+    <string name="confirm_scan_mode_button">Conferma</string>
 </resources>

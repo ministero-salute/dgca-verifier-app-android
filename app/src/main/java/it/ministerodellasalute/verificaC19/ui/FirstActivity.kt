@@ -22,19 +22,16 @@
 package it.ministerodellasalute.verificaC19.ui
 
 import android.Manifest
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.text.Html
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.StyleSpan
-import android.text.style.UnderlineSpan
 import android.text.util.Linkify
 import android.util.Log
 import android.view.View
@@ -45,6 +42,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
 import androidx.core.text.bold
 import androidx.core.view.isVisible
 import com.google.gson.Gson
@@ -62,15 +60,15 @@ import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.data.local.prefs.PrefKeys
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
 import it.ministerodellasalute.verificaC19sdk.model.ScanMode
+import it.ministerodellasalute.verificaC19sdk.model.validation.RuleSet
 import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
 import it.ministerodellasalute.verificaC19sdk.util.Utility
-import java.util.*
 
 @AndroidEntryPoint
 class FirstActivity : AppCompatActivity(), View.OnClickListener,
-    SharedPreferences.OnSharedPreferenceChangeListener {
+    SharedPreferences.OnSharedPreferenceChangeListener, DialogInterface.OnDismissListener {
 
     private lateinit var binding: ActivityFirstBinding
     private lateinit var shared: SharedPreferences
@@ -250,7 +248,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 .bold { append(getString(R.string.label_choose_scan_mode)) }
             binding.scanModeButton.text = s
         } else {
-            var chosenScanMode =
+            val chosenScanMode =
                 when (currentScanMode) {
                     ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
                     ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
@@ -260,21 +258,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                     ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header)
                     else -> getString(R.string.scan_mode_3G_header)
                 }
-            chosenScanMode += "\n"
-            val chosenModeDescription =
-                when (currentScanMode) {
-                    ScanMode.STANDARD -> getString(R.string.label_scan_mode_3G)
-                    ScanMode.STRENGTHENED -> getString(R.string.label_scan_mode_2G)
-                    ScanMode.BOOSTER -> getString(R.string.label_scan_mode_booster)
-                    ScanMode.WORK -> getString(R.string.label_scan_mode_work)
-                    ScanMode.ENTRY_ITALY -> getString(R.string.label_scan_mode_entry_italy)
-                    ScanMode.SCHOOL -> getString(R.string.label_scan_mode_school)
-                    else -> getString(R.string.label_scan_mode_3G)
-                }
-            val s = SpannableStringBuilder()
-                .bold { append(chosenScanMode) }
-                .append(chosenModeDescription)
-            binding.scanModeButton.text = s
+            binding.scanModeButton.text = chosenScanMode
         }
     }
 
@@ -288,7 +272,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     private fun createCheckConnectionAlertDialog() {
         val builder = AlertDialog.Builder(this)
-        var dialog: AlertDialog? = null
+        val dialog: AlertDialog?
         builder.setTitle(
             getString(R.string.no_internet_title)
         )
@@ -397,7 +381,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onResume() {
         super.onResume()
-        setScanModeButtonText(viewModel.getScanMode()!!)
+        setScanModeButtonText(viewModel.getScanMode())
         checkAppMinimumVersion()
     }
 
@@ -406,7 +390,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             if (Utility.versionCompare(
                     it,
                     BuildConfig.VERSION_NAME
-                ) > 0 || viewModel.isSDKVersionObsoleted()
+                ) > 0 || viewModel.isSDKVersionObsolete()
             ) {
                 createForceUpdateDialog()
             }
@@ -424,105 +408,56 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onClick(v: View?) {
-        if (v?.id == R.id.qrButton) {
-            viewModel.getDateLastSync().let {
-                if (!viewModel.getScanModeFlag() && v.id != R.id.scan_mode_button) {
-                    createNoScanModeChosenAlert()
-                    return
-                } else if (it == -1L) {
-                    createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
-                    return
-                }
-            }
-            viewModel.getDrlDateLastSync().let {
-                if (binding.resumeDownload.isVisible) {
-                    createNoSyncAlertDialog(getString(R.string.label_drl_download_in_progress))
-                    return
-                }
-                if ((viewModel.getIsDrlSyncActive() && System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) ||
-                    (viewModel.getIsDrlSyncActive() && it == -1L)
-                ) {
-                    createNoSyncAlertDialog(getString(R.string.noKeyAlertMessageForDrl))
-                    return
-                }
-            }
-        }
         when (v?.id) {
-            R.id.qrButton -> checkCameraPermission()
-            R.id.settings -> openSettings()
-            R.id.scan_mode_button -> showScanModeChoiceAlertDialog()
-            R.id.circle_info_container -> createScanModeInfoAlert()
-        }
-    }
-
-    private fun showScanModeChoiceAlertDialog() {
-        val mBuilder = AlertDialog.Builder(this)
-        val chosenScanMode = when (viewModel.getScanMode()) {
-            ScanMode.STANDARD -> 0
-            ScanMode.STRENGTHENED -> 1
-            ScanMode.BOOSTER -> 2
-            ScanMode.WORK -> 3
-            ScanMode.ENTRY_ITALY -> 4
-            ScanMode.SCHOOL -> 5
-            else -> 0
-        }
-        val scanModeChoices = arrayOf(
-            getString(
-                R.string.label_alert_dialog_option,
-                getString(R.string.scan_mode_3G_header),
-                getString(R.string.label_scan_mode_3G)
-            ),
-            getString(
-                R.string.label_alert_dialog_option,
-                getString(R.string.scan_mode_2G_header),
-                getString(R.string.label_scan_mode_2G)
-            ),
-            getString(
-                R.string.label_alert_dialog_option,
-                getString(R.string.scan_mode_booster_header),
-                getString(R.string.label_scan_mode_booster)
-            ),
-            getString(
-                R.string.label_alert_dialog_option,
-                getString(R.string.scan_mode_work_header),
-                getString(R.string.label_scan_mode_work)
-            ),
-            getString(
-                R.string.label_alert_dialog_option,
-                getString(R.string.scan_mode_entry_italy_header),
-                getString(R.string.label_scan_mode_entry_italy)
-            ),
-            getString(
-                R.string.label_alert_dialog_option,
-                getString(R.string.scan_mode_school_header),
-                getString(R.string.label_scan_mode_school)
-            ),
-        )
-
-        mBuilder.setTitle(getString(R.string.label_scan_mode))
-        mBuilder.setSingleChoiceItems(scanModeChoices, chosenScanMode) { dialog, which ->
-            if (!viewModel.getScanModeFlag()) viewModel.setScanModeFlag(true)
-            when (which) {
-                0 -> viewModel.setScanMode(ScanMode.STANDARD)
-                1 -> viewModel.setScanMode(ScanMode.STRENGTHENED)
-                2 -> viewModel.setScanMode(ScanMode.BOOSTER)
-                3 -> viewModel.setScanMode(ScanMode.WORK)
-                4 -> viewModel.setScanMode(ScanMode.ENTRY_ITALY)
-                5 -> viewModel.setScanMode(ScanMode.SCHOOL)
+            R.id.qrButton -> {
+                viewModel.getDateLastSync().let {
+                    if (it == -1L) {
+                        createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
+                        return
+                    } else if (!viewModel.getScanModeFlag() && v.id != R.id.scan_mode_button) {
+                        viewModel.getRuleSet()?.getErrorScanModePopup()?.run {
+                            createNoScanModeChosenAlert()
+                        } ?: run { createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage)) }
+                        return
+                    }
+                }
+                viewModel.getDrlDateLastSync().let {
+                    if (binding.resumeDownload.isVisible) {
+                        createNoSyncAlertDialog(getString(R.string.label_drl_download_in_progress))
+                        return
+                    }
+                    if ((viewModel.getIsDrlSyncActive() && System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) ||
+                        (viewModel.getIsDrlSyncActive() && it == -1L)
+                    ) {
+                        createNoSyncAlertDialog(getString(R.string.noKeyAlertMessageForDrl))
+                        return
+                    }
+                }
+                checkCameraPermission()
             }
-            dialog.dismiss()
+            R.id.settings -> openSettings()
+            R.id.scan_mode_button -> {
+                viewModel.getRuleSet()?.run {
+                    ScanModeDialogFragment(viewModel.getRuleSet()!!).show(supportFragmentManager, "SCAN_MODE_DIALOG_FRAGMENT")
+                } ?: run {
+                    createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
+                }
+            }
+            R.id.circle_info_container -> {
+                viewModel.getRuleSet()?.getBaseScanModeDescription()?.run {
+                    createScanModeInfoAlert()
+                } ?: run { createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage)) }
+            }
         }
-        val mDialog = mBuilder.create()
-        mDialog.setCancelable(false)
-        mDialog.show()
     }
 
     private fun createNoScanModeChosenAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.noKeyAlertTitle))
-        val string = SpannableString(getText(R.string.label_no_scan_mode_chosen)).also {
-            Linkify.addLinks(it, Linkify.ALL)
-        }
+        val string =
+            SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getErrorScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
+                Linkify.addLinks(it, Linkify.ALL)
+            }
         builder.setMessage(string)
         builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
         }
@@ -535,7 +470,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun createScanModeInfoAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.label_scan_mode_types))
-        val string = SpannableString(getText(R.string.label_scan_mode_types_description)).also {
+        val string = SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getInfoScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
             Linkify.addLinks(it, Linkify.ALL)
         }
         builder.setMessage(string)
@@ -643,7 +578,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onBackPressed() {
-        moveTaskToBack(false)
+        moveTaskToBack(true)
     }
 
     override fun onDestroy() {
@@ -664,4 +599,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             ConversionUtility.byteToMegaByte(viewModel.getTotalSizeInByte().toFloat())
         )
     }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        setScanModeButtonText(viewModel.getScanMode())
+    }
+
 }

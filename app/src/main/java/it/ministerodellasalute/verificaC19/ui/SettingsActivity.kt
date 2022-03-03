@@ -29,7 +29,6 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
-import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.ActivitySettingsBinding
 import it.ministerodellasalute.verificaC19.ui.main.ExternalLink
