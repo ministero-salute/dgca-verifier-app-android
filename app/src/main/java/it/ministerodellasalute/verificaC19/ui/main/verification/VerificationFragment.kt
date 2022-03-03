@@ -126,30 +126,34 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             setDoubleScanButtons(it)
             setScanModeText()
 
-            if (viewModel.getDoubleScanFlag() && it != CertificateStatus.NOT_EU_DCC) {
-                binding.doubleScanResultsContainer.visibility = View.VISIBLE
+            checkDoubleScanConditions(it)
+        }
+    }
 
-                addDoubleScanResult(R.drawable.ic_valid_cert, R.string.certificateValid)
+    private fun checkDoubleScanConditions(it: CertificateStatus) {
+        if (viewModel.getDoubleScanFlag() && it != CertificateStatus.NOT_EU_DCC) {
+            binding.doubleScanResultsContainer.visibility = View.VISIBLE
 
-                if (it.isANonValidCertificate()) {
-                    addDoubleScanResult(R.drawable.ic_invalid, R.string.certificateTestNotValid)
+            addDoubleScanResult(R.drawable.ic_valid_cert, R.string.certificateValid)
+
+            if (it.isANonValidCertificate()) {
+                addDoubleScanResult(R.drawable.ic_invalid, R.string.certificateTestNotValid)
+                setValidationLayout(CertificateStatus.NOT_VALID)
+                viewModel.setDoubleScanFlag(false)
+            } else if (it == CertificateStatus.VALID) {
+                addDoubleScanResult(R.drawable.ic_valid_cert, R.string.certificateTestValid)
+                viewModel.setDoubleScanFlag(false)
+                if (viewModel.getUserName() != userName) {
+                    addDoubleScanResult(R.drawable.ic_invalid, R.string.userDataDoesNotMatch)
                     setValidationLayout(CertificateStatus.NOT_VALID)
-                    viewModel.setDoubleScanFlag(false)
-                } else if (it == CertificateStatus.VALID) {
-                    addDoubleScanResult(R.drawable.ic_valid_cert, R.string.certificateTestValid)
-                    viewModel.setDoubleScanFlag(false)
-                    if (viewModel.getUserName() != userName) {
-                        addDoubleScanResult(R.drawable.ic_invalid, R.string.userDataDoesNotMatch)
-                        setValidationLayout(CertificateStatus.NOT_VALID)
-                    } else {
-                        setValidationLayout(CertificateStatus.VALID)
-                        if (viewModel.getTotemMode()) setOnBackTimer()
-                    }
+                } else {
+                    setValidationLayout(CertificateStatus.VALID)
+                    if (viewModel.getTotemMode()) setOnBackTimer()
                 }
-                viewModel.setUserName("")
-            } else {
-                setValidationLayout(it)
             }
+            viewModel.setUserName("")
+        } else {
+            setValidationLayout(it)
         }
     }
 
@@ -339,9 +343,14 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         when (v?.id) {
             R.id.close_button -> findNavController().popBackStack()
             R.id.no_test_available_button -> {
-                viewModel.setDoubleScanFlag(false)
+                binding.questionContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    topToBottom = binding.doubleScanResultsContainer.id
+                    topMargin = 32
+                }
 
-                setValidationLayout(CertificateStatus.NOT_VALID)
+                viewModel.setDoubleScanFlag(true)
+                checkDoubleScanConditions(CertificateStatus.NOT_VALID)
+                viewModel.setDoubleScanFlag(false)
 
                 binding.closeButton.visibility = View.VISIBLE
                 binding.scanTestButton.visibility = View.GONE
