@@ -92,8 +92,8 @@ android {
         applicationId "it.ministerodellasalute.verificaC19"
         minSdkVersion Config.minSdk
         targetSdkVersion Config.targetSdk
-        versionCode 655
-        versionName "1.2.6"
+        versionCode 662
+        versionName "1.2.8"
         testInstrumentationRunner Config.androidTestInstrumentation
 
         buildConfigField "String", "BASE_LINK_URL", "\"https://www.dgc.gov.it\""
@@ -105,7 +105,7 @@ android {
             buildConfigField "String", "PRIVACY_POLICY_URL", "\"https://www.dgc.gov.it/web/pn.html\""
             buildConfigField "String", "VERIFICATION_FAQ_URL", "\"https://www.dgc.gov.it/web/faq.html#verifica19\""
             minifyEnabled false
-            debuggable true
+            debuggable false
         }
 
         release {
