@@ -175,7 +175,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/margin_8dp"
-                                android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right"
+                                android:drawableEnd="@drawable/ic_close_dialog"
                                 android:layout_marginHorizontal="@dimen/margin_24dp"
                                 android:backgroundTint="@android:color/transparent"
                                 android:drawablePadding="@dimen/padding_10dp"
