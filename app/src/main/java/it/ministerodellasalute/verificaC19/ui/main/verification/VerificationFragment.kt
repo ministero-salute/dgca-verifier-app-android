@@ -139,10 +139,8 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             if (it.isANonValidCertificate()) {
                 addDoubleScanResult(R.drawable.ic_invalid, R.string.certificateTestNotValid)
                 setValidationLayout(CertificateStatus.NOT_VALID)
-                viewModel.setDoubleScanFlag(false)
             } else if (it == CertificateStatus.VALID) {
                 addDoubleScanResult(R.drawable.ic_valid_cert, R.string.certificateTestValid)
-                viewModel.setDoubleScanFlag(false)
                 if (viewModel.getUserName() != userName) {
                     addDoubleScanResult(R.drawable.ic_invalid, R.string.userDataDoesNotMatch)
                     setValidationLayout(CertificateStatus.NOT_VALID)
@@ -277,16 +275,18 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setValidationMainText(certStatus: CertificateStatus) {
+        val isDoubleScanFlow = viewModel.getDoubleScanFlag()
+        val validTitle = if (isDoubleScanFlow) getString(R.string.certificateTestValidTitle) else getString(R.string.certificateValid)
+        val notValidTitle = if (isDoubleScanFlow) getString(R.string.certificateTestNonValidTitle) else getString(R.string.certificateNonValid)
+
         binding.certificateValid.text = when (certStatus) {
-            CertificateStatus.VALID -> getString(R.string.certificateValid)
+            CertificateStatus.VALID -> validTitle
             CertificateStatus.NOT_EU_DCC -> getString(R.string.certificateNotDCC)
-            CertificateStatus.REVOKED -> if (isDebug()) getString(R.string.certificateRevoked) else getString(
-                R.string.certificateNonValid
-            )
-            CertificateStatus.NOT_VALID -> getString(R.string.certificateNonValid)
-            CertificateStatus.EXPIRED -> getString(R.string.certificateExpired)
+            CertificateStatus.REVOKED -> if (isDebug()) getString(R.string.certificateRevoked) else notValidTitle
+            CertificateStatus.NOT_VALID -> notValidTitle
+            CertificateStatus.EXPIRED -> if (isDoubleScanFlow) notValidTitle else getString(R.string.certificateExpired)
             CertificateStatus.TEST_NEEDED -> getString(R.string.certificateValidTestNeeded)
-            CertificateStatus.NOT_VALID_YET -> getString(R.string.certificateNonValidYet)
+            CertificateStatus.NOT_VALID_YET -> if (isDoubleScanFlow) notValidTitle else getString(R.string.certificateNonValidYet)
         }
     }
 
