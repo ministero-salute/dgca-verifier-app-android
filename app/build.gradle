@@ -152,7 +152,6 @@ android {
 dependencies {
     implementation project(':dgc-sdk')
     implementation project(':decoder')
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     coreLibraryDesugaring Deps.desugar_jdk_libs
 
     implementation Deps.kotlin_stdlib
