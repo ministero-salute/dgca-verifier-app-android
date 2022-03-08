@@ -22,7 +22,10 @@
 package it.ministerodellasalute.verificaC19.ui
 
 import android.Manifest
-import android.content.*
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
@@ -61,11 +64,9 @@ import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.data.local.prefs.PrefKeys
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
 import it.ministerodellasalute.verificaC19sdk.model.ScanMode
-import it.ministerodellasalute.verificaC19sdk.model.validation.RuleSet
 import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
-import it.ministerodellasalute.verificaC19sdk.util.Utility
 
 @AndroidEntryPoint
 class FirstActivity : AppCompatActivity(), View.OnClickListener,
@@ -370,10 +371,11 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     override fun onResume() {
         super.onResume()
         if (WhiteLabelApplication.dataResetted) {
+            binding.dateLastSyncText.text = getString(R.string.loading)
             Toast.makeText(this, "Dati inizializzati.", Toast.LENGTH_SHORT).show()
             WhiteLabelApplication.dataResetted = false
         }
-        setScanModeButtonText(viewModel.getScanMode()!!)
+        setScanModeButtonText(viewModel.getScanMode())
     }
 
     private fun openQrCodeReader() {
