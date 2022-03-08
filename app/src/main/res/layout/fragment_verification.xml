@@ -16,7 +16,8 @@
    ~ limitations under the License.
 -->
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/verification_background"
@@ -113,7 +114,24 @@
                                 android:textSize="32sp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/checkmark"
-                                tools:text="Certificazione valida per l'Italia" />
+                                tools:text="Verifica valida" />
+
+                            <LinearLayout
+                                android:id="@+id/double_scan_results_container"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginStart="@dimen/margin_24dp"
+                                android:layout_marginEnd="@dimen/margin_24dp"
+                                android:layout_marginTop="@dimen/margin_32dp"
+                                android:layout_marginBottom="@dimen/margin_8dp"
+                                android:visibility="gone"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/certificate_valid"
+                                app:layout_constraintBottom_toTopOf="@+id/question_container">
+
+                            </LinearLayout>
 
                             <androidx.appcompat.widget.LinearLayoutCompat
                                 android:id="@+id/question_container"
@@ -126,6 +144,58 @@
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/certificate_valid"
                                 app:showDividers="middle" />
+
+                            <Button
+                                android:id="@+id/scan_test_button"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_16dp"
+                                android:layout_marginHorizontal="@dimen/margin_24dp"
+                                android:background="@drawable/background_slightly_rounded_blue"
+                                android:drawableEnd="@drawable/ic_qr_code"
+                                android:drawablePadding="@dimen/padding_10dp"
+                                android:drawableTint="@color/white"
+                                android:fontFamily="@font/titiliumfont"
+                                android:padding="@dimen/padding_16dp"
+                                android:paddingStart="@dimen/padding_20dp"
+                                android:paddingEnd="@dimen/padding_20dp"
+                                android:text="@string/scan_test_label"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/white"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                android:visibility="gone"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/question_container" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/no_test_available_button"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_8dp"
+                                android:drawableEnd="@drawable/ic_close_dialog"
+                                android:layout_marginHorizontal="@dimen/margin_24dp"
+                                android:backgroundTint="@android:color/transparent"
+                                android:drawablePadding="@dimen/padding_10dp"
+                                android:drawableTint="@color/blue_dark"
+                                android:fontFamily="@font/titiliumfont"
+                                android:insetBottom="0dp"
+                                android:padding="@dimen/padding_16dp"
+                                android:paddingStart="@dimen/padding_20dp"
+                                android:paddingEnd="@dimen/padding_20dp"
+                                android:textStyle="bold"
+                                android:text="@string/no_test_available_label"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/blue_dark"
+                                android:textSize="15sp"
+                                android:visibility="gone"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/scan_test_button"
+                                app:strokeColor="@color/blue_dark"
+                                app:strokeWidth="1dp" />
 
                             <TextView
                                 android:id="@+id/subtitle_text"
