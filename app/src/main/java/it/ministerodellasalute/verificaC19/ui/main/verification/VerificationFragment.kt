@@ -27,7 +27,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -65,7 +64,9 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private lateinit var certificateModel: CertificateViewBean
 
     private var userName: String = ""
-    private var callback: OnBackPressedCallback? = null
+    private var handler: Handler? = null
+    private var onBackPressedCallback: OnBackPressedCallback? = null
+    private var runnableRunner: Runnable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,13 +84,15 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             certificate?.let {
                 certificateModel = it
 
-                callback = object : OnBackPressedCallback(true) {
+                handler = Handler(Looper.getMainLooper())
+                runnableRunner = Runnable { findNavController().popBackStack() }
+                onBackPressedCallback = object : OnBackPressedCallback(true) {
                     override fun handleOnBackPressed() {
                         findNavController().popBackStack()
                     }
                 }
 
-                setOnBackPressed(callback)
+                setOnBackPressed(onBackPressedCallback)
                 if (
                     viewModel.getTotemMode() &&
                     (certificate.certificateStatus == CertificateStatus.VALID) &&
@@ -156,9 +159,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setOnBackTimer() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            findNavController().navigate(R.id.action_verificationFragment_to_codeReaderFragment)
-        }, 5000)
+        runnableRunner?.let { handler?.postDelayed(it, 5000) }
     }
 
     private fun addDoubleScanResult(icon: Int, text: Int) {
@@ -391,6 +392,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onDestroy() {
+        runnableRunner?.let { handler?.removeCallbacks(it) }
         viewModel.setDoubleScanFlag(false)
         super.onDestroy()
     }
