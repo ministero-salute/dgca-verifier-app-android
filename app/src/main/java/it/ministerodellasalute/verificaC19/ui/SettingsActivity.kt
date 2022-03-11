@@ -92,10 +92,10 @@ class SettingsActivity : AppCompatActivity(), View.OnClickListener {
         builder.setMessage("Tutti i dati memorizzati nell'app verranno cancellati. Quest'operazione è irreversibile. Confermare?")
             .setTitle("Attenzione")
             .setCancelable(false)
-            .setPositiveButton("Sì") { dialog, id ->
+            .setPositiveButton("Sì") { _, _ ->
                 resetAndRestart()
             }
-            .setNegativeButton("No") { dialog, id ->
+            .setNegativeButton("No") { dialog, _ ->
                 dialog.dismiss()
             }
         val alert = builder.create()
