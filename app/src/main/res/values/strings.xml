@@ -151,7 +151,7 @@
     <string name="label_download_alert_complete">È necessario aggiornare la lista delle Certificazione verdi COVID-19 revocate per un totale di %1$.2fMB.</string>
     <string name="label_download_alert_simple">È necessario aggiornare la lista delle Certificazione verdi COVID-19 revocate.</string>
     <string name="label_drl_download_in_progress">L\'aggiornamento della lista delle Certificazione verdi COVID-19 revocate è incompleto. Assicurati di essere connesso a Internet e clicca per continuare.</string>
-    <string name="messageDownloadAlert">È necessario aggiornare la lista delle Certificazione verdi COVID-19 revocate, per un totale di %1$.2fMB. Controlla il tuo piano dati oppure connettiti a una rete wi-fi prima di procedere. Il tempo di aggiornamento dipende dalla velocità di connessione e dal tipo di device in uso.La lista verrà aggiornata ogni 24 ore.</string>
+    <string name="messageDownloadAlert">È necessario aggiornare la lista delle Certificazione verdi COVID-19 revocate, per un totale di %1$.2fMB. Controlla il tuo piano dati oppure connettiti a una rete wi-fi prima di procedere. Il tempo di aggiornamento dipende dalla velocità di connessione e dal tipo di device in uso. La lista verrà aggiornata ogni 24 ore.</string>
     <string name="messageDownloadStarted">È in corso l\'aggiornamento della lista delle Certificazioni verdi COVID-19 revocate. Attendere la fine del download per procedere con le scansioni.</string>
     <string name="chunk_count">Pacchetto %1$d su %2$d</string>
     <string name="chunk_size">%1$.2f Mb su %2$.2f Mb</string>
