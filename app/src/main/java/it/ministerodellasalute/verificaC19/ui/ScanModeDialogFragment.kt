@@ -65,6 +65,12 @@ class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), S
         scanModeAdapter = ScanModeAdapter(scanModes, chosenScanMode, this)
         scanModeBodyLayout.adapter = scanModeAdapter
 
+        if (chosenScanMode != -1) {
+            scanModeBodyLayout.post {
+                scanModeBodyLayout.smoothScrollToPosition(chosenScanMode)
+            }
+        }
+
         val btnClose = view.findViewById<AppCompatImageView>(R.id.closeImageView)
         btnClose.setOnClickListener {
             dismiss()
