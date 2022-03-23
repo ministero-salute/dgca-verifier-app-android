@@ -26,6 +26,7 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.*
 import dagger.hilt.android.HiltAndroidApp
+import it.ministerodellasalute.verificaC19sdk.network.HeaderInterceptor
 import it.ministerodellasalute.verificaC19sdk.worker.LoadKeysWorker
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -45,6 +46,7 @@ class WhiteLabelApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        HeaderInterceptor.appVersion = BuildConfig.VERSION_NAME
         setWorkManager()
     }
 
