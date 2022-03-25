@@ -180,9 +180,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                     binding.qrButton.background.alpha = 128
                     binding.resumeDownload.show()
                     binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
-                    binding.chunkCount.show()
-                    binding.chunkSize.show()
-                    binding.updateProgressBar.show()
+                    showDownloadProgressViews()
                 } else {
                     binding.resumeDownload.hide()
                 }
@@ -533,9 +531,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 PrefKeys.KEY_TOTAL_CHUNK -> {
                     val totalChunk = viewModel.getTotalChunk().toInt()
                     binding.updateProgressBar.max = totalChunk
-                    binding.updateProgressBar.show()
-                    binding.chunkCount.show()
-                    binding.chunkSize.show()
+                    showDownloadProgressViews()
                     updateDownloadedPackagesCount()
                     Log.i(PrefKeys.KEY_TOTAL_CHUNK, totalChunk.toString())
                 }
@@ -544,6 +540,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                     Log.i(PrefKeys.AUTH_TO_RESUME, authToResume.toString())
                     if (viewModel.getResumeAvailable() == 0L) {
                         binding.resumeDownload.show()
+                        binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
+                        showDownloadProgressViews()
                         binding.qrButton.background.alpha = 128
                     }
                 }
