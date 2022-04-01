@@ -60,7 +60,6 @@ import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.data.local.prefs.PrefKeys
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
 import it.ministerodellasalute.verificaC19sdk.model.ScanMode
-import it.ministerodellasalute.verificaC19sdk.model.validation.RuleSet
 import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
@@ -88,11 +87,20 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         super.onCreate(savedInstanceState)
         binding = ActivityFirstBinding.inflate(layoutInflater)
         shared = this.getSharedPreferences(PrefKeys.USER_PREF, Context.MODE_PRIVATE)
+
+        disableUnusedScanModes()
         setContentView(binding.root)
         setSecureWindowFlags()
         setOnClickListeners()
         setupUI()
         observeLiveData()
+    }
+
+    private fun disableUnusedScanModes() {
+        if (viewModel.getScanMode() == ScanMode.WORK || viewModel.getScanMode() == ScanMode.SCHOOL) {
+            viewModel.setScanModeFlag(false)
+            shared.edit().remove("scanMode").commit()
+        }
     }
 
     private fun observeLiveData() {
@@ -251,9 +259,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                     ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
                     ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
                     ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
-                    ScanMode.WORK -> getString(R.string.scan_mode_work_header)
                     ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
-                    ScanMode.SCHOOL -> getString(R.string.scan_mode_school_header)
                     else -> getString(R.string.scan_mode_3G_header)
                 }
             binding.scanModeButton.text = chosenScanMode
