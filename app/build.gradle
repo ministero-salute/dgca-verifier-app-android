@@ -92,8 +92,8 @@ android {
         applicationId "it.ministerodellasalute.verificaC19"
         minSdkVersion Config.minSdk
         targetSdkVersion Config.targetSdk
-        versionCode 665
-        versionName "1.2.9"
+        versionCode 677
+        versionName "1.3.0"
         testInstrumentationRunner Config.androidTestInstrumentation
 
         buildConfigField "String", "BASE_LINK_URL", "\"https://www.dgc.gov.it\""
