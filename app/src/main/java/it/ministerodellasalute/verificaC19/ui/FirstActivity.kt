@@ -66,8 +66,7 @@ import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
 import it.ministerodellasalute.verificaC19sdk.util.Utility
 
 @AndroidEntryPoint
-class FirstActivity : AppCompatActivity(), View.OnClickListener,
-    SharedPreferences.OnSharedPreferenceChangeListener, DialogInterface.OnDismissListener {
+class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface.OnDismissListener {
 
     private lateinit var binding: ActivityFirstBinding
     private lateinit var shared: SharedPreferences
@@ -109,8 +108,31 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         observeSizeOverThreshold()
         observeInitDownload()
         observeScanMode()
+        observeDrlState()
+        observeResumeBehaviour();
         doOnDebug {
             observeDebugInfo()
+        }
+    }
+
+    private fun observeResumeBehaviour() {
+        viewModel.authToResume.observe(this) { authToResume ->
+            Log.i(PrefKeys.AUTH_TO_RESUME, authToResume.toString())
+            if (authToResume == 0L) {
+                binding.resumeDownload.show()
+                binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
+                showDownloadProgressViews()
+                binding.qrButton.background.alpha = 128
+            }
+        }
+    }
+
+    private fun observeDrlState() {
+        viewModel.drlState.observe(this) {
+            if (it.currentChunk < it.totalChunk) {
+                updateDownloadedPackagesCount()
+                showDownloadProgressViews()
+            } else hideDownloadProgressViews()
         }
     }
 
@@ -209,16 +231,19 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         binding.qrButton.setOnClickListener(this)
         binding.settings.setOnClickListener(this)
         binding.scanModeButton.setOnClickListener(this)
+
         binding.privacyPolicyCard.setOnClickListener {
             val browserIntent =
                 Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.PRIVACY_POLICY_URL))
             startActivity(browserIntent)
         }
+
         binding.faqCard.setOnClickListener {
             val browserIntent =
                 Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.FAQ_URL))
             startActivity(browserIntent)
         }
+
         binding.initDownload.setOnClickListener {
             if (Utility.isOnline(this)) {
                 startDownload()
@@ -226,6 +251,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 createCheckConnectionAlertDialog()
             }
         }
+
         binding.debugButton.setOnClickListener {
             val debugInfoIntent = Intent(this, DebugInfoActivity::class.java)
             debugInfoIntent.putExtra(
@@ -522,36 +548,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        shared.registerOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (key != null) {
-            when (key) {
-                PrefKeys.KEY_DRL_STATE_IT -> {
-                    if (viewModel.getDrlState().currentChunk < viewModel.getDrlState().totalChunk) {
-                        updateDownloadedPackagesCount()
-                        showDownloadProgressViews()
-                    } else hideDownloadProgressViews()
-                }
-                PrefKeys.AUTH_TO_RESUME -> {
-                    val authToResume = viewModel.getResumeAvailable().toInt()
-                    Log.i(PrefKeys.AUTH_TO_RESUME, authToResume.toString())
-                    if (viewModel.getResumeAvailable() == 0L) {
-                        binding.resumeDownload.show()
-                        binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
-                        showDownloadProgressViews()
-                        binding.qrButton.background.alpha = 128
-                    }
-                }
-                else -> {
-
-                }
-            }
-        }
-    }
 
     private fun hideDownloadProgressViews() {
         binding.updateProgressBar.hide()
@@ -569,10 +565,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         moveTaskToBack(true)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        shared.unregisterOnSharedPreferenceChangeListener(this)
-    }
 
     private fun updateDownloadedPackagesCount() {
         val lastDownloadedChunk = viewModel.getDrlState().currentChunk.toInt()
