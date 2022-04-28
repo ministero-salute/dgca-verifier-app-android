@@ -166,4 +166,6 @@
     <string name="userDataDoesNotMatch">Dati anagrafici non congruenti</string>
     <string name="scan_mode_fragment_title">Modalità di verifica della <b>Certificazione</b></string>
     <string name="confirm_scan_mode_button">Conferma</string>
+    <string name="google_play_intent_error_title">Impossibile aprire Google Play</string>
+    <string name="google_play_intent_error_message">Errore nell\'apertura della pagina di VerificaC19 su Google Play. Apri lo store manualmente per aggiornare l\'app.</string>
 </resources>

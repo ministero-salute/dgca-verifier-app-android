@@ -513,12 +513,24 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         try {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
         } catch (e: ActivityNotFoundException) {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+            try {
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                    )
                 )
-            )
+            } catch (e: ActivityNotFoundException) {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle(getString(R.string.google_play_intent_error_title))
+                builder.setMessage(getString(R.string.google_play_intent_error_message))
+
+                builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
+                }
+                val dialog = builder.create()
+                dialog.setCancelable(false)
+                dialog.show()
+            }
         }
     }
 
