@@ -33,7 +33,6 @@ import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.StyleSpan
 import android.text.util.Linkify
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
@@ -58,6 +57,7 @@ import it.ministerodellasalute.verificaC19.ui.main.ExternalLink
 import it.ministerodellasalute.verificaC19.ui.main.Extras
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.data.local.prefs.PrefKeys
+import it.ministerodellasalute.verificaC19sdk.model.DownloadStatus
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
 import it.ministerodellasalute.verificaC19sdk.model.ScanMode
 import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
@@ -72,8 +72,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     private lateinit var shared: SharedPreferences
 
     private val viewModel by viewModels<FirstViewModel>()
-
-    private val whiteLabelApplication = WhiteLabelApplication()
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -103,26 +101,46 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     }
 
     private fun observeLiveData() {
+        observeDownloadStatus()
         observeSyncStatus()
-        observeRetryCount()
-        observeSizeOverThreshold()
-        observeInitDownload()
         observeScanMode()
-        observeDrlState()
-        observeResumeBehaviour();
         doOnDebug {
             observeDebugInfo()
         }
     }
 
-    private fun observeResumeBehaviour() {
-        viewModel.authToResume.observe(this) { authToResume ->
-            Log.i(PrefKeys.AUTH_TO_RESUME, authToResume.toString())
-            if (authToResume == 0L) {
-                binding.resumeDownload.show()
-                binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
-                showDownloadProgressViews()
-                binding.qrButton.background.alpha = 128
+    private fun observeDownloadStatus() {
+        viewModel.downloadStatus.observe(this) { downloadStatus ->
+            when (downloadStatus) {
+                DownloadStatus.DOWNLOAD_AVAILABLE -> {
+                    enableInitDownload()
+                }
+                DownloadStatus.RESUME_AVAILABLE -> {
+                    enableResumeDownload()
+                }
+                DownloadStatus.REQUIRES_CONFIRM -> {
+                    createDownloadAlert()
+                }
+                DownloadStatus.DOWNLOADING -> {
+                    updateDownloadedPackagesCount()
+                    showDownloadProgressViews()
+                }
+                DownloadStatus.COMPLETE -> {
+                    if (!viewModel.getIsPendingDownload()) {
+                        viewModel.getDateLastSync().let { date ->
+                            binding.dateLastSyncText.text = getString(
+                                R.string.lastSyncDate,
+                                if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
+                                    FORMATTED_DATE_LAST_SYNC
+                                )
+                            )
+                        }
+                        binding.qrButton.background.alpha = 255
+                        hideDownloadProgressViews()
+                    }
+                }
+                else -> {
+                }
             }
         }
     }
@@ -142,33 +160,16 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         }
     }
 
+    private fun enableResumeDownload() {
+        binding.resumeDownload.show()
+        binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
+        showDownloadProgressViews()
+        binding.qrButton.background.alpha = 128
+    }
+
     private fun observeDebugInfo() {
         viewModel.debugInfoLiveData.observe(this) {
             it?.let { binding.debugButton.show() }
-        }
-    }
-
-    private fun observeInitDownload() {
-        viewModel.initDownloadLiveData.observe(this) {
-            if (it) {
-                enableInitDownload()
-            }
-        }
-    }
-
-    private fun observeSizeOverThreshold() {
-        viewModel.sizeOverLiveData.observe(this) {
-            if (it) {
-                createDownloadAlert()
-            }
-        }
-    }
-
-    private fun observeRetryCount() {
-        viewModel.maxRetryReached.observe(this) {
-            if (it) {
-                enableInitDownload()
-            }
         }
     }
 
@@ -183,21 +184,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
             if (it) {
                 binding.qrButton.background.alpha = 128
             } else {
-                if (viewModel.getIsDrlSyncActive()) {
-                    viewModel.getCRLStatus()
-                }
                 viewModel.setDateLastSync(System.currentTimeMillis())
-                if (!viewModel.getIsPendingDownload() && viewModel.maxRetryReached.value == false) {
-                    viewModel.getDateLastSync().let { date ->
-                        binding.dateLastSyncText.text = getString(
-                            R.string.lastSyncDate,
-                            if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
-                                FORMATTED_DATE_LAST_SYNC
-                            )
-                        )
-                    }
-                    binding.qrButton.background.alpha = 255
-                    hideDownloadProgressViews()
+                if (viewModel.getIsDrlSyncActive()) {
+                    viewModel.startDrlFlow()
                 }
             }
         }
@@ -210,22 +199,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         }
         binding.versionText.text = spannableString
         binding.dateLastSyncText.text = getString(R.string.loading)
-
-        binding.updateProgressBar.max = viewModel.getDrlStateIT().totalChunk.toInt() + viewModel.getDrlStateEU().totalChunk.toInt()
-        updateDownloadedPackagesCount()
-
-        viewModel.getResumeAvailable().let {
-            if (it != -1L) {
-                if (it == 0.toLong() || viewModel.getIsPendingDownload()) {
-                    binding.qrButton.background.alpha = 128
-                    binding.resumeDownload.show()
-                    binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
-                    showDownloadProgressViews()
-                } else {
-                    binding.resumeDownload.hide()
-                }
-            }
-        }
     }
 
     private fun setSecureWindowFlags() {
@@ -274,9 +247,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         binding.resumeDownload.setOnClickListener {
             if (Utility.isOnline(this)) {
                 viewModel.setResumeAsAvailable()
+                viewModel.setShouldInitDownload(true)
                 binding.resumeDownload.hide()
                 binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
-                startSyncData()
+                viewModel.startDrlFlow()
             } else {
                 createCheckConnectionAlertDialog()
             }
@@ -307,7 +281,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         showDownloadProgressViews()
         binding.initDownload.hide()
         binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
-        startSyncData()
+        viewModel.startDrlFlow()
     }
 
     private fun createCheckConnectionAlertDialog() {
@@ -378,7 +352,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                 }
             }
             builder.setNegativeButton(getString(R.string.after_download)) { _, _ ->
-                enableInitDownload()
+                viewModel.setDownloadStatus(DownloadStatus.DOWNLOAD_AVAILABLE)
                 dialog?.dismiss()
             }
             dialog = builder.create()
@@ -393,10 +367,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         viewModel.resetCurrentRetry()
         viewModel.setShouldInitDownload(true)
         viewModel.setDownloadAsAvailable()
-    }
-
-    private fun startSyncData() {
-        whiteLabelApplication.setWorkManager()
     }
 
     private fun enableInitDownload() {
@@ -582,7 +552,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
 
         val singleChunkSize =
             when (viewModel.getDrlStateIT().currentChunk) {
-                viewModel.getDrlStateIT().totalChunk -> {/*partialTotalProduct = partialDownloadChunk;*/ viewModel.getDrlStateEU().sizeSingleChunkInByte
+                viewModel.getDrlStateIT().totalChunk -> {
+                    viewModel.getDrlStateEU().sizeSingleChunkInByte
                 }
                 else -> viewModel.getDrlStateIT().sizeSingleChunkInByte
             }
