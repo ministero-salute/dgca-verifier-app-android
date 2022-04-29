@@ -128,7 +128,13 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     }
 
     private fun observeDrlState() {
-        viewModel.drlState.observe(this) {
+        viewModel.drlStateIT.observe(this) {
+            if (it.currentChunk < it.totalChunk) {
+                updateDownloadedPackagesCount()
+                showDownloadProgressViews()
+            } else hideDownloadProgressViews()
+        }
+        viewModel.drlStateEU.observe(this) {
             if (it.currentChunk < it.totalChunk) {
                 updateDownloadedPackagesCount()
                 showDownloadProgressViews()
@@ -177,6 +183,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
             if (it) {
                 binding.qrButton.background.alpha = 128
             } else {
+                if (viewModel.getIsDrlSyncActive()) {
+                    viewModel.getCRLStatus()
+                }
+                viewModel.setDateLastSync(System.currentTimeMillis())
                 if (!viewModel.getIsPendingDownload() && viewModel.maxRetryReached.value == false) {
                     viewModel.getDateLastSync().let { date ->
                         binding.dateLastSyncText.text = getString(
@@ -201,7 +211,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         binding.versionText.text = spannableString
         binding.dateLastSyncText.text = getString(R.string.loading)
 
-        binding.updateProgressBar.max = viewModel.getDrlState().totalChunk.toInt()
+        binding.updateProgressBar.max = viewModel.getDrlStateIT().totalChunk.toInt() + viewModel.getDrlStateEU().totalChunk.toInt()
         updateDownloadedPackagesCount()
 
         viewModel.getResumeAvailable().let {
@@ -349,13 +359,13 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
             builder.setTitle(
                 getString(
                     R.string.titleDownloadAlert,
-                    ConversionUtility.byteToMegaByte(viewModel.getDrlState().totalSizeInByte.toFloat())
+                    ConversionUtility.byteToMegaByte(viewModel.getDrlStateIT().totalSizeInByte.toFloat() + viewModel.getDrlStateEU().totalSizeInByte.toFloat())
                 )
             )
             builder.setMessage(
                 getString(
                     R.string.messageDownloadAlert,
-                    ConversionUtility.byteToMegaByte(viewModel.getDrlState().totalSizeInByte.toFloat())
+                    ConversionUtility.byteToMegaByte(viewModel.getDrlStateIT().totalSizeInByte.toFloat() + viewModel.getDrlStateEU().totalSizeInByte.toFloat())
                 )
             )
             builder.setPositiveButton(getString(R.string.label_download)) { _, _ ->
@@ -394,7 +404,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         binding.initDownload.show()
         binding.qrButton.background.alpha = 128
         hideDownloadProgressViews()
-        binding.dateLastSyncText.text = when (viewModel.getDrlState().totalSizeInByte) {
+        binding.dateLastSyncText.text = when (viewModel.getDrlStateIT().totalSizeInByte + viewModel.getDrlStateEU().totalSizeInByte) {
             0L -> {
                 hideDownloadProgressViews()
                 getString(
@@ -404,7 +414,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
             else ->
                 getString(
                     R.string.label_download_alert_complete,
-                    ConversionUtility.byteToMegaByte(viewModel.getDrlState().totalSizeInByte.toFloat())
+                    ConversionUtility.byteToMegaByte(viewModel.getDrlStateIT().totalSizeInByte.toFloat() + viewModel.getDrlStateEU().totalSizeInByte.toFloat())
                 )
         }
     }
@@ -451,7 +461,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                         return
                     }
                 }
-                viewModel.getDrlState().dateLastFetch.let {
+                viewModel.getDrlStateIT().dateLastFetch.let {
                     if (binding.resumeDownload.isVisible) {
                         createNoSyncAlertDialog(getString(R.string.label_drl_download_in_progress))
                         return
@@ -567,9 +577,15 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
 
 
     private fun updateDownloadedPackagesCount() {
-        val lastDownloadedChunk = viewModel.getDrlState().currentChunk.toInt()
-        val lastChunk = viewModel.getDrlState().totalChunk.toInt()
-        val singleChunkSize = viewModel.getDrlState().sizeSingleChunkInByte
+        val lastDownloadedChunk = viewModel.getDrlStateIT().currentChunk.toInt() + viewModel.getDrlStateEU().currentChunk.toInt()
+        val lastChunk = viewModel.getDrlStateIT().totalChunk.toInt() + viewModel.getDrlStateEU().totalChunk.toInt()
+
+        val singleChunkSize =
+            when (viewModel.getDrlStateIT().currentChunk) {
+                viewModel.getDrlStateIT().totalChunk -> {/*partialTotalProduct = partialDownloadChunk;*/ viewModel.getDrlStateEU().sizeSingleChunkInByte
+                }
+                else -> viewModel.getDrlStateIT().sizeSingleChunkInByte
+            }
 
         binding.updateProgressBar.max = lastChunk
         binding.updateProgressBar.progress = lastDownloadedChunk
@@ -577,12 +593,11 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         binding.chunkSize.text = getString(
             R.string.chunk_size,
             ConversionUtility.byteToMegaByte((lastDownloadedChunk * singleChunkSize.toFloat())),
-            ConversionUtility.byteToMegaByte(viewModel.getDrlState().totalSizeInByte.toFloat())
+            ConversionUtility.byteToMegaByte(viewModel.getDrlStateIT().totalSizeInByte.toFloat() + viewModel.getDrlStateEU().totalSizeInByte.toFloat())
         )
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
         setScanModeButtonText(viewModel.getScanMode())
     }
-
 }
