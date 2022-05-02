@@ -95,7 +95,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     private fun disableUnusedScanModes() {
         if (viewModel.getScanMode() == ScanMode.WORK || viewModel.getScanMode() == ScanMode.SCHOOL) {
             viewModel.setScanModeFlag(false)
-            shared.edit().remove("scanMode").commit()
+            viewModel.removeScanMode()
         }
     }
 
