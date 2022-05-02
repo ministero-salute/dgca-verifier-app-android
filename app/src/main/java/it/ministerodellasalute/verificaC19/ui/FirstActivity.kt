@@ -48,7 +48,6 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
-import it.ministerodellasalute.verificaC19.WhiteLabelApplication
 import it.ministerodellasalute.verificaC19.databinding.ActivityFirstBinding
 import it.ministerodellasalute.verificaC19.ui.base.doOnDebug
 import it.ministerodellasalute.verificaC19.ui.extensions.hide
@@ -142,21 +141,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                 else -> {
                 }
             }
-        }
-    }
-
-    private fun observeDrlState() {
-        viewModel.drlStateIT.observe(this) {
-            if (it.currentChunk < it.totalChunk) {
-                updateDownloadedPackagesCount()
-                showDownloadProgressViews()
-            } else hideDownloadProgressViews()
-        }
-        viewModel.drlStateEU.observe(this) {
-            if (it.currentChunk < it.totalChunk) {
-                updateDownloadedPackagesCount()
-                showDownloadProgressViews()
-            } else hideDownloadProgressViews()
         }
     }
 
@@ -545,25 +529,19 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         moveTaskToBack(true)
     }
 
-
     private fun updateDownloadedPackagesCount() {
         val lastDownloadedChunk = viewModel.getDrlStateIT().currentChunk.toInt() + viewModel.getDrlStateEU().currentChunk.toInt()
         val lastChunk = viewModel.getDrlStateIT().totalChunk.toInt() + viewModel.getDrlStateEU().totalChunk.toInt()
-
-        val singleChunkSize =
-            when (viewModel.getDrlStateIT().currentChunk) {
-                viewModel.getDrlStateIT().totalChunk -> {
-                    viewModel.getDrlStateEU().sizeSingleChunkInByte
-                }
-                else -> viewModel.getDrlStateIT().sizeSingleChunkInByte
-            }
+        val dataAmountDownloaded =
+            (viewModel.getDrlStateIT().currentChunk * viewModel.getDrlStateIT().sizeSingleChunkInByte) +
+                    (viewModel.getDrlStateEU().currentChunk * viewModel.getDrlStateEU().sizeSingleChunkInByte)
 
         binding.updateProgressBar.max = lastChunk
         binding.updateProgressBar.progress = lastDownloadedChunk
         binding.chunkCount.text = getString(R.string.chunk_count, lastDownloadedChunk, lastChunk)
         binding.chunkSize.text = getString(
             R.string.chunk_size,
-            ConversionUtility.byteToMegaByte((lastDownloadedChunk * singleChunkSize.toFloat())),
+            ConversionUtility.byteToMegaByte(dataAmountDownloaded.toFloat()),
             ConversionUtility.byteToMegaByte(viewModel.getDrlStateIT().totalSizeInByte.toFloat() + viewModel.getDrlStateEU().totalSizeInByte.toFloat())
         )
     }
