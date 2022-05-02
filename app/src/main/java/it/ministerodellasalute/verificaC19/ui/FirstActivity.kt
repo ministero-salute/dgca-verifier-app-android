@@ -56,9 +56,9 @@ import it.ministerodellasalute.verificaC19.ui.main.ExternalLink
 import it.ministerodellasalute.verificaC19.ui.main.Extras
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
 import it.ministerodellasalute.verificaC19sdk.data.local.prefs.PrefKeys
-import it.ministerodellasalute.verificaC19sdk.model.DownloadStatus
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
 import it.ministerodellasalute.verificaC19sdk.model.ScanMode
+import it.ministerodellasalute.verificaC19sdk.model.drl.DownloadState
 import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
@@ -109,45 +109,54 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     }
 
     private fun observeDownloadStatus() {
-        viewModel.downloadStatus.observe(this) { downloadStatus ->
-            when (downloadStatus) {
-                DownloadStatus.DOWNLOAD_AVAILABLE -> {
-                    enableInitDownload()
+        viewModel.downloadStatus.observe(this) {
+            when (it) {
+                is DownloadState.Complete -> {
+                    renderCompleteState()
                 }
-                DownloadStatus.RESUME_AVAILABLE -> {
-                    enableResumeDownload()
+                is DownloadState.RequiresConfirm -> {
+                    renderRequiresConfirmState(it.totalSize)
                 }
-                DownloadStatus.REQUIRES_CONFIRM -> {
-                    createDownloadAlert()
+                is DownloadState.Downloading -> {
+                    renderDownloadingState()
                 }
-                DownloadStatus.DOWNLOADING -> {
-                    updateDownloadedPackagesCount()
-                    showDownloadProgressViews()
+                is DownloadState.ResumeAvailable -> {
+                    renderResumeAvailableState()
                 }
-                DownloadStatus.COMPLETE -> {
-                    if (!viewModel.getIsPendingDownload()) {
-                        viewModel.getDateLastSync().let { date ->
-                            binding.dateLastSyncText.text = getString(
-                                R.string.lastSyncDate,
-                                if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
-                                    FORMATTED_DATE_LAST_SYNC
-                                )
-                            )
-                        }
-                        binding.qrButton.background.alpha = 255
-                        hideDownloadProgressViews()
-                    }
+                is DownloadState.DownloadAvailable -> {
+                    renderDownloadAvailableState()
                 }
-                else -> {
-                }
+                else -> {}
             }
+        }
+
+    }
+
+    private fun renderDownloadingState() {
+        updateDownloadedPackagesCount()
+        showDownloadProgressViews()
+    }
+
+    private fun renderCompleteState() {
+        if (!viewModel.getIsPendingDownload()) {
+            viewModel.getDateLastSync().let { date ->
+                binding.dateLastSyncText.text = getString(
+                    R.string.lastSyncDate,
+                    if (date == -1L) getString(R.string.notAvailable) else date.parseTo(
+                        FORMATTED_DATE_LAST_SYNC
+                    )
+                )
+            }
+            binding.qrButton.background.alpha = 255
+            hideDownloadProgressViews()
         }
     }
 
-    private fun enableResumeDownload() {
+    private fun renderResumeAvailableState() {
         binding.resumeDownload.show()
         binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
         showDownloadProgressViews()
+        updateDownloadedPackagesCount()
         binding.qrButton.background.alpha = 128
     }
 
@@ -310,20 +319,20 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         }
     }
 
-    private fun createDownloadAlert() {
+    private fun renderRequiresConfirmState(totalSize: Float) {
         try {
             val builder = AlertDialog.Builder(this)
             var dialog: AlertDialog? = null
             builder.setTitle(
                 getString(
                     R.string.titleDownloadAlert,
-                    ConversionUtility.byteToMegaByte(viewModel.getDrlStateIT().totalSizeInByte.toFloat() + viewModel.getDrlStateEU().totalSizeInByte.toFloat())
+                    ConversionUtility.byteToMegaByte(totalSize)
                 )
             )
             builder.setMessage(
                 getString(
                     R.string.messageDownloadAlert,
-                    ConversionUtility.byteToMegaByte(viewModel.getDrlStateIT().totalSizeInByte.toFloat() + viewModel.getDrlStateEU().totalSizeInByte.toFloat())
+                    ConversionUtility.byteToMegaByte(totalSize)
                 )
             )
             builder.setPositiveButton(getString(R.string.label_download)) { _, _ ->
@@ -332,11 +341,11 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                     startDownload()
                 } else {
                     createCheckConnectionAlertDialog()
-                    enableInitDownload()
+                    renderDownloadAvailableState()
                 }
             }
             builder.setNegativeButton(getString(R.string.after_download)) { _, _ ->
-                viewModel.setDownloadStatus(DownloadStatus.DOWNLOAD_AVAILABLE)
+                viewModel.setDownloadStatus(DownloadState.DownloadAvailable)
                 dialog?.dismiss()
             }
             dialog = builder.create()
@@ -353,7 +362,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         viewModel.setDownloadAsAvailable()
     }
 
-    private fun enableInitDownload() {
+    private fun renderDownloadAvailableState() {
         binding.resumeDownload.hide()
         binding.initDownload.show()
         binding.qrButton.background.alpha = 128
