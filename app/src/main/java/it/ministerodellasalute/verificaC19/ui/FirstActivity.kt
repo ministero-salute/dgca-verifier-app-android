@@ -30,15 +30,12 @@ import android.os.Bundle
 import android.text.Html
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.text.method.LinkMovementMethod
 import android.text.style.StyleSpan
 import android.text.util.Linkify
 import android.view.View
 import android.view.WindowManager
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -278,15 +275,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     }
 
     private fun createCheckConnectionAlertDialog() {
-        val builder = AlertDialog.Builder(this)
-        val dialog: AlertDialog?
-        builder.setTitle(
-            getString(R.string.no_internet_title)
-        )
-        builder.setMessage(getString(R.string.no_internet_message))
-        builder.setPositiveButton(getString(R.string.ok_label)) { _, _ -> }
-        dialog = builder.create()
-        dialog.show()
+        DialogCaller()
+            .setTitle(getString(R.string.no_internet_title))
+            .setMessage(getString(R.string.no_internet_message))
+            .setPositiveText(getString(R.string.ok_label))
+            .setPositiveOnClickListener { _, _ -> }
+            .show(this)
     }
 
 
@@ -304,16 +298,14 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
 
     private fun createPermissionAlert() {
         try {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(getString(R.string.privacyTitle))
-            builder.setMessage(getString(R.string.privacy))
-            builder.setPositiveButton(getString(R.string.next)) { _, _ ->
-                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-            }
-            builder.setNegativeButton(getString(R.string.back)) { _, _ ->
-            }
-            val dialog = builder.create()
-            dialog.show()
+            DialogCaller()
+                .setTitle(getString(R.string.privacyTitle))
+                .setMessage(getString(R.string.privacy))
+                .setPositiveText(getString(R.string.next))
+                .setPositiveOnClickListener { _, _ -> requestPermissionLauncher.launch(Manifest.permission.CAMERA) }
+                .setNegativeText(getString(R.string.back))
+                .setNegativeOnClickListener { _, _ -> }
+                .show(this)
         } catch (e: Exception) {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
@@ -321,37 +313,33 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
 
     private fun renderRequiresConfirmState(totalSize: Float) {
         try {
-            val builder = AlertDialog.Builder(this)
-            var dialog: AlertDialog? = null
-            builder.setTitle(
-                getString(
-                    R.string.titleDownloadAlert,
-                    ConversionUtility.byteToMegaByte(totalSize)
+            DialogCaller()
+                .setTitle(
+                    getString(
+                        R.string.titleDownloadAlert,
+                        ConversionUtility.byteToMegaByte(totalSize)
+                    )
                 )
-            )
-            builder.setMessage(
-                getString(
-                    R.string.messageDownloadAlert,
-                    ConversionUtility.byteToMegaByte(totalSize)
+                .setMessage(
+                    getString(
+                        R.string.messageDownloadAlert,
+                        ConversionUtility.byteToMegaByte(totalSize)
+                    )
                 )
-            )
-            builder.setPositiveButton(getString(R.string.label_download)) { _, _ ->
-                dialog?.dismiss()
-                if (Utility.isOnline(this)) {
-                    startDownload()
-                } else {
-                    createCheckConnectionAlertDialog()
-                    renderDownloadAvailableState()
+                .setPositiveText(getString(R.string.label_download))
+                .setPositiveOnClickListener { _, _ ->
+                    if (Utility.isOnline(this)) {
+                        startDownload()
+                    } else {
+                        createCheckConnectionAlertDialog()
+                        renderDownloadAvailableState()
+                    }
                 }
-            }
-            builder.setNegativeButton(getString(R.string.after_download)) { _, _ ->
-                viewModel.setDownloadStatus(DownloadState.DownloadAvailable)
-                dialog?.dismiss()
-            }
-            dialog = builder.create()
-            dialog.setCanceledOnTouchOutside(false)
-            dialog.setCancelable(false)
-            dialog.show()
+                .setNegativeText(getString(R.string.after_download))
+                .setNegativeOnClickListener { _, _ ->
+                    viewModel.setDownloadStatus(DownloadState.DownloadAvailable)
+                }
+                .show(this)
         } catch (e: Exception) {
         }
     }
@@ -415,24 +403,24 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
             R.id.qrButton -> {
                 viewModel.getDateLastSync().let {
                     if (it == -1L) {
-                        createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
+                        createNoSyncAlertDialog()
                         return
                     } else if (!viewModel.getScanModeFlag() && v.id != R.id.scan_mode_button) {
                         viewModel.getRuleSet()?.getErrorScanModePopup()?.run {
                             createNoScanModeChosenAlert()
-                        } ?: run { createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage)) }
+                        } ?: run { createNoSyncAlertDialog() }
                         return
                     }
                 }
                 viewModel.getDrlStateIT().dateLastFetch.let {
                     if (binding.resumeDownload.isVisible) {
-                        createNoSyncAlertDialog(getString(R.string.label_drl_download_in_progress))
+                        createNoSyncAlertDialog()
                         return
                     }
                     if ((viewModel.getIsDrlSyncActive() && System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) ||
                         (viewModel.getIsDrlSyncActive() && it == -1L)
                     ) {
-                        createNoSyncAlertDialog(getString(R.string.noKeyAlertMessageForDrl))
+                        createNoSyncAlertDialog()
                         return
                     }
                 }
@@ -443,69 +431,62 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                 viewModel.getRuleSet()?.run {
                     ScanModeDialogFragment(viewModel.getRuleSet()!!).show(supportFragmentManager, "SCAN_MODE_DIALOG_FRAGMENT")
                 } ?: run {
-                    createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
+                    createNoSyncAlertDialog()
                 }
             }
             R.id.circle_info_container -> {
                 viewModel.getRuleSet()?.getBaseScanModeDescription()?.run {
                     createScanModeInfoAlert()
-                } ?: run { createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage)) }
+                } ?: run { createNoSyncAlertDialog() }
             }
         }
     }
 
     private fun createNoScanModeChosenAlert() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.noKeyAlertTitle))
         val string =
             SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getErrorScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
                 Linkify.addLinks(it, Linkify.ALL)
             }
-        builder.setMessage(string)
-        builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
-        }
-        val dialog = builder.create()
-        dialog.show()
-        val alertMessage = dialog.findViewById<TextView>(android.R.id.message) as TextView
-        alertMessage.movementMethod = LinkMovementMethod.getInstance()
+
+        DialogCaller()
+            .setTitle(getString(R.string.noKeyAlertTitle))
+            .setMessage(string)
+            .setPositiveText(getString(R.string.ok))
+            .setPositiveOnClickListener { _, _ -> }
+            .enableLinks()
+            .show(this)
     }
 
     private fun createScanModeInfoAlert() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.label_scan_mode_types))
         val string = SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getInfoScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
             Linkify.addLinks(it, Linkify.ALL)
         }
-        builder.setMessage(string)
-        builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
-        }
-        val dialog = builder.create()
-        dialog.show()
-        val alertMessage = dialog.findViewById<TextView>(android.R.id.message) as TextView
-        alertMessage.movementMethod = LinkMovementMethod.getInstance()
+
+        DialogCaller()
+            .setTitle(getString(R.string.label_scan_mode_types))
+            .setMessage(string)
+            .setPositiveText(getString(R.string.ok))
+            .setPositiveOnClickListener { _, _ -> }
+            .enableLinks()
+            .show(this)
     }
 
-    private fun createNoSyncAlertDialog(alertMessage: String) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.noKeyAlertTitle))
-        builder.setMessage(alertMessage)
-        builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
-        }
-        val dialog = builder.create()
-        dialog.show()
+    private fun createNoSyncAlertDialog() {
+        DialogCaller()
+            .setTitle(getString(R.string.noKeyAlertTitle))
+            .setMessage(getString(R.string.noKeyAlertMessage))
+            .setPositiveText(getString(R.string.ok))
+            .setPositiveOnClickListener { _, _ -> }
+            .show(this)
     }
 
     private fun createForceUpdateDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.updateTitle))
-        builder.setMessage(getString(R.string.updateMessage))
-
-        builder.setPositiveButton(getString(R.string.updateLabel)) { _, _ ->
-            openGooglePlay()
-        }
-        val dialog = builder.create()
-        dialog.setCancelable(false)
-        dialog.show()
+        DialogCaller()
+            .setTitle(getString(R.string.updateTitle))
+            .setMessage(getString(R.string.updateMessage))
+            .setPositiveText(getString(R.string.updateLabel))
+            .setPositiveOnClickListener { _, _ -> openGooglePlay() }
+            .show(this)
     }
 
     private fun openGooglePlay() {
