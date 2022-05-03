@@ -32,3 +32,11 @@ fun View.hide() {
 fun View.invisible() {
     visibility = INVISIBLE
 }
+
+fun View.enable() {
+    background.alpha = 255
+}
+
+fun View.disable() {
+    background.alpha = 128
+}

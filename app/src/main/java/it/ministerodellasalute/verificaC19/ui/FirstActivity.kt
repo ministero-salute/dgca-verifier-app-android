@@ -22,7 +22,9 @@
 package it.ministerodellasalute.verificaC19.ui
 
 import android.Manifest
-import android.content.*
+import android.content.ActivityNotFoundException
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
@@ -32,6 +34,7 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.text.util.Linkify
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,17 +50,19 @@ import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.ActivityFirstBinding
 import it.ministerodellasalute.verificaC19.ui.base.doOnDebug
+import it.ministerodellasalute.verificaC19.ui.extensions.disable
+import it.ministerodellasalute.verificaC19.ui.extensions.enable
 import it.ministerodellasalute.verificaC19.ui.extensions.hide
 import it.ministerodellasalute.verificaC19.ui.extensions.show
 import it.ministerodellasalute.verificaC19.ui.main.ExternalLink
 import it.ministerodellasalute.verificaC19.ui.main.Extras
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
-import it.ministerodellasalute.verificaC19sdk.data.local.prefs.PrefKeys
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
 import it.ministerodellasalute.verificaC19sdk.model.ScanMode
 import it.ministerodellasalute.verificaC19sdk.model.drl.DownloadState
 import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
+import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.isOneDayElapsed
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
 import it.ministerodellasalute.verificaC19sdk.util.Utility
 
@@ -65,7 +70,6 @@ import it.ministerodellasalute.verificaC19sdk.util.Utility
 class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface.OnDismissListener {
 
     private lateinit var binding: ActivityFirstBinding
-    private lateinit var shared: SharedPreferences
 
     private val viewModel by viewModels<FirstViewModel>()
 
@@ -79,21 +83,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFirstBinding.inflate(layoutInflater)
-        shared = this.getSharedPreferences(PrefKeys.USER_PREF, Context.MODE_PRIVATE)
 
-        disableUnusedScanModes()
         setContentView(binding.root)
         setSecureWindowFlags()
         setOnClickListeners()
         setupUI()
         observeLiveData()
-    }
-
-    private fun disableUnusedScanModes() {
-        if (viewModel.getScanMode() == ScanMode.WORK || viewModel.getScanMode() == ScanMode.SCHOOL) {
-            viewModel.setScanModeFlag(false)
-            viewModel.removeScanMode()
-        }
     }
 
     private fun observeLiveData() {
@@ -144,7 +139,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                     )
                 )
             }
-            binding.qrButton.background.alpha = 255
+            binding.qrButton.enable()
             hideDownloadProgressViews()
         }
     }
@@ -154,7 +149,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
         showDownloadProgressViews()
         updateDownloadedPackagesCount()
-        binding.qrButton.background.alpha = 128
+        binding.qrButton.disable()
     }
 
     private fun observeDebugInfo() {
@@ -172,7 +167,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     private fun observeSyncStatus() {
         viewModel.fetchStatus.observe(this) {
             if (it) {
-                binding.qrButton.background.alpha = 128
+                binding.qrButton.disable()
             } else {
                 viewModel.setDateLastSync(System.currentTimeMillis())
                 if (viewModel.getIsDrlSyncActive()) {
@@ -341,6 +336,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                 }
                 .show(this)
         } catch (e: Exception) {
+            Log.i("RequiresConfirmException", e.message.toString())
         }
     }
 
@@ -353,7 +349,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     private fun renderDownloadAvailableState() {
         binding.resumeDownload.hide()
         binding.initDownload.show()
-        binding.qrButton.background.alpha = 128
+        binding.qrButton.disable()
         hideDownloadProgressViews()
         binding.dateLastSyncText.text = when (viewModel.getDrlStateIT().totalSizeInByte + viewModel.getDrlStateEU().totalSizeInByte) {
             0L -> {
@@ -417,7 +413,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                         createNoSyncAlertDialog()
                         return
                     }
-                    if ((viewModel.getIsDrlSyncActive() && System.currentTimeMillis() >= it + 24 * 60 * 60 * 1000) ||
+
+                    if ((viewModel.getIsDrlSyncActive() && it.isOneDayElapsed()) ||
                         (viewModel.getIsDrlSyncActive() && it == -1L)
                     ) {
                         createNoSyncAlertDialog()
