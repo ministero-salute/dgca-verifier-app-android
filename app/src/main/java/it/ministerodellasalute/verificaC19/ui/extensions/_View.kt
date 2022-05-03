@@ -33,10 +33,10 @@ fun View.invisible() {
     visibility = INVISIBLE
 }
 
-fun View.enable() {
+fun View.removeTransparency() {
     background.alpha = 255
 }
 
-fun View.disable() {
+fun View.addTransparency() {
     background.alpha = 128
 }

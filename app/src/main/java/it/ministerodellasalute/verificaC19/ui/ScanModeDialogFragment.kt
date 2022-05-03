@@ -58,7 +58,7 @@ class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), S
 
         val view = inflater.inflate(R.layout.fragment_scan_mode_dialog, container)
         setScanModeList()
-        val chosenScanMode = if (viewModel.getScanModeFlag()) getChosenScanMode() else -1
+        val chosenScanMode = if (viewModel.hasScanModeBeenChosen()) getChosenScanMode() else -1
 
         scanModeBodyLayout = view.findViewById<ViewGroup>(R.id.bodyLayout) as RecyclerView
         scanModeBodyLayout.layoutManager = LinearLayoutManager(this.activity)
@@ -77,12 +77,11 @@ class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), S
         }
 
         confirmButton = view.findViewById(R.id.confirmButton)
-        if (!viewModel.getScanModeFlag()) {
+        if (!viewModel.hasScanModeBeenChosen()) {
             confirmButton.isEnabled = false
             confirmButton.background.alpha = 128
         }
         confirmButton.setOnClickListener {
-            if (!viewModel.getScanModeFlag()) viewModel.setScanModeFlag(true)
             setChosenScanMode()
             dismiss()
         }
@@ -98,15 +97,15 @@ class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), S
 
     private fun setChosenScanMode() {
         when (scanModeAdapter.mSelectedItem) {
-            0 -> viewModel.setScanMode(ScanMode.STANDARD)
-            1 -> viewModel.setScanMode(ScanMode.STRENGTHENED)
-            2 -> viewModel.setScanMode(ScanMode.BOOSTER)
-            3 -> viewModel.setScanMode(ScanMode.ENTRY_ITALY)
+            0 -> viewModel.setChosenScanMode(ScanMode.STANDARD)
+            1 -> viewModel.setChosenScanMode(ScanMode.STRENGTHENED)
+            2 -> viewModel.setChosenScanMode(ScanMode.BOOSTER)
+            3 -> viewModel.setChosenScanMode(ScanMode.ENTRY_ITALY)
         }
     }
 
     private fun getChosenScanMode(): Int {
-        val chosenScanMode = when (viewModel.getScanMode()) {
+        val chosenScanMode = when (viewModel.getChosenScanMode()) {
             ScanMode.STANDARD -> 0
             ScanMode.STRENGTHENED -> 1
             ScanMode.BOOSTER -> 2

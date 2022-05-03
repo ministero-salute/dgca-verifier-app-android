@@ -43,16 +43,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.text.bold
-import androidx.core.view.isVisible
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.ActivityFirstBinding
 import it.ministerodellasalute.verificaC19.ui.base.doOnDebug
-import it.ministerodellasalute.verificaC19.ui.extensions.disable
-import it.ministerodellasalute.verificaC19.ui.extensions.enable
+import it.ministerodellasalute.verificaC19.ui.extensions.addTransparency
 import it.ministerodellasalute.verificaC19.ui.extensions.hide
+import it.ministerodellasalute.verificaC19.ui.extensions.removeTransparency
 import it.ministerodellasalute.verificaC19.ui.extensions.show
 import it.ministerodellasalute.verificaC19.ui.main.ExternalLink
 import it.ministerodellasalute.verificaC19.ui.main.Extras
@@ -62,7 +61,6 @@ import it.ministerodellasalute.verificaC19sdk.model.ScanMode
 import it.ministerodellasalute.verificaC19sdk.model.drl.DownloadState
 import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
-import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.isOneDayElapsed
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
 import it.ministerodellasalute.verificaC19sdk.util.Utility
 
@@ -139,7 +137,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                     )
                 )
             }
-            binding.qrButton.enable()
+            binding.qrButton.removeTransparency()
             hideDownloadProgressViews()
         }
     }
@@ -149,7 +147,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         binding.dateLastSyncText.text = getString(R.string.incompleteDownload)
         showDownloadProgressViews()
         updateDownloadedPackagesCount()
-        binding.qrButton.disable()
+        binding.qrButton.addTransparency()
     }
 
     private fun observeDebugInfo() {
@@ -167,12 +165,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     private fun observeSyncStatus() {
         viewModel.fetchStatus.observe(this) {
             if (it) {
-                binding.qrButton.disable()
+                binding.qrButton.addTransparency()
             } else {
                 viewModel.setDateLastSync(System.currentTimeMillis())
-                if (viewModel.getIsDrlSyncActive()) {
-                    viewModel.startDrlFlow()
-                }
+                viewModel.startDrlFlow()
             }
         }
     }
@@ -243,8 +239,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         binding.circleInfoContainer.setOnClickListener(this)
     }
 
-    private fun setScanModeButtonText(currentScanMode: ScanMode) {
-        if (!viewModel.getScanModeFlag()) {
+    private fun setScanModeButtonText(currentScanMode: ScanMode?) {
+        if (!viewModel.hasScanModeBeenChosen()) {
             val s = SpannableStringBuilder()
                 .bold { append(getString(R.string.label_choose_scan_mode)) }
             binding.scanModeButton.text = s
@@ -349,7 +345,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     private fun renderDownloadAvailableState() {
         binding.resumeDownload.hide()
         binding.initDownload.show()
-        binding.qrButton.disable()
+        binding.qrButton.addTransparency()
         hideDownloadProgressViews()
         binding.dateLastSyncText.text = when (viewModel.getDrlStateIT().totalSizeInByte + viewModel.getDrlStateEU().totalSizeInByte) {
             0L -> {
@@ -368,7 +364,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
 
     override fun onResume() {
         super.onResume()
-        setScanModeButtonText(viewModel.getScanMode())
+        setScanModeButtonText(viewModel.getChosenScanMode())
         checkAppMinimumVersion()
     }
 
@@ -397,29 +393,19 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.qrButton -> {
-                viewModel.getDateLastSync().let {
-                    if (it == -1L) {
-                        createNoSyncAlertDialog()
-                        return
-                    } else if (!viewModel.getScanModeFlag() && v.id != R.id.scan_mode_button) {
-                        viewModel.getRuleSet()?.getErrorScanModePopup()?.run {
-                            createNoScanModeChosenAlert()
-                        } ?: run { createNoSyncAlertDialog() }
-                        return
-                    }
+                if (viewModel.getDateLastSync() == -1L) {
+                    createNoSyncAlertDialog()
+                    return
+                } else if (!viewModel.hasScanModeBeenChosen()) {
+                    viewModel.getRuleSet()?.getErrorScanModePopup()?.run {
+                        createNoScanModeChosenAlert()
+                    } ?: run { createNoSyncAlertDialog() }
+                    return
                 }
-                viewModel.getDrlStateIT().dateLastFetch.let {
-                    if (binding.resumeDownload.isVisible) {
-                        createNoSyncAlertDialog()
-                        return
-                    }
 
-                    if ((viewModel.getIsDrlSyncActive() && it.isOneDayElapsed()) ||
-                        (viewModel.getIsDrlSyncActive() && it == -1L)
-                    ) {
-                        createNoSyncAlertDialog()
-                        return
-                    }
+                if (viewModel.isDrlOutdatedOrNull()) {
+                    createNoSyncAlertDialog()
+                    return
                 }
                 checkCameraPermission()
             }
@@ -534,6 +520,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
-        setScanModeButtonText(viewModel.getScanMode())
+        setScanModeButtonText(viewModel.getChosenScanMode())
     }
 }
