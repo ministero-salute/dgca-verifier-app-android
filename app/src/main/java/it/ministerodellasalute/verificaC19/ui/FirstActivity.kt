@@ -96,7 +96,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun disableUnusedScanModes() {
-        if (viewModel.getScanMode() == ScanMode.WORK || viewModel.getScanMode() == ScanMode.SCHOOL) {
+        if (
+            viewModel.getScanMode() == ScanMode.STANDARD ||
+            viewModel.getScanMode() == ScanMode.STRENGTHENED ||
+            viewModel.getScanMode() == ScanMode.WORK ||
+            viewModel.getScanMode() == ScanMode.SCHOOL
+        ) {
             viewModel.setScanModeFlag(false)
             shared.edit().remove("scanMode").commit()
         }
@@ -255,11 +260,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         } else {
             val chosenScanMode =
                 when (currentScanMode) {
-                    ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
-                    ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
                     ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
                     ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
-                    else -> getString(R.string.scan_mode_3G_header)
+                    else -> getString(R.string.label_choose_scan_mode)
                 }
             binding.scanModeButton.text = chosenScanMode
         }

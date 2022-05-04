@@ -98,19 +98,15 @@ class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), S
 
     private fun setChosenScanMode() {
         when (scanModeAdapter.mSelectedItem) {
-            0 -> viewModel.setScanMode(ScanMode.STANDARD)
-            1 -> viewModel.setScanMode(ScanMode.STRENGTHENED)
-            2 -> viewModel.setScanMode(ScanMode.BOOSTER)
-            3 -> viewModel.setScanMode(ScanMode.ENTRY_ITALY)
+            0 -> viewModel.setScanMode(ScanMode.BOOSTER)
+            1 -> viewModel.setScanMode(ScanMode.ENTRY_ITALY)
         }
     }
 
     private fun getChosenScanMode(): Int {
         val chosenScanMode = when (viewModel.getScanMode()) {
-            ScanMode.STANDARD -> 0
-            ScanMode.STRENGTHENED -> 1
-            ScanMode.BOOSTER -> 2
-            ScanMode.ENTRY_ITALY -> 3
+            ScanMode.BOOSTER -> 0
+            ScanMode.ENTRY_ITALY -> 1
             else -> 0
         }
         return chosenScanMode
@@ -118,8 +114,6 @@ class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), S
 
     private fun setScanModeList() {
         scanModes = mutableListOf(
-            ScanModeChoice(getString(R.string.scan_mode_3G_header), ruleSet.getBaseScanModeDescription() ?: ""),
-            ScanModeChoice(getString(R.string.scan_mode_2G_header), ruleSet.getReinforcedScanModeDescription()),
             ScanModeChoice(getString(R.string.scan_mode_booster_header), ruleSet.getBoosterScanModeDescription()),
             ScanModeChoice(getString(R.string.scan_mode_entry_italy_header), ruleSet.getItalyEntryScanModeDescription()),
         )

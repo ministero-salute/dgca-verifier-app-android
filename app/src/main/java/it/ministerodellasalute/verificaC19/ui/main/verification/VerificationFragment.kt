@@ -213,12 +213,10 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setScanModeText() {
         val chosenScanMode = when (viewModel.getScanMode()) {
-            ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
-            ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
             ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
             ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
             ScanMode.DOUBLE_SCAN -> getString(R.string.scan_mode_booster_header)
-            else -> getString(R.string.scan_mode_3G_header)
+            else -> ""
         }
         binding.scanModeText.text = chosenScanMode
     }
