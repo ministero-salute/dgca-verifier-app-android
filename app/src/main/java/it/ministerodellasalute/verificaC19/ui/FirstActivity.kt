@@ -195,47 +195,11 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         binding.qrButton.setOnClickListener(this)
         binding.settings.setOnClickListener(this)
         binding.scanModeButton.setOnClickListener(this)
-
-        binding.privacyPolicyCard.setOnClickListener {
-            val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.PRIVACY_POLICY_URL))
-            startActivity(browserIntent)
-        }
-
-        binding.faqCard.setOnClickListener {
-            val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.FAQ_URL))
-            startActivity(browserIntent)
-        }
-
-        binding.initDownload.setOnClickListener {
-            if (Utility.isOnline(this)) {
-                startDownload()
-            } else {
-                createCheckConnectionAlertDialog()
-            }
-        }
-
-        binding.debugButton.setOnClickListener {
-            val debugInfoIntent = Intent(this, DebugInfoActivity::class.java)
-            debugInfoIntent.putExtra(
-                Extras.DEBUG_INFO,
-                Gson().toJson(viewModel.debugInfoLiveData.value)
-            )
-            startActivity(debugInfoIntent)
-        }
-
-        binding.resumeDownload.setOnClickListener {
-            if (Utility.isOnline(this)) {
-                viewModel.setResumeAsAvailable()
-                viewModel.setShouldInitDownload(true)
-                binding.resumeDownload.hide()
-                binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
-                viewModel.startDrlFlow()
-            } else {
-                createCheckConnectionAlertDialog()
-            }
-        }
+        binding.privacyPolicyCard.setOnClickListener(this)
+        binding.faqCard.setOnClickListener(this)
+        binding.initDownload.setOnClickListener(this)
+        binding.debugButton.setOnClickListener(this)
+        binding.resumeDownload.setOnClickListener(this)
         binding.circleInfoContainer.setOnClickListener(this)
     }
 
@@ -409,7 +373,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                 }
                 checkCameraPermission()
             }
+
             R.id.settings -> openSettings()
+
             R.id.scan_mode_button -> {
                 viewModel.getRuleSet()?.run {
                     ScanModeDialogFragment(viewModel.getRuleSet()!!).show(supportFragmentManager, "SCAN_MODE_DIALOG_FRAGMENT")
@@ -417,10 +383,52 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                     createNoSyncAlertDialog()
                 }
             }
+
             R.id.circle_info_container -> {
                 viewModel.getRuleSet()?.getBaseScanModeDescription()?.run {
                     createScanModeInfoAlert()
                 } ?: run { createNoSyncAlertDialog() }
+            }
+
+            R.id.privacy_policy_card -> {
+                val browserIntent =
+                    Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.PRIVACY_POLICY_URL))
+                startActivity(browserIntent)
+            }
+
+            R.id.faq_card -> {
+                val browserIntent =
+                    Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.FAQ_URL))
+                startActivity(browserIntent)
+            }
+
+            R.id.init_download -> {
+                if (Utility.isOnline(this)) {
+                    startDownload()
+                } else {
+                    createCheckConnectionAlertDialog()
+                }
+            }
+
+            R.id.debugButton -> {
+                val debugInfoIntent = Intent(this, DebugInfoActivity::class.java)
+                debugInfoIntent.putExtra(
+                    Extras.DEBUG_INFO,
+                    Gson().toJson(viewModel.debugInfoLiveData.value)
+                )
+                startActivity(debugInfoIntent)
+            }
+
+            R.id.resumeDownload -> {
+                if (Utility.isOnline(this)) {
+                    viewModel.setResumeAsAvailable()
+                    viewModel.setShouldInitDownload(true)
+                    binding.resumeDownload.hide()
+                    binding.dateLastSyncText.text = getString(R.string.updatingRevokedPass)
+                    viewModel.startDrlFlow()
+                } else {
+                    createCheckConnectionAlertDialog()
+                }
             }
         }
     }
