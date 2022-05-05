@@ -166,4 +166,11 @@
     <string name="userDataDoesNotMatch">Dati anagrafici non congruenti</string>
     <string name="scan_mode_fragment_title">Modalità di verifica della <b>Certificazione</b></string>
     <string name="confirm_scan_mode_button">Conferma</string>
+    <string name="google_play_intent_error_title">Impossibile aprire Google Play</string>
+    <string name="google_play_intent_error_message">Errore nell\'apertura della pagina di VerificaC19 su Google Play. Apri lo store manualmente per aggiornare l\'app.</string>
+
+    <string name="no_permissions_granted_camera_title">Permessi fotocamera necessari</string>
+    <string name="no_permissions_granted_camera_message">VerificaC19 necessita di accedere alla fotocamera del telefono. Apri le impostazioni per autorizzare l\'app.</string>
+    <string name="not_now">Non ora</string>
+    <string name="open_settings">Apri impostazioni</string>
 </resources>
