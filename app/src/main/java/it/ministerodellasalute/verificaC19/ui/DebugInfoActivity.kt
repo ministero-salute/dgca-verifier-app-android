@@ -24,8 +24,6 @@ package it.ministerodellasalute.verificaC19.ui
 
 import android.os.Bundle
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
@@ -34,7 +32,7 @@ import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.ActivityDebugInfoBinding
 import it.ministerodellasalute.verificaC19.ui.main.Extras
 import it.ministerodellasalute.verificaC19sdk.model.DebugInfoWrapper
-import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
+import it.ministerodellasalute.verificaC19sdk.model.DrlFlowType
 
 @AndroidEntryPoint
 class DebugInfoActivity : AppCompatActivity() {
@@ -51,8 +49,11 @@ class DebugInfoActivity : AppCompatActivity() {
     }
 
     private fun setupWithWrapper(wrapper: DebugInfoWrapper) {
-        binding.revokesValue.text =
-            wrapper.revokesNumber?.toString() ?: "Revoche non scaricate"
+        val itRevokesCount = "${DrlFlowType.IT.value}  ${wrapper.itRevokesNumber?.toString()}"
+        val euRevokesCount = "${DrlFlowType.EU.value}  ${wrapper.euRevokesNumber?.toString()}"
+
+        binding.itRevokesValue.text = itRevokesCount
+        binding.euRevokesValue.text = euRevokesCount
         wrapper.kidList?.forEach {
             val textView = TextView(this).apply {
                 textSize = 16f
@@ -61,6 +62,4 @@ class DebugInfoActivity : AppCompatActivity() {
             binding.kidContainer.addView(textView)
         }
     }
-
-
 }

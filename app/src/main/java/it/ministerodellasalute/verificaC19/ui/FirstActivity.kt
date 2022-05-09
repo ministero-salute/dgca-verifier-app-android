@@ -128,7 +128,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     }
 
     private fun renderCompleteState() {
-        if (!viewModel.getIsPendingDownload()) {
             viewModel.getDateLastSync().let { date ->
                 binding.dateLastSyncText.text = getString(
                     R.string.lastSyncDate,
@@ -139,7 +138,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
             }
             binding.qrButton.removeTransparency()
             hideDownloadProgressViews()
-        }
     }
 
     private fun renderResumeAvailableState() {

@@ -37,13 +37,14 @@
         android:fontFamily="@font/titilliumweb_bold"
         android:paddingStart="@dimen/default_padding"
         android:paddingTop="@dimen/default_padding"
-        android:text="Downloaded UCVI"
+        android:text="Lista UCVI"
         android:textColor="@color/blue"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry" />
 
     <TextView
-        android:id="@+id/revokes_value"
+        android:id="@+id/it_revokes_value"
         style="@style/H1.Regular"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -54,7 +55,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/revokes_title"
-        tools:text="1000123213" />
+        tools:text="10" />
+
+    <TextView
+        android:id="@+id/eu_revokes_value"
+        style="@style/H1.Regular"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/default_padding"
+        android:paddingTop="@dimen/padding_4dp"
+        android:paddingEnd="@dimen/default_padding"
+        android:textColor="@color/blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/it_revokes_value"
+        tools:text="1000" />
 
 
     <TextView
@@ -66,10 +81,10 @@
         android:fontFamily="@font/titilliumweb_bold"
         android:paddingStart="@dimen/default_padding"
         android:paddingEnd="@dimen/default_padding"
-        android:text="KID List"
+        android:text="Lista KID"
         android:textColor="@color/blue"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/revokes_value" />
+        app:layout_constraintTop_toBottomOf="@id/eu_revokes_value" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
