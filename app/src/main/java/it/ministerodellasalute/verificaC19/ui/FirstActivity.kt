@@ -366,7 +366,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                 }
 
                 if (viewModel.isDrlOutdatedOrNull()) {
-                    createNoSyncAlertDialog()
+                    createNoDrlAlertDialog()
                     return
                 }
                 checkCameraPermission()
@@ -464,6 +464,15 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         DialogCaller()
             .setTitle(getString(R.string.noKeyAlertTitle))
             .setMessage(getString(R.string.noKeyAlertMessage))
+            .setPositiveText(getString(R.string.ok))
+            .setPositiveOnClickListener { _, _ -> }
+            .show(this)
+    }
+
+    private fun createNoDrlAlertDialog() {
+        DialogCaller()
+            .setTitle(getString(R.string.noKeyAlertTitle))
+            .setMessage(getString(R.string.noKeyAlertMessageForDrl))
             .setPositiveText(getString(R.string.ok))
             .setPositiveOnClickListener { _, _ -> }
             .show(this)
