@@ -178,6 +178,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         }
         binding.versionText.text = spannableString
         binding.dateLastSyncText.text = getString(R.string.loading)
+        binding.qrButton.addTransparency()
     }
 
     private fun setSecureWindowFlags() {

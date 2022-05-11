@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_24dp"
                 android:layout_marginBottom="@dimen/margin_16dp"
-                android:background="@drawable/background_rounded_blue_alpha"
+                android:background="@drawable/background_slightly_rounded_blue"
                 android:drawableEnd="@drawable/ic_qr_code"
                 android:drawablePadding="@dimen/padding_10dp"
                 android:drawableTint="@color/white"
