@@ -96,6 +96,7 @@ class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), S
     }
 
     private fun setChosenScanMode() {
+
         when (scanModeAdapter.mSelectedItem) {
             0 -> viewModel.setChosenScanMode(ScanMode.STANDARD)
             1 -> viewModel.setChosenScanMode(ScanMode.STRENGTHENED)
