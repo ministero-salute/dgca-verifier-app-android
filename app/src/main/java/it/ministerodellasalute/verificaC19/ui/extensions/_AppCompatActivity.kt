@@ -18,9 +18,12 @@
 
 package it.ministerodellasalute.verificaC19.ui.extensions
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import it.ministerodellasalute.verificaC19sdk.util.Utility
 
 fun AppCompatActivity.openBrowser(url: String) {
@@ -30,3 +33,8 @@ fun AppCompatActivity.openBrowser(url: String) {
 }
 
 fun AppCompatActivity.isOnline() = Utility.isOnline(this)
+
+fun AppCompatActivity.hasCameraPermission() = ContextCompat.checkSelfPermission(
+    this,
+    Manifest.permission.CAMERA
+) == PackageManager.PERMISSION_GRANTED

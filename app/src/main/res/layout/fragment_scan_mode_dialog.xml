@@ -75,7 +75,7 @@
         android:layout_marginTop="@dimen/margin_16dp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bodyLayout"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:itemCount="2"

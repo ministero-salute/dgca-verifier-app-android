@@ -28,8 +28,7 @@ import android.content.DialogInterface
 import android.text.method.LinkMovementMethod
 import android.widget.TextView
 
-class DialogCaller {
-
+class DialogCaller(private val context: Context) {
     private var title: String
     private var message: CharSequence
     private var positiveText: String
@@ -62,7 +61,7 @@ class DialogCaller {
 
     fun enableLinks() = apply { linksEnabled = true }
 
-    fun show(context: Context) {
+    fun show() {
         val builder =
             AlertDialog.Builder(context)
                 .setTitle(title)

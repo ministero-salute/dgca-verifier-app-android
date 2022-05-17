@@ -22,49 +22,49 @@
 
 package it.ministerodellasalute.verificaC19.ui
 
-import android.annotation.SuppressLint
-import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import it.ministerodellasalute.verificaC19.databinding.ScanModeChoiceLayoutBinding
-import it.ministerodellasalute.verificaC19.ui.ScanModeDialogFragment.ScanModeChoice
+import it.ministerodellasalute.verificaC19.ui.scanmode.ScanModeChoice
 
 class ScanModeAdapter(
-    private var adapterList: List<ScanModeChoice>,
-    var mSelectedItem: Int,
-    private val scanModeDialogFragment: ScanModeDialogCallback
-) : RecyclerView.Adapter<ScanModeAdapter.ViewHolder>() {
+    private val onItemClicked: (ScanModeChoice) -> Unit
+) : ListAdapter<ScanModeChoice, ScanModeAdapter.ScanModeHolder>(DiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(ScanModeChoiceLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScanModeHolder {
+        return ScanModeHolder(ScanModeChoiceLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(adapterList[position], position, mSelectedItem)
-    }
+    override fun getItemCount() = currentList.size
 
-    override fun getItemCount() = adapterList.size
+    inner class ScanModeHolder(private val binding: ScanModeChoiceLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    inner class ViewHolder(private val binding: ScanModeChoiceLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
-
-        @SuppressLint("NotifyDataSetChanged")
-        fun bind(
-            scanMode: ScanModeChoice,
-            position: Int,
-            selectedPosition: Int
-        ) {
-            binding.title.text = scanMode.name
-            binding.description.text = scanMode.description
-            binding.radioButton.isChecked = selectedPosition == position
-            binding.cardView.visibility = if (selectedPosition == position) View.VISIBLE else View.GONE
+        fun bind(choice: ScanModeChoice) {
+            binding.title.text = choice.title
+            binding.description.text = choice.description
+            binding.radioButton.isChecked = choice.isChecked
+            binding.cardView.visibility = if (choice.isChecked) View.VISIBLE else View.GONE
 
             binding.root.setOnClickListener {
-                scanModeDialogFragment.enableConfirmButton()
-                mSelectedItem = adapterPosition
-                notifyDataSetChanged()
+                onItemClicked(choice)
             }
         }
+    }
+
+    override fun onBindViewHolder(holder: ScanModeAdapter.ScanModeHolder, position: Int) {
+        val item = currentList[position]
+        holder.bind(item)
+    }
+
+    private class DiffCallback : DiffUtil.ItemCallback<ScanModeChoice>() {
+        override fun areItemsTheSame(oldItem: ScanModeChoice, newItem: ScanModeChoice) =
+            oldItem.scanMode == newItem.scanMode
+
+        override fun areContentsTheSame(oldItem: ScanModeChoice, newItem: ScanModeChoice) =
+            oldItem.isChecked == newItem.isChecked
     }
 }

@@ -23,9 +23,7 @@ package it.ministerodellasalute.verificaC19.ui
 
 import android.Manifest
 import android.content.ActivityNotFoundException
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
@@ -34,13 +32,11 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.text.util.Linkify
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.text.bold
 import com.google.gson.Gson
@@ -53,16 +49,19 @@ import it.ministerodellasalute.verificaC19.ui.extensions.*
 import it.ministerodellasalute.verificaC19.ui.main.ExternalLink
 import it.ministerodellasalute.verificaC19.ui.main.Extras
 import it.ministerodellasalute.verificaC19.ui.main.MainActivity
+import it.ministerodellasalute.verificaC19.ui.scanmode.ScanModeChoice
+import it.ministerodellasalute.verificaC19.ui.scanmode.ScanModeDialogFragment
 import it.ministerodellasalute.verificaC19sdk.model.FirstViewModel
 import it.ministerodellasalute.verificaC19sdk.model.ScanMode
 import it.ministerodellasalute.verificaC19sdk.model.drl.DownloadState
+import it.ministerodellasalute.verificaC19sdk.model.validation.Settings
 import it.ministerodellasalute.verificaC19sdk.util.ConversionUtility
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_DATE_LAST_SYNC
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.parseTo
 import it.ministerodellasalute.verificaC19sdk.util.Utility
 
 @AndroidEntryPoint
-class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface.OnDismissListener {
+class FirstActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityFirstBinding
 
@@ -116,7 +115,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                 else -> {}
             }
         }
-
     }
 
     private fun renderDownloadingState() {
@@ -215,87 +213,73 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     }
 
     private fun showNoConnectionDialog() {
-        DialogCaller()
+        DialogCaller(this)
             .setTitle(getString(R.string.no_internet_title))
             .setMessage(getString(R.string.no_internet_message))
             .setPositiveText(getString(R.string.ok_label))
             .setPositiveOnClickListener { _, _ -> }
-            .show(this)
+            .show()
     }
 
 
     private fun prepareToScan() {
-        if (viewModel.getDateLastSync() == -1L) {
-            showMissingSyncDialog()
-            return
-        }
-        if (!viewModel.hasScanModeBeenChosen()) {
-            showMissingScanModeDialog()
-            return
-        }
-        if (viewModel.isDrlOutdatedOrNull()) {
-            showDrlOutDatedDialog()
-            return
-        }
-
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_DENIED
-        ) {
-            createPermissionAlert()
-        } else {
-            openQrCodeReader()
+        when {
+            viewModel.getDateLastSync() == -1L -> {
+                showMissingSyncDialog();return
+            }
+            viewModel.isScanModeMissing() -> {
+                showMissingScanModeDialog();return
+            }
+            viewModel.isDrlOutdatedOrNull() -> {
+                showDrlOutDatedDialog();return
+            }
+            else -> if (hasCameraPermission()) openQrCodeReader() else createPermissionAlert()
         }
     }
 
     private fun createPermissionAlert() {
         try {
-            DialogCaller()
+            DialogCaller(this)
                 .setTitle(getString(R.string.privacyTitle))
                 .setMessage(getString(R.string.privacy))
                 .setPositiveText(getString(R.string.next))
                 .setPositiveOnClickListener { _, _ -> requestPermissionLauncher.launch(Manifest.permission.CAMERA) }
                 .setNegativeText(getString(R.string.back))
                 .setNegativeOnClickListener { _, _ -> }
-                .show(this)
+                .show()
         } catch (e: Exception) {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
     private fun renderRequiresConfirmState(totalSize: Float) {
-        try {
-            DialogCaller()
-                .setTitle(
-                    getString(
-                        R.string.titleDownloadAlert,
-                        ConversionUtility.byteToMegaByte(totalSize)
-                    )
+        DialogCaller(this)
+            .setTitle(
+                getString(
+                    R.string.titleDownloadAlert,
+                    ConversionUtility.byteToMegaByte(totalSize)
                 )
-                .setMessage(
-                    getString(
-                        R.string.messageDownloadAlert,
-                        ConversionUtility.byteToMegaByte(totalSize)
-                    )
+            )
+            .setMessage(
+                getString(
+                    R.string.messageDownloadAlert,
+                    ConversionUtility.byteToMegaByte(totalSize)
                 )
-                .setPositiveText(getString(R.string.label_download))
-                .setPositiveOnClickListener { _, _ ->
-                    if (isOnline()) {
-                        startDownload()
-                    } else {
-                        showNoConnectionDialog()
-                        renderDownloadAvailableState()
-                    }
+            )
+            .setPositiveText(getString(R.string.label_download))
+            .setPositiveOnClickListener { _, _ ->
+                if (isOnline()) {
+                    startDownload()
+                } else {
+                    showNoConnectionDialog()
+                    renderDownloadAvailableState()
                 }
-                .setNegativeText(getString(R.string.after_download))
-                .setNegativeOnClickListener { _, _ ->
-                    viewModel.setDownloadStatus(DownloadState.DownloadAvailable)
-                }
-                .show(this)
-        } catch (e: Exception) {
-            Log.i("RequiresConfirmException", e.message.toString())
-        }
+            }
+            .setNegativeText(getString(R.string.after_download))
+            .setNegativeOnClickListener { _, _ ->
+                viewModel.setDownloadStatus(DownloadState.DownloadAvailable)
+            }
+            .show()
     }
 
     private fun prepareForDownload() {
@@ -331,15 +315,14 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
 
     private fun checkAppMinimumVersion() {
         viewModel.getAppMinVersion().let {
-            if (Utility.versionCompare(
-                    it,
-                    BuildConfig.VERSION_NAME
-                ) > 0 || viewModel.isSDKVersionObsolete()
-            ) {
-                showForceUpdateDialog()
-            }
+            if (shouldForceUpdate(it)) showForceUpdateDialog()
         }
     }
+
+    private fun shouldForceUpdate(it: String) = Utility.versionCompare(
+        it,
+        BuildConfig.VERSION_NAME
+    ) > 0 || viewModel.isSDKVersionObsolete()
 
     private fun openQrCodeReader() {
         val intent = Intent(this, MainActivity::class.java)
@@ -364,7 +347,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
             } ?: run { showMissingSyncDialog() }
 
             R.id.privacy_policy_card -> openBrowser(ExternalLink.PRIVACY_POLICY_URL)
-
 
             R.id.faq_card -> openBrowser(ExternalLink.FAQ_URL)
 
@@ -393,12 +375,21 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
     }
 
     private fun showScanModeChoiceDialog() {
-        viewModel.getRuleSet()?.run {
-            ScanModeDialogFragment(viewModel.getRuleSet()!!).show(supportFragmentManager, "SCAN_MODE_DIALOG_FRAGMENT")
+        viewModel.getRuleSet()?.let {
+            ScanModeDialogFragment(getAllowedChoices(it), onChoiceSelected = { choice ->
+                viewModel.setChosenScanMode(choice)
+            }).show(supportFragmentManager)
         } ?: run {
             showMissingSyncDialog()
         }
     }
+
+    private fun getAllowedChoices(it: Settings) = mutableListOf(
+        ScanModeChoice(ScanMode.STANDARD, getString(R.string.scan_mode_3G_header), it.getBaseScanModeDescription()),
+        ScanModeChoice(ScanMode.STRENGTHENED, getString(R.string.scan_mode_2G_header), it.getReinforcedScanModeDescription()),
+        ScanModeChoice(ScanMode.BOOSTER, getString(R.string.scan_mode_booster_header), it.getBoosterScanModeDescription()),
+        ScanModeChoice(ScanMode.ENTRY_ITALY, getString(R.string.scan_mode_entry_italy_header), it.getItalyEntryScanModeDescription()),
+    ).also { list -> list.find { choice -> choice.scanMode == viewModel.getChosenScanMode() }?.isChecked = true }
 
     private fun showMissingScanModeDialog() {
         viewModel.getRuleSet()?.getErrorScanModePopup()?.run {
@@ -412,54 +403,50 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
                 Linkify.addLinks(it, Linkify.ALL)
             }
 
-        DialogCaller()
+        DialogCaller(this)
             .setTitle(getString(R.string.noKeyAlertTitle))
             .setMessage(string)
             .setPositiveText(getString(R.string.ok))
             .setPositiveOnClickListener { _, _ -> }
             .enableLinks()
-            .show(this)
+            .show()
     }
 
     private fun showScanModeInfoDialog() {
-        val string = SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getInfoScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
-            Linkify.addLinks(it, Linkify.ALL)
-        }
-
-        DialogCaller()
+        DialogCaller(this)
             .setTitle(getString(R.string.label_scan_mode_types))
-            .setMessage(string)
+            .setMessage(viewModel.getRuleSet()?.getInfoScanModePopup()?.linkify() ?: "")
             .setPositiveText(getString(R.string.ok))
             .setPositiveOnClickListener { _, _ -> }
             .enableLinks()
-            .show(this)
+            .show()
     }
 
     private fun showMissingSyncDialog() {
-        DialogCaller()
+        DialogCaller(this)
             .setTitle(getString(R.string.noKeyAlertTitle))
             .setMessage(getString(R.string.noKeyAlertMessage))
             .setPositiveText(getString(R.string.ok))
             .setPositiveOnClickListener { _, _ -> }
-            .show(this)
+            .show()
     }
 
     private fun showDrlOutDatedDialog() {
-        DialogCaller()
+        DialogCaller(this)
             .setTitle(getString(R.string.noKeyAlertTitle))
             .setMessage(getString(R.string.noKeyAlertMessageForDrl))
             .setPositiveText(getString(R.string.ok))
             .setPositiveOnClickListener { _, _ -> }
-            .show(this)
+            .show()
     }
 
     private fun showForceUpdateDialog() {
-        DialogCaller()
+        DialogCaller(this)
             .setTitle(getString(R.string.updateTitle))
             .setMessage(getString(R.string.updateMessage))
             .setPositiveText(getString(R.string.updateLabel))
             .setPositiveOnClickListener { _, _ -> openGooglePlay() }
-            .show(this)
+            .show()
     }
 
     private fun openGooglePlay() {
@@ -509,7 +496,5 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener, DialogInterface
         )
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
-        setScanModeButtonText(viewModel.getChosenScanMode())
-    }
+
 }
