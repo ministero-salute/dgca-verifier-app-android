@@ -22,6 +22,8 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.provider.Settings
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import it.ministerodellasalute.verificaC19sdk.util.Utility
@@ -30,6 +32,17 @@ fun AppCompatActivity.openBrowser(url: String) {
     val browserIntent =
         Intent(Intent.ACTION_VIEW, Uri.parse(url))
     startActivity(browserIntent)
+}
+
+fun AppCompatActivity.openDeviceSettings() {
+    try {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri = Uri.fromParts("package", packageName, null)
+        intent.data = uri
+        startActivity(intent)
+    } catch (e: Exception) {
+        Log.i("openSettings", e.toString())
+    }
 }
 
 fun AppCompatActivity.isOnline() = Utility.isOnline(this)
