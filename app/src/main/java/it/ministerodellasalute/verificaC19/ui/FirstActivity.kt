@@ -69,9 +69,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (isGranted) {
-                openQrCodeReader()
-            }
+            if (isGranted) openQrCodeReader() else showCameraNeedsDialog()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -329,7 +327,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         startActivity(intent)
     }
 
-    private fun openSettings() {
+    private fun openSettingsActivity() {
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
     }
@@ -338,11 +336,11 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.qrButton -> prepareToScan()
 
-            R.id.settings -> openSettings()
+            R.id.settings -> openSettingsActivity()
 
             R.id.scan_mode_button -> showScanModeChoiceDialog()
 
-            R.id.circle_info_container -> viewModel.getRuleSet()?.getBaseScanModeDescription()?.run {
+            R.id.circle_info_container -> viewModel.getSettings()?.getBaseScanModeDescription()?.run {
                 showScanModeInfoDialog()
             } ?: run { showMissingSyncDialog() }
 
@@ -375,7 +373,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun showScanModeChoiceDialog() {
-        viewModel.getRuleSet()?.let {
+        viewModel.getSettings()?.let {
             ScanModeDialogFragment(getAllowedChoices(it), onChoiceSelected = { choice ->
                 viewModel.setChosenScanMode(choice)
             }).show(supportFragmentManager)
@@ -392,14 +390,14 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
     ).also { list -> list.find { choice -> choice.scanMode == viewModel.getChosenScanMode() }?.isChecked = true }
 
     private fun showMissingScanModeDialog() {
-        viewModel.getRuleSet()?.getErrorScanModePopup()?.run {
+        viewModel.getSettings()?.getErrorScanModePopup()?.run {
             createNoScanModeChosenAlert()
         } ?: run { showMissingSyncDialog() }
     }
 
     private fun createNoScanModeChosenAlert() {
         val string =
-            SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getErrorScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
+            SpannableString(Html.fromHtml(viewModel.getSettings()?.getErrorScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
                 Linkify.addLinks(it, Linkify.ALL)
             }
 
@@ -415,7 +413,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
     private fun showScanModeInfoDialog() {
         DialogCaller(this)
             .setTitle(getString(R.string.label_scan_mode_types))
-            .setMessage(viewModel.getRuleSet()?.getInfoScanModePopup()?.linkify() ?: "")
+            .setMessage(viewModel.getSettings()?.getInfoScanModePopup()?.linkify() ?: "")
             .setPositiveText(getString(R.string.ok))
             .setPositiveOnClickListener { _, _ -> }
             .enableLinks()
@@ -453,13 +451,33 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         try {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
         } catch (e: ActivityNotFoundException) {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+            try {
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                    )
                 )
-            )
+            } catch (e: ActivityNotFoundException) {
+                DialogCaller(this)
+                    .setTitle(getString(R.string.google_play_intent_error_title))
+                    .setMessage(getString(R.string.google_play_intent_error_message))
+                    .setPositiveText(getString(R.string.ok))
+                    .setPositiveOnClickListener { _, _ -> }
+                    .show()
+            }
         }
+    }
+
+    private fun showCameraNeedsDialog() {
+        DialogCaller(this)
+            .setTitle(getString(R.string.no_permissions_granted_camera_title))
+            .setMessage(getString(R.string.no_permissions_granted_camera_message))
+            .setPositiveText(getString(R.string.open_settings))
+            .setNegativeText(getString(R.string.not_now))
+            .setPositiveOnClickListener { _, _ -> openDeviceSettings() }
+            .setNegativeOnClickListener { _, _ -> }
+            .show()
     }
 
 
