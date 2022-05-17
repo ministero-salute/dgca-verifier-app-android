@@ -62,18 +62,23 @@ class SettingsActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        if (v?.id == R.id.back_image || v?.id == R.id.back_text) {
-            finish()
-        } else if (v?.id == R.id.totem_switch) {
-            viewModel.setTotemMode(binding.totemSwitch.isChecked)
-        } else if (v?.id == R.id.faq_card) {
-            val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.FAQ_URL))
-            startActivity(browserIntent)
-        } else if (v?.id == R.id.privacy_policy_card) {
-            val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.PRIVACY_POLICY_URL))
-            startActivity(browserIntent)
+        when (v?.id) {
+            R.id.back_image, R.id.back_text -> {
+                finish()
+            }
+            R.id.totem_switch -> {
+                viewModel.setTotemMode(binding.totemSwitch.isChecked)
+            }
+            R.id.faq_card -> {
+                val browserIntent =
+                    Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.FAQ_URL))
+                startActivity(browserIntent)
+            }
+            R.id.privacy_policy_card -> {
+                val browserIntent =
+                    Intent(Intent.ACTION_VIEW, Uri.parse(ExternalLink.PRIVACY_POLICY_URL))
+                startActivity(browserIntent)
+            }
         }
     }
 }

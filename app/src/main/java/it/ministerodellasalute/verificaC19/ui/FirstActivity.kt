@@ -340,9 +340,9 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
 
             R.id.scan_mode_button -> showScanModeChoiceDialog()
 
-            R.id.circle_info_container -> viewModel.getSettings()?.getBaseScanModeDescription()?.run {
-                showScanModeInfoDialog()
-            } ?: run { showMissingSyncDialog() }
+            R.id.circle_info_container -> {
+                if (viewModel.getSettings()?.getBaseScanModeDescription().isNullOrEmpty()) showMissingSyncDialog() else showScanModeInfoDialog()
+            }
 
             R.id.privacy_policy_card -> openBrowser(ExternalLink.PRIVACY_POLICY_URL)
 
@@ -479,7 +479,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
             .setNegativeOnClickListener { _, _ -> }
             .show()
     }
-
 
     private fun hideDownloadProgressViews() {
         binding.updateProgressBar.hide()
