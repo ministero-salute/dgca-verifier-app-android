@@ -49,8 +49,8 @@ class DebugInfoActivity : AppCompatActivity() {
     }
 
     private fun setupWithWrapper(wrapper: DebugInfoWrapper) {
-        val itRevokesCount = "${DrlFlowType.IT.value}  ${wrapper.itRevokesNumber?.toString()}"
-        val euRevokesCount = "${DrlFlowType.EU.value}  ${wrapper.euRevokesNumber?.toString()}"
+        val itRevokesCount = "${DrlFlowType.IT.value}:  ${wrapper.itRevokesNumber?.toString() ?: getString(R.string.notAvailable)}"
+        val euRevokesCount = "${DrlFlowType.EU.value}:  ${wrapper.euRevokesNumber?.toString() ?: getString(R.string.notAvailable)}"
 
         binding.itRevokesValue.text = itRevokesCount
         binding.euRevokesValue.text = euRevokesCount

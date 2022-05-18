@@ -214,8 +214,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         DialogCaller(this)
             .setTitle(getString(R.string.no_internet_title))
             .setMessage(getString(R.string.no_internet_message))
-            .setPositiveText(getString(R.string.ok_label))
-            .setPositiveOnClickListener { _, _ -> }
+            .setPositiveOnClickListener(getString(R.string.ok_label)) {}
             .show()
     }
 
@@ -240,10 +239,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
             DialogCaller(this)
                 .setTitle(getString(R.string.privacyTitle))
                 .setMessage(getString(R.string.privacy))
-                .setPositiveText(getString(R.string.next))
-                .setPositiveOnClickListener { _, _ -> requestPermissionLauncher.launch(Manifest.permission.CAMERA) }
-                .setNegativeText(getString(R.string.back))
-                .setNegativeOnClickListener { _, _ -> }
+                .setPositiveOnClickListener(getString(R.string.next)) { requestPermissionLauncher.launch(Manifest.permission.CAMERA) }
+                .setNegativeOnClickListener(getString(R.string.back)) {}
                 .show()
         } catch (e: Exception) {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
@@ -264,8 +261,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
                     ConversionUtility.byteToMegaByte(totalSize)
                 )
             )
-            .setPositiveText(getString(R.string.label_download))
-            .setPositiveOnClickListener { _, _ ->
+            .setPositiveOnClickListener(getString(R.string.label_download)) {
                 if (isOnline()) {
                     startDownload()
                 } else {
@@ -273,8 +269,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
                     renderDownloadAvailableState()
                 }
             }
-            .setNegativeText(getString(R.string.after_download))
-            .setNegativeOnClickListener { _, _ ->
+            .setNegativeOnClickListener(getString(R.string.after_download)) {
                 viewModel.setDownloadStatus(DownloadState.DownloadAvailable)
             }
             .show()
@@ -404,8 +399,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         DialogCaller(this)
             .setTitle(getString(R.string.noKeyAlertTitle))
             .setMessage(string)
-            .setPositiveText(getString(R.string.ok))
-            .setPositiveOnClickListener { _, _ -> }
+            .setPositiveOnClickListener(getString(R.string.ok)) {}
             .enableLinks()
             .show()
     }
@@ -414,8 +408,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         DialogCaller(this)
             .setTitle(getString(R.string.label_scan_mode_types))
             .setMessage(viewModel.getSettings()?.getInfoScanModePopup()?.linkify() ?: "")
-            .setPositiveText(getString(R.string.ok))
-            .setPositiveOnClickListener { _, _ -> }
+            .setPositiveOnClickListener(getString(R.string.ok)) {}
             .enableLinks()
             .show()
     }
@@ -424,8 +417,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         DialogCaller(this)
             .setTitle(getString(R.string.noKeyAlertTitle))
             .setMessage(getString(R.string.noKeyAlertMessage))
-            .setPositiveText(getString(R.string.ok))
-            .setPositiveOnClickListener { _, _ -> }
+            .setPositiveOnClickListener(getString(R.string.ok)) {}
             .show()
     }
 
@@ -433,8 +425,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         DialogCaller(this)
             .setTitle(getString(R.string.noKeyAlertTitle))
             .setMessage(getString(R.string.noKeyAlertMessageForDrl))
-            .setPositiveText(getString(R.string.ok))
-            .setPositiveOnClickListener { _, _ -> }
+            .setPositiveOnClickListener(getString(R.string.ok)) {}
             .show()
     }
 
@@ -442,8 +433,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         DialogCaller(this)
             .setTitle(getString(R.string.updateTitle))
             .setMessage(getString(R.string.updateMessage))
-            .setPositiveText(getString(R.string.updateLabel))
-            .setPositiveOnClickListener { _, _ -> openGooglePlay() }
+            .setPositiveOnClickListener(getString(R.string.updateLabel)) { openGooglePlay() }
             .show()
     }
 
@@ -462,8 +452,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
                 DialogCaller(this)
                     .setTitle(getString(R.string.google_play_intent_error_title))
                     .setMessage(getString(R.string.google_play_intent_error_message))
-                    .setPositiveText(getString(R.string.ok))
-                    .setPositiveOnClickListener { _, _ -> }
+                    .setPositiveOnClickListener(getString(R.string.ok)) {}
                     .show()
             }
         }
@@ -473,10 +462,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         DialogCaller(this)
             .setTitle(getString(R.string.no_permissions_granted_camera_title))
             .setMessage(getString(R.string.no_permissions_granted_camera_message))
-            .setPositiveText(getString(R.string.open_settings))
-            .setNegativeText(getString(R.string.not_now))
-            .setPositiveOnClickListener { _, _ -> openDeviceSettings() }
-            .setNegativeOnClickListener { _, _ -> }
+            .setPositiveOnClickListener(getString(R.string.open_settings)) { openDeviceSettings() }
+            .setNegativeOnClickListener(getString(R.string.not_now)) {}
             .show()
     }
 

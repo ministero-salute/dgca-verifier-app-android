@@ -24,26 +24,21 @@ package it.ministerodellasalute.verificaC19.ui
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.text.method.LinkMovementMethod
 import android.widget.TextView
 
 class DialogCaller(private val context: Context) {
-    private var title: String
-    private var message: CharSequence
-    private var positiveText: String
+    private lateinit var title: String
+    private lateinit var message: CharSequence
+    private lateinit var positiveText: String
     private var negativeText: String
-    private var positiveOnClickListener: DialogInterface.OnClickListener?
-    private var negativeOnClickListener: DialogInterface.OnClickListener?
+    private lateinit var positiveOnClickListener: () -> Unit
+    private var negativeOnClickListener: () -> Unit
     private var linksEnabled: Boolean
 
     init {
-        title = ""
-        message = ""
-        positiveText = ""
         negativeText = ""
-        positiveOnClickListener = null
-        negativeOnClickListener = null
+        negativeOnClickListener = {}
         linksEnabled = false
     }
 
@@ -51,13 +46,15 @@ class DialogCaller(private val context: Context) {
 
     fun setMessage(message: CharSequence) = apply { this.message = message }
 
-    fun setPositiveText(positiveText: String) = apply { this.positiveText = positiveText }
+    fun setPositiveOnClickListener(positiveText: String, action: () -> Unit) = apply {
+        this.positiveText = positiveText
+        this.positiveOnClickListener = action
+    }
 
-    fun setNegativeText(negativeText: String) = apply { this.negativeText = negativeText }
-
-    fun setPositiveOnClickListener(onClickListener: DialogInterface.OnClickListener) = apply { this.positiveOnClickListener = onClickListener }
-
-    fun setNegativeOnClickListener(onClickListener: DialogInterface.OnClickListener) = apply { this.negativeOnClickListener = onClickListener }
+    fun setNegativeOnClickListener(negativeText: String, action: () -> Unit) = apply {
+        this.negativeText = negativeText
+        this.negativeOnClickListener = action
+    }
 
     fun enableLinks() = apply { linksEnabled = true }
 
@@ -66,9 +63,12 @@ class DialogCaller(private val context: Context) {
             AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(positiveText, positiveOnClickListener)
-                .setNegativeButton(negativeText, negativeOnClickListener)
-
+                .setPositiveButton(positiveText) { _, _ ->
+                    positiveOnClickListener()
+                }
+                .setNegativeButton(negativeText) { _, _ ->
+                    negativeOnClickListener()
+                }
         val dialog = builder.create()
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
