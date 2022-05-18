@@ -44,9 +44,10 @@ import it.ministerodellasalute.verificaC19.databinding.DoubleScanResultBinding
 import it.ministerodellasalute.verificaC19.databinding.FragmentVerificationBinding
 import it.ministerodellasalute.verificaC19.ui.base.isDebug
 import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
-import it.ministerodellasalute.verificaC19sdk.VerificaDownloadInProgressException
-import it.ministerodellasalute.verificaC19sdk.VerificaMinSDKVersionException
-import it.ministerodellasalute.verificaC19sdk.VerificaMinVersionException
+import it.ministerodellasalute.verificaC19sdk.exception.VerificaDownloadInProgressException
+import it.ministerodellasalute.verificaC19sdk.exception.VerificaMinSDKVersionException
+import it.ministerodellasalute.verificaC19sdk.exception.VerificaMinVersionException
+import it.ministerodellasalute.verificaC19sdk.methodName
 import it.ministerodellasalute.verificaC19sdk.model.*
 import it.ministerodellasalute.verificaC19sdk.util.FORMATTED_VALIDATION_DATE
 import it.ministerodellasalute.verificaC19sdk.util.TimeUtility.formatDateOfBirth
@@ -112,13 +113,13 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         try {
             viewModel.init(args.qrCodeText, true)
         } catch (e: VerificaMinSDKVersionException) {
-            Log.d("VerificationFragment", "Min SDK Version Exception")
+            Log.e(methodName(), "sdk version outdated", e)
             createForceUpdateDialog(getString(R.string.updateMessage))
         } catch (e: VerificaMinVersionException) {
-            Log.d("VerificationFragment", "Min App Version Exception")
+            Log.e(methodName(), "app version outdated", e)
             createForceUpdateDialog(getString(R.string.updateMessage))
         } catch (e: VerificaDownloadInProgressException) {
-            Log.d("VerificationFragment", "Download In Progress Exception")
+            Log.e(methodName(), "drl download in progress", e)
             createForceUpdateDialog(getString(R.string.messageDownloadStarted))
         }
     }
