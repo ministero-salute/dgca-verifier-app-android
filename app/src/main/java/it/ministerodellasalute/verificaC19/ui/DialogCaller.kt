@@ -46,12 +46,12 @@ class DialogCaller(private val context: Context) {
 
     fun setMessage(message: CharSequence) = apply { this.message = message }
 
-    fun setPositiveOnClickListener(positiveText: String, action: () -> Unit) = apply {
+    fun setPositiveOnClickListener(positiveText: String, action: () -> Unit = {}) = apply {
         this.positiveText = positiveText
         this.positiveOnClickListener = action
     }
 
-    fun setNegativeOnClickListener(negativeText: String, action: () -> Unit) = apply {
+    fun setNegativeOnClickListener(negativeText: String, action: () -> Unit = {}) = apply {
         this.negativeText = negativeText
         this.negativeOnClickListener = action
     }

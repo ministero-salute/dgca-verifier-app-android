@@ -28,7 +28,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -42,6 +41,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.DoubleScanResultBinding
 import it.ministerodellasalute.verificaC19.databinding.FragmentVerificationBinding
+import it.ministerodellasalute.verificaC19.ui.DialogCaller
 import it.ministerodellasalute.verificaC19.ui.base.isDebug
 import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
 import it.ministerodellasalute.verificaC19sdk.exception.VerificaDownloadInProgressException
@@ -343,6 +343,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.close_button -> findNavController().popBackStack()
+
             R.id.no_test_available_button -> {
                 binding.questionContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
                     topToBottom = binding.doubleScanResultsContainer.id
@@ -379,16 +380,11 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     }
 
     private fun createForceUpdateDialog(message: String) {
-        val builder = this.activity?.let { AlertDialog.Builder(requireContext()) }
-        builder!!.setTitle(getString(R.string.updateTitle))
-        builder.setMessage(message)
-        builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
-            findNavController().popBackStack()
-        }
-        val dialog = builder.create()
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setCancelable(false)
-        dialog.show()
+        DialogCaller(requireContext())
+            .setTitle(getString(R.string.updateTitle))
+            .setMessage(message)
+            .setPositiveOnClickListener(getString(R.string.ok)) { findNavController().popBackStack() }
+            .show()
     }
 
     override fun onDestroy() {

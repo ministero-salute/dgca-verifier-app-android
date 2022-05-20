@@ -214,7 +214,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         DialogCaller(this)
             .setTitle(getString(R.string.no_internet_title))
             .setMessage(getString(R.string.no_internet_message))
-            .setPositiveOnClickListener(getString(R.string.ok_label)) {}
+            .setPositiveOnClickListener(getString(R.string.ok_label))
             .show()
     }
 
@@ -240,7 +240,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
                 .setTitle(getString(R.string.privacyTitle))
                 .setMessage(getString(R.string.privacy))
                 .setPositiveOnClickListener(getString(R.string.next)) { requestPermissionLauncher.launch(Manifest.permission.CAMERA) }
-                .setNegativeOnClickListener(getString(R.string.back)) {}
+                .setNegativeOnClickListener(getString(R.string.back))
                 .show()
         } catch (e: Exception) {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
@@ -399,7 +399,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         DialogCaller(this)
             .setTitle(getString(R.string.noKeyAlertTitle))
             .setMessage(string)
-            .setPositiveOnClickListener(getString(R.string.ok)) {}
+            .setPositiveOnClickListener(getString(R.string.ok))
             .enableLinks()
             .show()
     }
@@ -408,7 +408,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         DialogCaller(this)
             .setTitle(getString(R.string.label_scan_mode_types))
             .setMessage(viewModel.getSettings()?.getInfoScanModePopup()?.linkify() ?: "")
-            .setPositiveOnClickListener(getString(R.string.ok)) {}
+            .setPositiveOnClickListener(getString(R.string.ok))
             .enableLinks()
             .show()
     }
@@ -417,7 +417,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         DialogCaller(this)
             .setTitle(getString(R.string.noKeyAlertTitle))
             .setMessage(getString(R.string.noKeyAlertMessage))
-            .setPositiveOnClickListener(getString(R.string.ok)) {}
+            .setPositiveOnClickListener(getString(R.string.ok))
             .show()
     }
 
@@ -425,7 +425,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
         DialogCaller(this)
             .setTitle(getString(R.string.noKeyAlertTitle))
             .setMessage(getString(R.string.noKeyAlertMessageForDrl))
-            .setPositiveOnClickListener(getString(R.string.ok)) {}
+            .setPositiveOnClickListener(getString(R.string.ok))
             .show()
     }
 
@@ -452,7 +452,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
                 DialogCaller(this)
                     .setTitle(getString(R.string.google_play_intent_error_title))
                     .setMessage(getString(R.string.google_play_intent_error_message))
-                    .setPositiveOnClickListener(getString(R.string.ok)) {}
+                    .setPositiveOnClickListener(getString(R.string.ok))
                     .show()
             }
         }
@@ -463,7 +463,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
             .setTitle(getString(R.string.no_permissions_granted_camera_title))
             .setMessage(getString(R.string.no_permissions_granted_camera_message))
             .setPositiveOnClickListener(getString(R.string.open_settings)) { openDeviceSettings() }
-            .setNegativeOnClickListener(getString(R.string.not_now)) {}
+            .setNegativeOnClickListener(getString(R.string.not_now))
             .show()
     }
 
