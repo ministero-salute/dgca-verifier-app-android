@@ -101,7 +101,6 @@ class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), S
             0 -> viewModel.setScanMode(ScanMode.STANDARD)
             1 -> viewModel.setScanMode(ScanMode.STRENGTHENED)
             2 -> viewModel.setScanMode(ScanMode.BOOSTER)
-            3 -> viewModel.setScanMode(ScanMode.ENTRY_ITALY)
         }
     }
 
@@ -110,7 +109,6 @@ class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), S
             ScanMode.STANDARD -> 0
             ScanMode.STRENGTHENED -> 1
             ScanMode.BOOSTER -> 2
-            ScanMode.ENTRY_ITALY -> 3
             else -> 0
         }
         return chosenScanMode
@@ -121,7 +119,6 @@ class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), S
             ScanModeChoice(getString(R.string.scan_mode_3G_header), ruleSet.getBaseScanModeDescription() ?: ""),
             ScanModeChoice(getString(R.string.scan_mode_2G_header), ruleSet.getReinforcedScanModeDescription()),
             ScanModeChoice(getString(R.string.scan_mode_booster_header), ruleSet.getBoosterScanModeDescription()),
-            ScanModeChoice(getString(R.string.scan_mode_entry_italy_header), ruleSet.getItalyEntryScanModeDescription()),
         )
     }
 
