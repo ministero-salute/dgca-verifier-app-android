@@ -96,7 +96,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun disableUnusedScanModes() {
-        if (viewModel.getScanMode() == ScanMode.WORK || viewModel.getScanMode() == ScanMode.SCHOOL) {
+        if (viewModel.getScanMode() == ScanMode.WORK || viewModel.getScanMode() == ScanMode.SCHOOL || viewModel.getScanMode() == ScanMode.ENTRY_ITALY) {
             viewModel.setScanModeFlag(false)
             shared.edit().remove("scanMode").commit()
         }
@@ -258,7 +258,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                     ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
                     ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
                     ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
-                    ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
                     else -> getString(R.string.scan_mode_3G_header)
                 }
             binding.scanModeButton.text = chosenScanMode
