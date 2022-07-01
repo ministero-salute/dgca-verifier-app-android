@@ -75,7 +75,7 @@
                 android:padding="@dimen/padding_16dp"
                 android:paddingStart="@dimen/padding_20dp"
                 android:paddingEnd="@dimen/padding_20dp"
-                android:text="SHOW DEBUG INFO"
+                android:text="MOSTRA INFO DI DEBUG"
                 android:textAlignment="textStart"
                 android:textColor="@color/white"
                 android:textSize="15sp"
