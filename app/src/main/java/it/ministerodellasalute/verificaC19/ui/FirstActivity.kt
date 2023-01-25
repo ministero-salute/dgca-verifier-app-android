@@ -52,6 +52,7 @@ import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.WhiteLabelApplication
 import it.ministerodellasalute.verificaC19.databinding.ActivityFirstBinding
+import it.ministerodellasalute.verificaC19.ui.ScanModeDialogFragment.Companion.DIALOG_TAG
 import it.ministerodellasalute.verificaC19.ui.base.doOnDebug
 import it.ministerodellasalute.verificaC19.ui.extensions.hide
 import it.ministerodellasalute.verificaC19.ui.extensions.show
@@ -96,11 +97,13 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun disableUnusedScanModes() {
-        if (viewModel.getScanMode() == ScanMode.WORK || viewModel.getScanMode() == ScanMode.SCHOOL || viewModel.getScanMode() == ScanMode.ENTRY_ITALY) {
+        if (isUnusedScanMode()) {
             viewModel.setScanModeFlag(false)
-            shared.edit().remove("scanMode").commit()
+            shared.edit().remove("scanMode").apply()
         }
     }
+
+    private fun isUnusedScanMode() = viewModel.getScanMode() != ScanMode.STANDARD
 
     private fun observeLiveData() {
         observeSyncStatus()
@@ -256,8 +259,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             val chosenScanMode =
                 when (currentScanMode) {
                     ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
-                    ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
-                    ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
                     else -> getString(R.string.scan_mode_3G_header)
                 }
             binding.scanModeButton.text = chosenScanMode
@@ -348,6 +349,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             dialog.setCancelable(false)
             dialog.show()
         } catch (e: Exception) {
+            Log.i("createDownloadAlert", e.toString())
         }
     }
 
@@ -440,7 +442,10 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             R.id.settings -> openSettingsActivity()
             R.id.scan_mode_button -> {
                 viewModel.getRuleSet()?.run {
-                    ScanModeDialogFragment(viewModel.getRuleSet()!!).show(supportFragmentManager, "SCAN_MODE_DIALOG_FRAGMENT")
+                    ScanModeDialogFragment(viewModel.getRuleSet()!!).show(
+                        supportFragmentManager,
+                        DIALOG_TAG
+                    )
                 } ?: run {
                     createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
                 }
@@ -457,7 +462,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.noKeyAlertTitle))
         val string =
-            SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getErrorScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
+            SpannableString(
+                Html.fromHtml(
+                    viewModel.getRuleSet()?.getErrorScanModePopup(),
+                    HtmlCompat.FROM_HTML_MODE_LEGACY
+                )
+            ).also {
                 Linkify.addLinks(it, Linkify.ALL)
             }
         builder.setMessage(string)
@@ -472,7 +482,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun createScanModeInfoAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.label_scan_mode_types))
-        val string = SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getInfoScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
+        val string = SpannableString(
+            Html.fromHtml(
+                viewModel.getRuleSet()?.getInfoScanModePopup(),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
+        ).also {
             Linkify.addLinks(it, Linkify.ALL)
         }
         builder.setMessage(string)
@@ -625,8 +640,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun updateDownloadedPackagesCount() {
-        val lastDownloadedChunk = viewModel.getCurrentChunk().toInt()
-        val lastChunk = viewModel.getTotalChunk().toInt()
+        val lastDownloadedChunk: Int = viewModel.getCurrentChunk().toInt()
+        val lastChunk: Int = viewModel.getTotalChunk().toInt()
         val singleChunkSize = viewModel.getSizeSingleChunkInByte()
 
         binding.updateProgressBar.progress = lastDownloadedChunk

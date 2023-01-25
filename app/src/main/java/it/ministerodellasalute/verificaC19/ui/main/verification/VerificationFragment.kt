@@ -35,12 +35,10 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.R
-import it.ministerodellasalute.verificaC19.databinding.DoubleScanResultBinding
 import it.ministerodellasalute.verificaC19.databinding.FragmentVerificationBinding
 import it.ministerodellasalute.verificaC19.ui.base.isDebug
 import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
@@ -63,7 +61,6 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private val binding get() = _binding!!
     private lateinit var certificateModel: CertificateViewBean
 
-    private var userName: String = ""
     private var handler: Handler? = null
     private var onBackPressedCallback: OnBackPressedCallback? = null
     private var runnableRunner: Runnable? = null
@@ -79,7 +76,6 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.closeButton.setOnClickListener(this)
-        binding.noTestAvailableButton.setOnClickListener(this)
         viewModel.certificate.observe(viewLifecycleOwner) { certificate ->
             certificate?.let {
                 certificateModel = it
@@ -95,8 +91,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 setOnBackPressed(onBackPressedCallback)
                 if (
                     viewModel.getTotemMode() &&
-                    (certificate.certificateStatus == CertificateStatus.VALID) &&
-                    !viewModel.getDoubleScanFlag()
+                    (certificate.certificateStatus == CertificateStatus.VALID)
                 ) setOnBackTimer()
                 setPersonData(it.person, it.dateOfBirth)
                 binding.closeButton.visibility = View.VISIBLE
@@ -126,48 +121,13 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private fun setupCertStatusView(cert: CertificateViewBean) {
         cert.certificateStatus?.let {
             setPersonDetailsVisibility(it)
-            setDoubleScanButtons(it)
             setScanModeText()
-
-            checkDoubleScanConditions(it)
-        }
-    }
-
-    private fun checkDoubleScanConditions(it: CertificateStatus) {
-        if (viewModel.getDoubleScanFlag() && it != CertificateStatus.NOT_EU_DCC) {
-            binding.doubleScanResultsContainer.visibility = View.VISIBLE
-
-            addDoubleScanResult(R.drawable.ic_valid_cert, R.string.certificateValid)
-
-            if (it.isANonValidCertificate()) {
-                addDoubleScanResult(R.drawable.ic_invalid, R.string.certificateTestNotValid)
-                setValidationLayout(CertificateStatus.NOT_VALID)
-            } else if (it == CertificateStatus.VALID) {
-                addDoubleScanResult(R.drawable.ic_valid_cert, R.string.certificateTestValid)
-                if (viewModel.getUserName() != userName) {
-                    addDoubleScanResult(R.drawable.ic_invalid, R.string.userDataDoesNotMatch)
-                    setValidationLayout(CertificateStatus.NOT_VALID)
-                } else {
-                    setValidationLayout(CertificateStatus.VALID)
-                    if (viewModel.getTotemMode()) setOnBackTimer()
-                }
-            }
-            viewModel.setUserName("")
-        } else {
             setValidationLayout(it)
         }
     }
 
     private fun setOnBackTimer() {
         runnableRunner?.let { handler?.postDelayed(it, 5000) }
-    }
-
-    private fun addDoubleScanResult(icon: Int, text: Int) {
-        val container = binding.doubleScanResultsContainer
-        val binding = DoubleScanResultBinding.inflate(layoutInflater, container, false)
-        binding.validationText.text = getString(text)
-        binding.validationIcon.setImageResource(icon)
-        container.addView(binding.root)
     }
 
     private fun setValidationLayout(it: CertificateStatus) {
@@ -179,44 +139,9 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         setLinkViews(it)
     }
 
-    private fun setDoubleScanButtons(status: CertificateStatus) {
-        if (status == CertificateStatus.TEST_NEEDED && !viewModel.getDoubleScanFlag()) {
-            binding.scanTestButton.visibility = View.VISIBLE
-            binding.noTestAvailableButton.visibility = View.VISIBLE
-            binding.closeButton.visibility = View.GONE
-
-            binding.subtitleText.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                topToBottom = binding.noTestAvailableButton.id
-                bottomMargin = 64
-            }
-
-            binding.scanTestButton.setOnClickListener {
-                viewModel.setDoubleScanFlag(true)
-                it.findNavController().navigate(R.id.action_verificationFragment_to_codeReaderFragment)
-            }
-
-            val callback = object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {}
-            }
-            setOnBackPressed(callback)
-
-        } else if (viewModel.getDoubleScanFlag()) {
-            binding.scanTestButton.visibility = View.GONE
-            binding.noTestAvailableButton.visibility = View.GONE
-
-            binding.questionContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                topToBottom = binding.doubleScanResultsContainer.id
-                topMargin = 32
-            }
-        }
-    }
-
     private fun setScanModeText() {
         val chosenScanMode = when (viewModel.getScanMode()) {
             ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
-            ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
-            ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
-            ScanMode.DOUBLE_SCAN -> getString(R.string.scan_mode_booster_header)
             else -> getString(R.string.scan_mode_3G_header)
         }
         binding.scanModeText.text = chosenScanMode
@@ -268,24 +193,25 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         binding.subtitleText.text =
             when (certStatus) {
                 CertificateStatus.VALID -> getString(R.string.subtitle_text)
-                CertificateStatus.TEST_NEEDED, CertificateStatus.NOT_VALID, CertificateStatus.EXPIRED, CertificateStatus.NOT_VALID_YET -> getString(R.string.subtitle_text_notvalid)
+                CertificateStatus.TEST_NEEDED, CertificateStatus.NOT_VALID, CertificateStatus.EXPIRED, CertificateStatus.NOT_VALID_YET -> getString(
+                    R.string.subtitle_text_notvalid
+                )
                 else -> getString(R.string.subtitle_text_technicalError)
             }
     }
 
     private fun setValidationMainText(certStatus: CertificateStatus) {
-        val isDoubleScanFlow = viewModel.getDoubleScanFlag()
-        val validTitle = if (isDoubleScanFlow) getString(R.string.certificateTestValidTitle) else getString(R.string.certificateValid)
-        val notValidTitle = if (isDoubleScanFlow) getString(R.string.certificateTestNonValidTitle) else getString(R.string.certificateNonValid)
+        val validTitle = getString(R.string.certificateValid)
+        val notValidTitle = getString(R.string.certificateNonValid)
 
         binding.certificateValid.text = when (certStatus) {
             CertificateStatus.VALID -> validTitle
             CertificateStatus.NOT_EU_DCC -> getString(R.string.certificateNotDCC)
             CertificateStatus.REVOKED -> if (isDebug()) getString(R.string.certificateRevoked) else notValidTitle
             CertificateStatus.NOT_VALID -> notValidTitle
-            CertificateStatus.EXPIRED -> if (isDoubleScanFlow) notValidTitle else getString(R.string.certificateExpired)
+            CertificateStatus.EXPIRED -> getString(R.string.certificateExpired)
             CertificateStatus.TEST_NEEDED -> getString(R.string.certificateValidTestNeeded)
-            CertificateStatus.NOT_VALID_YET -> if (isDoubleScanFlow) notValidTitle else getString(R.string.certificateNonValidYet)
+            CertificateStatus.NOT_VALID_YET -> getString(R.string.certificateNonValidYet)
         }
     }
 
@@ -325,43 +251,17 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private fun setPersonData(person: PersonModel?, dateOfBirth: String?) {
         if (person?.familyName.isNullOrEmpty()) {
             binding.nameStandardisedText.text =
-                person?.standardisedFamilyName.plus(" ").plus(person?.standardisedGivenName).plus(" ").plus(person?.givenName)
+                person?.standardisedFamilyName.plus(" ").plus(person?.standardisedGivenName)
+                    .plus(" ").plus(person?.givenName)
         } else {
             binding.nameStandardisedText.text = person?.familyName.plus(" ").plus(person?.givenName)
         }
         binding.birthdateText.text = dateOfBirth?.formatDateOfBirth().orEmpty()
-
-        userName = binding.nameStandardisedText.text.toString()
-
-        if (certificateModel.certificateStatus == CertificateStatus.TEST_NEEDED && !viewModel.getDoubleScanFlag()) {
-            viewModel.setUserName(userName)
-        }
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.close_button -> findNavController().popBackStack()
-            R.id.no_test_available_button -> {
-                binding.questionContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                    topToBottom = binding.doubleScanResultsContainer.id
-                    topMargin = 32
-                }
-
-                viewModel.setDoubleScanFlag(true)
-                checkDoubleScanConditions(CertificateStatus.NOT_VALID)
-                viewModel.setDoubleScanFlag(false)
-
-                binding.closeButton.visibility = View.VISIBLE
-                binding.scanTestButton.visibility = View.GONE
-                binding.noTestAvailableButton.visibility = View.GONE
-
-                val callback = object : OnBackPressedCallback(true) {
-                    override fun handleOnBackPressed() {
-                        findNavController().popBackStack()
-                    }
-                }
-                setOnBackPressed(callback)
-            }
         }
     }
 
@@ -391,7 +291,6 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     override fun onDestroy() {
         runnableRunner?.let { handler?.removeCallbacks(it) }
-        viewModel.setDoubleScanFlag(false)
         super.onDestroy()
     }
 }
