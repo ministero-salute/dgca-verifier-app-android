@@ -23,6 +23,7 @@ package it.ministerodellasalute.verificaC19.ui.main.codeReader
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -77,6 +78,7 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
             try {
                 beepManager.playBeepSoundAndVibrate()
             } catch (e: Exception) {
+                Log.i("barcodeResult", e.toString())
             }
 
             navigateToVerificationPage(result.text)
@@ -101,17 +103,16 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val hintsMap: MutableMap<DecodeHintType, Any> = EnumMap(com.google.zxing.DecodeHintType::class.java)
+        val hintsMap: MutableMap<DecodeHintType, Any> =
+            EnumMap(com.google.zxing.DecodeHintType::class.java)
         val formats: Collection<BarcodeFormat> = listOf(BarcodeFormat.QR_CODE, BarcodeFormat.AZTEC)
         hintsMap[DecodeHintType.TRY_HARDER] = false
-        binding.barcodeScanner.barcodeView.decoderFactory = DefaultDecoderFactory(formats, hintsMap, null, 0)
+        binding.barcodeScanner.barcodeView.decoderFactory =
+            DefaultDecoderFactory(formats, hintsMap, null, 0)
         binding.barcodeScanner.cameraSettings.isAutoFocusEnabled = true
 
         val chosenScanMode = when (viewModel.getScanMode()) {
             ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
-            ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
-            ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
-            ScanMode.DOUBLE_SCAN -> getString(R.string.scan_mode_booster_header)
             else -> getString(R.string.scan_mode_3G_header)
         }
         binding.scanModeText.text = chosenScanMode
@@ -146,11 +147,13 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
 
         binding.flipCamera.setOnClickListener(this)
 
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                callOnBack()
-            }
-        })
+        activity?.onBackPressedDispatcher?.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    callOnBack()
+                }
+            })
     }
 
     override fun onDestroyView() {
@@ -221,12 +224,7 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
     }
 
     private fun callOnBack() {
-        if (viewModel.getDoubleScanFlag()) {
-            viewModel.setDoubleScanFlag(false)
-            findNavController().popBackStack()
-        } else {
-            findNavController().navigate(R.id.action_codeReaderFragment_to_firstActivity)
-        }
+        findNavController().navigate(R.id.action_codeReaderFragment_to_firstActivity)
     }
 
     private fun hasFlash(): Boolean {
