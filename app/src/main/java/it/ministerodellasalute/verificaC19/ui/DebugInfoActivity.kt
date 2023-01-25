@@ -53,7 +53,7 @@ class DebugInfoActivity : AppCompatActivity() {
     private fun setupWithWrapper(wrapper: DebugInfoWrapper) {
         binding.revokesValue.text =
             wrapper.revokesNumber?.toString() ?: "Revoche non scaricate"
-        wrapper.kidList.iterator()?.forEach {
+        wrapper.kidList?.iterator()?.forEach {
             val textView = TextView(this).apply {
                 textSize = 16f
                 text = it
