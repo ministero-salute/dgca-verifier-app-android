@@ -41,7 +41,12 @@ import it.ministerodellasalute.verificaC19sdk.model.ScanMode
 import it.ministerodellasalute.verificaC19sdk.model.validation.RuleSet
 
 @AndroidEntryPoint
-class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), ScanModeDialogCallback {
+class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(),
+    ScanModeDialogCallback {
+
+    companion object {
+        const val DIALOG_TAG = "SCAN_MODE_DIALOG_FRAGMENT"
+    }
 
     private val viewModel by viewModels<FirstViewModel>()
     private lateinit var scanModeAdapter: ScanModeAdapter
@@ -51,10 +56,17 @@ class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), S
 
     override fun onStart() {
         super.onStart()
-        dialog?.window?.setLayout(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)
+        dialog?.window?.setLayout(
+            ActionBar.LayoutParams.MATCH_PARENT,
+            ActionBar.LayoutParams.MATCH_PARENT
+        )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         val view = inflater.inflate(R.layout.fragment_scan_mode_dialog, container)
         setScanModeList()
@@ -99,26 +111,17 @@ class ScanModeDialogFragment(private val ruleSet: RuleSet) : DialogFragment(), S
     private fun setChosenScanMode() {
         when (scanModeAdapter.mSelectedItem) {
             0 -> viewModel.setScanMode(ScanMode.STANDARD)
-            1 -> viewModel.setScanMode(ScanMode.STRENGTHENED)
-            2 -> viewModel.setScanMode(ScanMode.BOOSTER)
         }
     }
 
-    private fun getChosenScanMode(): Int {
-        val chosenScanMode = when (viewModel.getScanMode()) {
-            ScanMode.STANDARD -> 0
-            ScanMode.STRENGTHENED -> 1
-            ScanMode.BOOSTER -> 2
-            else -> 0
-        }
-        return chosenScanMode
-    }
+    private fun getChosenScanMode(): Int = 0
 
     private fun setScanModeList() {
         scanModes = mutableListOf(
-            ScanModeChoice(getString(R.string.scan_mode_3G_header), ruleSet.getBaseScanModeDescription() ?: ""),
-            ScanModeChoice(getString(R.string.scan_mode_2G_header), ruleSet.getReinforcedScanModeDescription()),
-            ScanModeChoice(getString(R.string.scan_mode_booster_header), ruleSet.getBoosterScanModeDescription()),
+            ScanModeChoice(
+                getString(R.string.scan_mode_3G_header),
+                ruleSet.getBaseScanModeDescription() ?: ""
+            )
         )
     }
 
