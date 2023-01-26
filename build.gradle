@@ -30,6 +30,13 @@ allprojects {
     project.configurations.all {
         resolutionStrategy {
             force Deps.androidx_worker_ktx
+            force Deps.zxing_core
+            force Deps.jackson_cbor
+            force Deps.jackson_datetype
+            force Deps.kotlin_stdlib
+            force Deps.kotlin_reflect
+            force Deps.desugar_jdk_libs
+            force Deps.tools_kotlin
         }
     }
 }
