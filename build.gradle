@@ -36,7 +36,6 @@ allprojects {
             force Deps.kotlin_stdlib
             force Deps.kotlin_reflect
             force Deps.desugar_jdk_libs
-            force Deps.tools_kotlin
         }
     }
 }
