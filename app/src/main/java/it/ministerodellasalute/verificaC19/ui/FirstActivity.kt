@@ -22,14 +22,12 @@
 package it.ministerodellasalute.verificaC19.ui
 
 import android.Manifest
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Html
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -55,6 +53,7 @@ import it.ministerodellasalute.verificaC19.BuildConfig
 import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.WhiteLabelApplication
 import it.ministerodellasalute.verificaC19.databinding.ActivityFirstBinding
+import it.ministerodellasalute.verificaC19.ui.ScanModeDialogFragment.Companion.DIALOG_TAG
 import it.ministerodellasalute.verificaC19.ui.base.doOnDebug
 import it.ministerodellasalute.verificaC19.ui.extensions.hide
 import it.ministerodellasalute.verificaC19.ui.extensions.show
@@ -81,9 +80,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (isGranted) {
-                openQrCodeReader()
-            }
+            if (isGranted) openQrCodeReader() else noPermissionsGrantedCamera()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,11 +97,13 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun disableUnusedScanModes() {
-        if (viewModel.getScanMode() == ScanMode.WORK || viewModel.getScanMode() == ScanMode.SCHOOL) {
+        if (isUnusedScanMode()) {
             viewModel.setScanModeFlag(false)
-            shared.edit().remove("scanMode").commit()
+            shared.edit().remove("scanMode").apply()
         }
     }
+
+    private fun isUnusedScanMode() = viewModel.getScanMode() != ScanMode.STANDARD
 
     private fun observeLiveData() {
         observeSyncStatus()
@@ -252,9 +251,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             val chosenScanMode =
                 when (currentScanMode) {
                     ScanMode.STANDARD -> getString(R.string.scan_mode_3G_header)
-                    ScanMode.STRENGTHENED -> getString(R.string.scan_mode_2G_header)
-                    ScanMode.BOOSTER -> getString(R.string.scan_mode_booster_header)
-                    ScanMode.ENTRY_ITALY -> getString(R.string.scan_mode_entry_italy_header)
                     else -> getString(R.string.scan_mode_3G_header)
                 }
             binding.scanModeButton.text = chosenScanMode
@@ -340,6 +336,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
             dialog.setCancelable(false)
             dialog.show()
         } catch (e: Exception) {
+            Log.i("createDownloadAlert", e.toString())
         }
     }
 
@@ -388,7 +385,7 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         startActivity(intent)
     }
 
-    private fun openSettings() {
+    private fun openSettingsActivity() {
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
     }
@@ -421,10 +418,13 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
                 }
                 checkCameraPermission()
             }
-            R.id.settings -> openSettings()
+            R.id.settings -> openSettingsActivity()
             R.id.scan_mode_button -> {
                 viewModel.getRuleSet()?.run {
-                    ScanModeDialogFragment(viewModel.getRuleSet()!!).show(supportFragmentManager, "SCAN_MODE_DIALOG_FRAGMENT")
+                    ScanModeDialogFragment(viewModel.getRuleSet()!!).show(
+                        supportFragmentManager,
+                        DIALOG_TAG
+                    )
                 } ?: run {
                     createNoSyncAlertDialog(getString(R.string.noKeyAlertMessage))
                 }
@@ -441,7 +441,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.noKeyAlertTitle))
         val string =
-            SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getErrorScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
+            SpannableString(
+                Html.fromHtml(
+                    viewModel.getRuleSet()?.getErrorScanModePopup(),
+                    HtmlCompat.FROM_HTML_MODE_LEGACY
+                )
+            ).also {
                 Linkify.addLinks(it, Linkify.ALL)
             }
         builder.setMessage(string)
@@ -456,7 +461,12 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     private fun createScanModeInfoAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.label_scan_mode_types))
-        val string = SpannableString(Html.fromHtml(viewModel.getRuleSet()?.getInfoScanModePopup(), HtmlCompat.FROM_HTML_MODE_LEGACY)).also {
+        val string = SpannableString(
+            Html.fromHtml(
+                viewModel.getRuleSet()?.getInfoScanModePopup(),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
+        ).also {
             Linkify.addLinks(it, Linkify.ALL)
         }
         builder.setMessage(string)
@@ -476,6 +486,68 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
         }
         val dialog = builder.create()
         dialog.show()
+    }
+
+    private fun createForceUpdateDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.updateTitle))
+        builder.setMessage(getString(R.string.updateMessage))
+
+        builder.setPositiveButton(getString(R.string.updateLabel)) { _, _ ->
+            openGooglePlay()
+        }
+        val dialog = builder.create()
+        dialog.setCancelable(false)
+        dialog.show()
+    }
+
+    private fun openGooglePlay() {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+        } catch (e: ActivityNotFoundException) {
+            try {
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                    )
+                )
+            } catch (e: ActivityNotFoundException) {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle(getString(R.string.google_play_intent_error_title))
+                builder.setMessage(getString(R.string.google_play_intent_error_message))
+
+                builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
+                }
+                val dialog = builder.create()
+                dialog.setCancelable(false)
+                dialog.show()
+            }
+        }
+    }
+
+    private fun noPermissionsGrantedCamera() {
+        val builder = AlertDialog.Builder(this)
+        val dialog: AlertDialog?
+        builder.setTitle(
+            getString(R.string.no_permissions_granted_camera_title)
+        )
+        builder.setMessage(getString(R.string.no_permissions_granted_camera_message))
+        builder.setPositiveButton(getString(R.string.open_settings)) { _, _ -> openSettings() }
+        builder.setNegativeButton(getString(R.string.not_now)) { _, _ -> }
+        dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun openSettings() {
+        try {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri = Uri.fromParts("package", packageName, null)
+            intent.data = uri
+            startActivity(intent)
+        } catch (e: Exception) {
+            Log.i("openSettings", e.toString())
+        }
     }
 
     override fun onStart() {
@@ -547,8 +619,8 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun updateDownloadedPackagesCount() {
-        val lastDownloadedChunk = viewModel.getCurrentChunk().toInt()
-        val lastChunk = viewModel.getTotalChunk().toInt()
+        val lastDownloadedChunk: Int = viewModel.getCurrentChunk().toInt()
+        val lastChunk: Int = viewModel.getTotalChunk().toInt()
         val singleChunkSize = viewModel.getSizeSingleChunkInByte()
 
         binding.updateProgressBar.progress = lastDownloadedChunk
